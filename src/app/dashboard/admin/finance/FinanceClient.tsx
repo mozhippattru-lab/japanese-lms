@@ -9,8 +9,9 @@ import {
 
 import DataToolbar from '@/components/DataToolbar'
 import StatCard, { StatGrid } from '@/components/StatCard'
+import { printReceipt, printBankStatement, type StatementRow } from '@/lib/receipt'
 
-type Tab = 'overview' | 'invoices' | 'fees' | 'colleges'
+type Tab = 'overview' | 'invoices' | 'fees' | 'colleges' | 'report'
 
 type Invoice = {
   id: string; student_id: string; batch_id: string | null; fee_structure_id: string | null
@@ -30,6 +31,10 @@ type College = { id: string; name: string; category: string | null; payment_type
 type CollegePayment = {
   id: string; college_id: string | null; amount: number; period_month: string | null
   payment_date: string | null; payment_method: string | null; reference_number: string | null
+}
+type Payment = {
+  id: string; invoice_id: string | null; student_id: string; amount: number
+  payment_method: string | null; payment_date: string | null; reference_number: string | null; notes: string | null
 }
 
 const PAYMENT_METHODS = ['Cash', 'UPI', 'Bank Transfer', 'Card', 'Cheque']
@@ -82,6 +87,7 @@ function TabBar({ tab, setTab }: { tab: string; setTab: (t: Tab) => void }) {
     { key: 'invoices', label: 'Invoices', icon: <Receipt size={14} /> },
     { key: 'fees', label: 'Fee Structures', icon: <DollarSign size={14} /> },
     { key: 'colleges', label: 'College Billing', icon: <Building2 size={14} /> },
+    { key: 'report', label: 'Report', icon: <Landmark size={14} /> },
   ]
   return (
     <div style={{ display: 'flex', gap: '4px', background: '#f0f0f2', borderRadius: '10px', padding: '4px', marginBottom: '24px', width: 'fit-content' }}>
@@ -103,15 +109,19 @@ const emptyCF = { studentId: '', batchId: '', feeId: '', amount: '', dueDate: ''
 const emptyFF = { name: '', jlpt_level: '', amount: '', frequency: 'Monthly', description: '' }
 const emptyPF = { amount: '', method: 'Cash', date: todayStr(), reference: '', notes: '' }
 
-export default function FinanceClient({ initialInvoices, initialFees, students, batches, colleges, collegePayments }: {
+export default function FinanceClient({ initialInvoices, initialFees, students, batches, colleges, collegePayments, payments }: {
   initialInvoices: Invoice[]
   initialFees: FeeStructure[]
   students: Student[]
   batches: Batch[]
   colleges: College[]
   collegePayments: CollegePayment[]
+  payments: Payment[]
 }) {
   const [tab, setTab] = useState<Tab>('overview')
+  const monthStart = new Date(); monthStart.setDate(1)
+  const [repFrom, setRepFrom] = useState(monthStart.toISOString().slice(0, 10))
+  const [repTo, setRepTo] = useState(todayStr())
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices)
   const [fees, setFees] = useState<FeeStructure[]>(initialFees)
   const [loading, setLoading] = useState(false)
@@ -131,6 +141,40 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
 
   // Lookups
   const studentMap = Object.fromEntries(students.map(s => [s.id, s]))
+  const invoiceMap = Object.fromEntries(initialInvoices.map(i => [i.id, i]))
+
+  const paymentByInvoice: Record<string, Payment> = {}
+  for (const p of payments) if (p.invoice_id) paymentByInvoice[p.invoice_id] = p
+
+  // Print a receipt for a paid invoice (uses the real payment if recorded)
+  function openInvoiceReceipt(inv: Invoice) {
+    const p = paymentByInvoice[inv.id]
+    if (p) { openReceipt(p); return }
+    const st = studentMap[inv.student_id]
+    printReceipt({
+      receiptNo: inv.id.slice(0, 8).toUpperCase(), date: fmtDate(todayStr()),
+      studentName: st?.full_name || st?.email || 'Student', level: st?.jlpt_level || null,
+      batch: st?.batch_name || st?.batch || null, description: inv.description || 'Fee payment',
+      amount: Number(inv.amount), method: 'Cash', reference: null,
+    })
+  }
+
+  // Print a cheque-style fee receipt for a student payment
+  function openReceipt(p: Payment) {
+    const st = studentMap[p.student_id]
+    const inv = p.invoice_id ? invoiceMap[p.invoice_id] : null
+    printReceipt({
+      receiptNo: p.id.slice(0, 8).toUpperCase(),
+      date: p.payment_date ? fmtDate(p.payment_date) : fmtDate(todayStr()),
+      studentName: st?.full_name || st?.email || 'Student',
+      level: st?.jlpt_level || null,
+      batch: st?.batch_name || st?.batch || null,
+      description: inv?.description || 'Fee payment',
+      amount: Number(p.amount),
+      method: p.payment_method || 'Cash',
+      reference: p.reference_number || null,
+    })
+  }
 
   // Stats
   const studentCollected = invoices.filter(i => i.status === 'Paid').reduce((s, i) => s + Number(i.amount), 0)
@@ -334,6 +378,124 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
   }
 
   // ══════════════════════════════════════════════════════════════════
+  // REPORT TAB — bank-statement-style ledger by date range
+  // ══════════════════════════════════════════════════════════════════
+  if (tab === 'report') {
+    type Txn = { date: string; ref: string; desc: string; party: string; method: string; credit: number; payment?: Payment }
+    const all: Txn[] = []
+    for (const p of payments) {
+      if (!p.payment_date) continue
+      const st = studentMap[p.student_id]
+      const inv = p.invoice_id ? invoiceMap[p.invoice_id] : null
+      all.push({ date: p.payment_date, ref: p.reference_number || '', desc: inv?.description || 'Student fee', party: st?.full_name || st?.email || 'Student', method: p.payment_method || 'Cash', credit: Number(p.amount), payment: p })
+    }
+    for (const cp of collegePayments) {
+      if (!cp.payment_date) continue
+      const c = cp.college_id ? collegeMap[cp.college_id] : null
+      all.push({ date: cp.payment_date, ref: cp.reference_number || '', desc: 'College contract' + (cp.period_month ? ` · ${cp.period_month}` : ''), party: c?.name || 'College', method: cp.payment_method || '—', credit: Number(cp.amount) })
+    }
+    all.sort((a, b) => a.date.localeCompare(b.date))
+
+    const opening = all.filter(t => t.date < repFrom).reduce((s, t) => s + t.credit, 0)
+    const inRange = all.filter(t => t.date >= repFrom && t.date <= repTo)
+    let running = opening
+    const ledger = inRange.map(t => { running += t.credit; return { ...t, balance: running } })
+    const totalCredit = inRange.reduce((s, t) => s + t.credit, 0)
+    const closing = opening + totalCredit
+
+    const stmtRows: StatementRow[] = ledger.map(t => ({ date: fmtDate(t.date), ref: t.ref, desc: t.desc, party: t.party, method: t.method, credit: t.credit, balance: t.balance }))
+
+    const presets: { label: string; from: () => string; to: () => string }[] = [
+      { label: 'This month', from: () => { const d = new Date(); d.setDate(1); return d.toISOString().slice(0, 10) }, to: () => todayStr() },
+      { label: 'Last month', from: () => { const d = new Date(); d.setMonth(d.getMonth() - 1, 1); return d.toISOString().slice(0, 10) }, to: () => { const d = new Date(); d.setDate(0); return d.toISOString().slice(0, 10) } },
+      { label: 'This year', from: () => { const d = new Date(); return new Date(d.getFullYear(), 0, 1).toISOString().slice(0, 10) }, to: () => todayStr() },
+    ]
+
+    return (
+      <>
+        {pageHeader}
+        <TabBar tab={tab} setTab={setTab} />
+
+        {/* Date range controls */}
+        <div style={{ background: '#fff', border: '1px solid #ececef', borderRadius: '12px', padding: '14px 16px', marginBottom: '16px', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'flex-end' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#6b7280', marginBottom: '5px' }}>From</label>
+            <input type="date" value={repFrom} max={repTo} onChange={e => setRepFrom(e.target.value)} style={{ ...inputStyle, width: 'auto', background: '#fff' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#6b7280', marginBottom: '5px' }}>To</label>
+            <input type="date" value={repTo} min={repFrom} max={todayStr()} onChange={e => setRepTo(e.target.value)} style={{ ...inputStyle, width: 'auto', background: '#fff' }} />
+          </div>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            {presets.map(p => {
+              const on = repFrom === p.from() && repTo === p.to()
+              return (
+                <button key={p.label} onClick={() => { setRepFrom(p.from()); setRepTo(p.to()) }} style={{
+                  padding: '8px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+                  border: `1px solid ${on ? 'var(--navy)' : '#e5e7eb'}`,
+                  background: on ? 'var(--navy)' : '#f9fafb',
+                  color: on ? '#fff' : '#374151',
+                }}>{p.label}</button>
+              )
+            })}
+          </div>
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+            <DataToolbar
+              title="Account Statement"
+              subtitle={`${fmtDate(repFrom)} to ${fmtDate(repTo)}`}
+              columns={[{ key: 'date', label: 'Date' }, { key: 'ref', label: 'Reference' }, { key: 'desc', label: 'Description' }, { key: 'party', label: 'Party' }, { key: 'method', label: 'Mode' }, { key: 'credit', label: 'Credit' }, { key: 'balance', label: 'Balance' }]}
+              rows={ledger.map(t => ({ date: fmtDate(t.date), ref: t.ref || '—', desc: t.desc, party: t.party, method: t.method, credit: fmt(t.credit), balance: fmt(t.balance) }))}
+            />
+            <button onClick={() => printBankStatement({ from: fmtDate(repFrom), to: fmtDate(repTo), rows: stmtRows, opening, closing, totalCredit, count: inRange.length })}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', padding: '10px 16px', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '9px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+              <Landmark size={15} /> Print Statement
+            </button>
+          </div>
+        </div>
+
+        <StatGrid>
+          {[
+            { label: 'Opening Balance', value: fmt(opening), icon: <Wallet size={18} />, color: '#9ca3af' },
+            { label: 'Credited (period)', value: fmt(totalCredit), icon: <CheckCircle2 size={18} />, color: '#22c55e' },
+            { label: 'Transactions', value: String(inRange.length), icon: <Receipt size={18} />, color: '#2d7dd2' },
+            { label: 'Closing Balance', value: fmt(closing), icon: <Landmark size={18} />, color: '#1a1f3c' },
+          ].map(({ label, value, icon, color }) => <StatCard key={label} label={label} value={value} icon={icon} color={color} />)}
+        </StatGrid>
+
+        {/* Ledger */}
+        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+            <thead>
+              <tr style={{ background: '#f9fafb', borderBottom: '1px solid #f0f0f0' }}>
+                {['Date', 'Reference', 'Description', 'Mode', 'Credit', 'Balance', ''].map((h, i) => (
+                  <th key={h} style={{ padding: '11px 14px', textAlign: i >= 4 && i < 6 ? 'right' : 'left', color: '#9ca3af', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {ledger.length === 0 ? (
+                <tr><td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: '#9ca3af' }}>No transactions in this period.</td></tr>
+              ) : ledger.map((t, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid #f9fafb' }}>
+                  <td style={{ padding: '11px 14px', whiteSpace: 'nowrap', color: '#6b7280' }}>{fmtDate(t.date)}</td>
+                  <td style={{ padding: '11px 14px', color: '#9ca3af', fontSize: '12px' }}>{t.ref || '—'}</td>
+                  <td style={{ padding: '11px 14px' }}><div style={{ fontWeight: 600, color: '#1d1d1f' }}>{t.desc}</div><div style={{ fontSize: '11px', color: '#9ca3af' }}>{t.party}</div></td>
+                  <td style={{ padding: '11px 14px', color: '#6b7280' }}>{t.method}</td>
+                  <td style={{ padding: '11px 14px', textAlign: 'right', fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap' }}>{fmt(t.credit)}</td>
+                  <td style={{ padding: '11px 14px', textAlign: 'right', fontWeight: 600, color: '#1d1d1f', whiteSpace: 'nowrap' }}>{fmt(t.balance)}</td>
+                  <td style={{ padding: '11px 14px', textAlign: 'right' }}>
+                    {t.payment && <button onClick={() => openReceipt(t.payment!)} style={{ padding: '5px 10px', background: '#eff6ff', color: '#2d7dd2', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>Receipt</button>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
+  // ══════════════════════════════════════════════════════════════════
   // INVOICES TAB
   // ══════════════════════════════════════════════════════════════════
   if (tab === 'invoices') {
@@ -414,6 +576,12 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
                     <button onClick={() => { setPayingInv(inv); setPf({ ...emptyPF, amount: String(inv.amount) }) }}
                       style={{ padding: '4px 10px', background: '#f0fdf4', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '11px', color: '#22c55e', fontWeight: '700' }}>
                       Pay
+                    </button>
+                  )}
+                  {inv.status === 'Paid' && (
+                    <button onClick={() => openInvoiceReceipt(inv)}
+                      style={{ padding: '4px 10px', background: '#eff6ff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '11px', color: '#2d7dd2', fontWeight: '700' }}>
+                      Receipt
                     </button>
                   )}
                   {inv.status === 'Pending' && (

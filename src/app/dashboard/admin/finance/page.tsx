@@ -19,6 +19,7 @@ export default async function FinancePage() {
     { data: enrollments },
     { data: colleges },
     { data: collegePayments },
+    { data: payments },
   ] = await Promise.all([
     supabase.from('invoices').select('*').order('created_at', { ascending: false }),
     supabase.from('fee_structures').select('*').order('created_at', { ascending: false }),
@@ -27,6 +28,7 @@ export default async function FinancePage() {
     supabase.from('student_batches').select('student_id, batch_id, batches(name, jlpt_level)').eq('status', 'Active'),
     supabase.from('colleges').select('id, name, category, payment_type, payment_amount, status').order('name'),
     supabase.from('college_payments').select('*').order('payment_date', { ascending: false }),
+    supabase.from('payments').select('id, invoice_id, student_id, amount, payment_method, payment_date, reference_number, notes').order('payment_date', { ascending: false }),
   ])
 
   // Map each student to their first active batch enrollment
@@ -54,6 +56,7 @@ export default async function FinancePage() {
           batches={batches || []}
           colleges={colleges || []}
           collegePayments={collegePayments || []}
+          payments={payments || []}
         />
       </main>
     </div>
