@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { School, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import LoginAtmosphere from './LoginAtmosphere'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -28,8 +29,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
-      <div style={{ width: '100%', maxWidth: '420px' }}>
+    <div style={{ position: 'relative', minHeight: '100vh', background: 'var(--navy)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
+      <LoginAtmosphere />
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '420px' }}>
 
         {/* Brand */}
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>

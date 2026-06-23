@@ -551,9 +551,17 @@ function LandingStyles() {
       .kc-bridge::before, .kc-bridge::after { content: ''; width: 16px; height: 1px; background: rgba(216,184,120,0.5); }
       .kc-romaji { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-soft); font-weight: 600; }
       .kc-tamil { font-family: var(--ta); font-weight: 600; font-size: 34px; line-height: 1; color: var(--gold-soft); }
+      .kc-footer { display: flex; flex-direction: column; align-items: center; gap: 14px; }
       .kc-caption { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-soft); margin: 0; }
       .kc-caption span:first-child { font-family: var(--ta); }
       .kc-caption span:last-child { font-family: var(--jp); }
+      .kc-sound { display: inline-flex; align-items: center; gap: 7px; font-family: inherit; font-size: 12px;
+        font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft);
+        background: transparent; border: 1px solid var(--line); border-radius: 99px; padding: 7px 15px;
+        cursor: pointer; transition: all 180ms ease; }
+      .kc-sound:hover { border-color: var(--gold); color: var(--gold); }
+      .kc-sound.on { background: var(--gold); border-color: var(--gold); color: #2a2410; }
+      .kc-sound svg { flex-shrink: 0; }
 
       /* Sections */
       .lp-section { padding: 96px 0; }
