@@ -30,8 +30,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Redirect authenticated users away from auth pages
-  if (user && (pathname === '/login' || pathname === '/register' || pathname === '/')) {
+  // Redirect authenticated users away from auth pages.
+  // NOTE: '/' is the public marketing website — keep it visible to everyone
+  // (logged-in users included), so it is intentionally NOT redirected here.
+  if (user && (pathname === '/login' || pathname === '/register')) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
