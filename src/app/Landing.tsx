@@ -473,7 +473,7 @@ function LandingStyles() {
       .lp-nav { position: sticky; top: 0; z-index: 50; background: rgba(246,241,231,0.82);
         backdrop-filter: saturate(160%) blur(12px); border-bottom: 1px solid var(--line); }
       .lp-nav-inner { display: flex; align-items: center; justify-content: space-between; height: 74px; }
-      .lp-brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+      .lp-brand { display: flex; align-items: center; gap: 18px; text-decoration: none; }
       .lp-logo { width: 44px; height: 44px; border-radius: 8px; background: var(--red); color: #fff;
         font-family: var(--jp); font-weight: 700; font-size: 24px; display: flex; align-items: center;
         justify-content: center; box-shadow: 0 6px 16px rgba(226,65,56,0.3); flex-shrink: 0; }
