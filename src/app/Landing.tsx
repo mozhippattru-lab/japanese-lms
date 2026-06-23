@@ -477,9 +477,9 @@ function LandingStyles() {
       .lp-logo { width: 44px; height: 44px; border-radius: 8px; background: var(--red); color: #fff;
         font-family: var(--jp); font-weight: 700; font-size: 24px; display: flex; align-items: center;
         justify-content: center; box-shadow: 0 6px 16px rgba(226,65,56,0.3); flex-shrink: 0; }
-      .lp-brand-text { display: flex; flex-direction: column; line-height: 1.18; }
-      .lp-brand-ta { font-family: var(--ta); font-weight: 600; font-size: 19px; color: var(--ink); }
-      .lp-brand-en { font-size: 10.5px; color: var(--ink-soft); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+      .lp-brand-text { display: flex; flex-direction: column; gap: 3px; }
+      .lp-brand-ta { font-family: var(--ta); font-weight: 600; font-size: 19px; color: var(--ink); line-height: 1.45; }
+      .lp-brand-en { font-size: 10.5px; color: var(--ink-soft); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; line-height: 1.2; }
       .lp-links { display: flex; align-items: center; gap: 30px; }
       .lp-links > a { text-decoration: none; color: var(--ink); font-size: 14px; font-weight: 500; position: relative; }
       .lp-links > a:not(.lp-btn):not(.lp-nav-login)::after { content: ''; position: absolute; left: 0; bottom: -6px;
