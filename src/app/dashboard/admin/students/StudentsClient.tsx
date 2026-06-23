@@ -2,10 +2,12 @@
 import { useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { Search, Plus, Eye, Pencil, Trash2, X, CheckCircle, AlertCircle, ChevronDown, ChevronUp, Eye as EyeIcon, EyeOff, GraduationCap } from 'lucide-react'
+import { Search, Plus, Pencil, Trash2, X, CheckCircle, AlertCircle, ChevronDown, ChevronUp, Eye as EyeIcon, EyeOff, GraduationCap } from 'lucide-react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
 import DataToolbar from '@/components/DataToolbar'
+import Avatar from '@/components/Avatar'
+import StatCard, { StatGrid } from '@/components/StatCard'
 
 type Student = {
   id: string
@@ -17,6 +19,7 @@ type Student = {
   jlpt_level?: string | null
   batch?: string | null
   status?: string | null
+  avatar_url?: string | null
 }
 
 type Invoice = {
@@ -262,53 +265,22 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
       </div>
 
       {/* Level stats */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: '14px', marginBottom: '22px',
-      }}>
+      <StatGrid>
         {LEVELS.map(l => {
           const count = students.filter(s => s.jlpt_level === l).length
-          const active = filterLevel === l
           return (
-            <button
+            <StatCard
               key={l}
-              onClick={() => setFilterLevel(active ? '' : l)}
-              style={{
-                textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '14px',
-                padding: '18px', borderRadius: '14px', cursor: 'pointer', fontFamily: 'inherit',
-                background: '#fff',
-                border: `1px solid ${active ? levelColor[l] : '#ececef'}`,
-                boxShadow: active ? `0 6px 20px ${levelColor[l]}1f` : '0 1px 2px rgba(0,0,0,0.04)',
-                transition: 'all 200ms cubic-bezier(0.4,0,0.2,1)',
-              }}
-              onMouseEnter={e => {
-                if (active) return
-                e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.08)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
-              }}
-              onMouseLeave={e => {
-                if (active) return
-                e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04)'
-                e.currentTarget.style.transform = 'none'
-              }}
-            >
-              {/* icon tile */}
-              <div style={{
-                width: '40px', height: '40px', borderRadius: '11px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: levelColor[l] + '14', color: levelColor[l],
-              }}>
-                <GraduationCap size={20} strokeWidth={2.2} />
-              </div>
-              {/* number + label */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                <span style={{ fontSize: '28px', fontWeight: '700', color: '#1d1d1f', lineHeight: 1, letterSpacing: '-0.025em' }}>{count}</span>
-                <span style={{ fontSize: '12px', fontWeight: '500', color: '#86868b' }}>{l} students</span>
-              </div>
-            </button>
+              label={`${l} students`}
+              value={count}
+              icon={<GraduationCap size={18} strokeWidth={2.2} />}
+              color={levelColor[l]}
+              active={filterLevel === l}
+              onClick={() => setFilterLevel(filterLevel === l ? '' : l)}
+            />
           )
         })}
-      </div>
+      </StatGrid>
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '18px', flexWrap: 'wrap' }}>
@@ -360,16 +332,9 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
                 <td style={{ padding: '13px 16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{
-                      width: '34px', height: '34px', borderRadius: '50%', flexShrink: 0,
-                      background: levelColor[s.jlpt_level || 'N5'] || 'var(--red)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: '#fff', fontWeight: '700', fontSize: '13px',
-                    }}>
-                      {(s.full_name || s.email || '?').charAt(0).toUpperCase()}
-                    </div>
-                    <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{s.full_name || '—'}</span>
+                  <div onClick={() => openView(s)} title="View profile" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                    <Avatar url={s.avatar_url} name={s.full_name || s.email} size={34} bg={levelColor[s.jlpt_level || 'N5'] || 'var(--red)'} />
+                    <span className="row-name" style={{ fontWeight: '600', color: 'var(--navy)' }}>{s.full_name || '—'}</span>
                   </div>
                 </td>
                 <td style={{ padding: '13px 16px', color: '#6b7280' }}>{s.email || '—'}</td>
@@ -386,7 +351,6 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
                 </td>
                 <td style={{ padding: '13px 16px' }}>
                   <div style={{ display: 'flex', gap: '5px' }}>
-                    <ActionBtn onClick={() => openView(s)} color="#6b7280"><Eye size={13} />View</ActionBtn>
                     <ActionBtn onClick={() => openEdit(s)} color="#2d7dd2"><Pencil size={13} />Edit</ActionBtn>
                     <ActionBtn onClick={() => handleDelete(s.id)} color="#e84040"><Trash2 size={13} /></ActionBtn>
                   </div>
@@ -451,13 +415,8 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
       {viewStudent && (
         <Modal title="Student Profile" onClose={() => setViewStudent(null)}>
           <div style={{ textAlign: 'center', marginBottom: '22px' }}>
-            <div style={{
-              width: '68px', height: '68px', borderRadius: '50%', margin: '0 auto 12px',
-              background: levelColor[viewStudent.jlpt_level || 'N5'] || 'var(--red)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontWeight: '800', fontSize: '26px',
-            }}>
-              {(viewStudent.full_name || viewStudent.email || '?').charAt(0).toUpperCase()}
+            <div style={{ margin: '0 auto 12px', width: '68px' }}>
+              <Avatar url={viewStudent.avatar_url} name={viewStudent.full_name || viewStudent.email} size={68} bg={levelColor[viewStudent.jlpt_level || 'N5'] || 'var(--red)'} fontSize={26} />
             </div>
             <h3 style={{ fontSize: '17px', fontWeight: '700', color: 'var(--navy)', margin: '0 0 4px' }}>{viewStudent.full_name || 'Unknown'}</h3>
             <p style={{ color: '#9ca3af', fontSize: '13px', margin: 0 }}>{viewStudent.email}</p>
@@ -529,6 +488,9 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
       {editStudent && (
         <Modal title="Edit Student" onClose={() => setEditStudent(null)}>
           <form onSubmit={handleUpdate}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
+              <Avatar url={editStudent.avatar_url} name={editStudent.full_name || editStudent.email} size={64} bg={levelColor[editStudent.jlpt_level || 'N5'] || 'var(--red)'} fontSize={26} />
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <Field label="Full Name" required>
                 <input className="input-field" value={editStudent.full_name || ''} onChange={e => setEditStudent(s => s ? { ...s, full_name: e.target.value } : s)} />

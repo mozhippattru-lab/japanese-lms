@@ -282,6 +282,10 @@ body {
   border-radius: 99px;
 }
 
+/* Clickable row names (open profile on click) */
+.row-name { transition: color 120ms; }
+.row-name:hover { text-decoration: underline; text-underline-offset: 2px; color: var(--red); }
+
 /* ─── Selects: custom chevron with breathing room ─── */
 select {
   -webkit-appearance: none;
@@ -292,6 +296,57 @@ select {
   background-position: right 12px center !important;
   background-size: 15px !important;
   padding-right: 36px !important;
+}
+
+/* ─── Responsive layout shell (mobile drawer) ─────────────── */
+.sidebar-toggle, .sidebar-close { display: none; }
+.sidebar-overlay { display: none; }
+
+@media (max-width: 900px) {
+  /* Sidebar slides off-canvas, opens as a drawer */
+  .app-sidebar {
+    transform: translateX(-100%);
+    transition: transform 240ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 6px 0 30px rgba(0, 0, 0, 0.25);
+  }
+  .app-sidebar.open { transform: translateX(0); }
+
+  /* Hamburger button, fixed top-left */
+  .sidebar-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    position: fixed; top: 12px; left: 12px; z-index: 40;
+    width: 42px; height: 42px; border-radius: 11px;
+    background: var(--navy); color: #fff; border: none; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  }
+  .sidebar-close {
+    display: inline-flex; align-items: center; justify-content: center;
+    position: absolute; top: 12px; right: 12px;
+    width: 34px; height: 34px; border-radius: 9px;
+    background: rgba(255, 255, 255, 0.08); color: #fff; border: none; cursor: pointer;
+  }
+  .sidebar-overlay.show {
+    display: block; position: fixed; inset: 0; z-index: 55;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  /* Content goes full-width; leave room for the hamburger */
+  .app-sidebar ~ main {
+    margin-left: 0 !important;
+    padding: 62px 16px 24px !important;
+  }
+
+  /* Tables stay readable by scrolling horizontally instead of squishing.
+     Force the table's wrapper to scroll (overrides inline overflow:hidden). */
+  *:has(> table) { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+  table { min-width: 560px; }
+}
+
+/* On phones, collapse wide fixed stat grids to 2 columns.
+   (auto-fit/minmax grids already reflow on their own and are unaffected.) */
+@media (max-width: 640px) {
+  main [style*="repeat(4,"],
+  main [style*="repeat(3,"] { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
 /* ─── Reduce motion ─────────────────────── */

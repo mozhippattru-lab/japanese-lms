@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 
 import DataToolbar from '@/components/DataToolbar'
+import StatCard, { StatGrid } from '@/components/StatCard'
 
 type Tab = 'overview' | 'invoices' | 'fees' | 'colleges'
 
@@ -291,22 +292,16 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
         {pageHeader}
         <TabBar tab={tab} setTab={setTab} />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' }}>
+        <StatGrid>
           {[
-            { label: 'Total Collected', value: fmt(totalCollected), icon: <CheckCircle2 size={16} />, color: '#22c55e' },
-            { label: 'Pending', value: fmt(totalPending), icon: <Clock size={16} />, color: '#f59e0b' },
-            { label: 'Overdue', value: fmt(totalOverdue), icon: <AlertTriangle size={16} />, color: '#e84040' },
-            { label: 'Total Invoices', value: String(invoices.length), icon: <Receipt size={16} />, color: '#2d7dd2' },
+            { label: 'Total Collected', value: fmt(totalCollected), icon: <CheckCircle2 size={18} />, color: '#22c55e' },
+            { label: 'Pending', value: fmt(totalPending), icon: <Clock size={18} />, color: '#f59e0b' },
+            { label: 'Overdue', value: fmt(totalOverdue), icon: <AlertTriangle size={18} />, color: '#e84040' },
+            { label: 'Total Invoices', value: String(invoices.length), icon: <Receipt size={18} />, color: '#2d7dd2' },
           ].map(({ label, value, icon, color }) => (
-            <div key={label} style={{ background: '#fff', borderRadius: '10px', padding: '16px', border: '1px solid #ececef', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '12px', color: '#6e6e73', fontWeight: '500' }}>{label}</span>
-                <span style={{ color, display: 'flex', alignItems: 'center' }}>{icon}</span>
-              </div>
-              <div style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', lineHeight: 1, letterSpacing: '-0.02em' }}>{value}</div>
-            </div>
+            <StatCard key={label} label={label} value={value} icon={icon} color={color} />
           ))}
-        </div>
+        </StatGrid>
 
         <div style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', border: '1px solid #ececef' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 20px', borderBottom: '1px solid #f3f4f6' }}>
@@ -599,22 +594,16 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
         {pageHeader}
         <TabBar tab={tab} setTab={setTab} />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' }}>
+        <StatGrid>
           {[
-            { label: 'Contract Revenue', value: fmt(collegeCollected), icon: <Wallet size={16} />, color: '#22c55e' },
-            { label: 'This Month', value: fmt(thisMonthTotal), icon: <CheckCircle2 size={16} />, color: '#2d7dd2' },
-            { label: 'Colleges', value: String(colleges.length), icon: <Building2 size={16} />, color: '#8b5cf6' },
-            { label: 'Payments Logged', value: String(collegePayments.length), icon: <Receipt size={16} />, color: '#f59e0b' },
+            { label: 'Contract Revenue', value: fmt(collegeCollected), icon: <Wallet size={18} />, color: '#22c55e' },
+            { label: 'This Month', value: fmt(thisMonthTotal), icon: <CheckCircle2 size={18} />, color: '#2d7dd2' },
+            { label: 'Colleges', value: String(colleges.length), icon: <Building2 size={18} />, color: '#8b5cf6' },
+            { label: 'Payments Logged', value: String(collegePayments.length), icon: <Receipt size={18} />, color: '#f59e0b' },
           ].map(({ label, value, icon, color }) => (
-            <div key={label} style={{ background: '#fff', borderRadius: '10px', padding: '16px', border: '1px solid #ececef', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '12px', color: '#6e6e73', fontWeight: '500' }}>{label}</span>
-                <span style={{ color, display: 'flex' }}>{icon}</span>
-              </div>
-              <div style={{ fontSize: '20px', fontWeight: '700', color: '#1d1d1f', lineHeight: 1, letterSpacing: '-0.02em' }}>{value}</div>
-            </div>
+            <StatCard key={label} label={label} value={value} icon={icon} color={color} />
           ))}
-        </div>
+        </StatGrid>
 
         <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', overflow: 'hidden', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>

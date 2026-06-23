@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
+import StatCard, { StatGrid } from '@/components/StatCard'
 
 type Batch = { id: string; name: string; jlpt_level: string; enrolled: number }
 type Assignment = {
@@ -141,22 +142,16 @@ export default function TeacherAssignmentsClient({
       )}
 
       {/* KPI cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '20px' }}>
+      <StatGrid>
         {[
           { label: 'Total', value: stats.total, icon: <ClipboardList size={18} />, color: '#2d7dd2' },
           { label: 'Published', value: stats.published, icon: <CheckCircle2 size={18} />, color: '#22c55e' },
           { label: 'Submissions', value: stats.submissions, icon: <FileText size={18} />, color: '#8b5cf6' },
           { label: 'To grade', value: stats.toGrade, icon: <Clock size={18} />, color: '#e84040' },
         ].map(s => (
-          <div key={s.label} style={{ background: '#fff', border: '1px solid #ececef', borderRadius: '12px', padding: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: s.color, marginBottom: '8px' }}>
-              <div style={{ width: '34px', height: '34px', borderRadius: '9px', background: `${s.color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{s.icon}</div>
-            </div>
-            <div style={{ fontSize: '28px', fontWeight: 700, color: '#1d1d1f', lineHeight: 1 }}>{s.value}</div>
-            <div style={{ fontSize: '12px', color: '#6e6e73', marginTop: '4px' }}>{s.label}</div>
-          </div>
+          <StatCard key={s.label} label={s.label} value={s.value} icon={s.icon} color={s.color} />
         ))}
-      </div>
+      </StatGrid>
 
       {/* Type filter */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>

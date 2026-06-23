@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { ClipboardCheck, CheckCircle2, Clock, FileText, User } from 'lucide-react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
+import StatCard, { StatGrid } from '@/components/StatCard'
 
 type Submission = {
   id: string; assignment_id: string; assignment_title: string; assignment_type: string
@@ -72,19 +73,15 @@ export default function TeacherGradingClient({
       </div>
 
       {/* KPI */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '20px' }}>
+      <StatGrid>
         {[
           { label: 'Awaiting grade', value: pending.length, icon: <Clock size={18} />, color: '#e84040' },
           { label: 'Graded', value: graded.length, icon: <CheckCircle2 size={18} />, color: '#22c55e' },
           { label: 'Total submissions', value: subs.length, icon: <FileText size={18} />, color: '#2d7dd2' },
         ].map(s => (
-          <div key={s.label} style={{ background: '#fff', border: '1px solid #ececef', borderRadius: '12px', padding: '16px' }}>
-            <div style={{ width: '34px', height: '34px', borderRadius: '9px', background: `${s.color}14`, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}>{s.icon}</div>
-            <div style={{ fontSize: '28px', fontWeight: 700, color: '#1d1d1f', lineHeight: 1 }}>{s.value}</div>
-            <div style={{ fontSize: '12px', color: '#6e6e73', marginTop: '4px' }}>{s.label}</div>
-          </div>
+          <StatCard key={s.label} label={s.label} value={s.value} icon={s.icon} color={s.color} />
         ))}
-      </div>
+      </StatGrid>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>

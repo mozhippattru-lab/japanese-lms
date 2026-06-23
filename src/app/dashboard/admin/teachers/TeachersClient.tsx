@@ -1,9 +1,11 @@
 'use client'
 import { useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Search, Plus, Eye, Pencil, Trash2, X, AlertCircle, Eye as EyeIcon, EyeOff } from 'lucide-react'
+import { Search, Plus, Pencil, Trash2, X, AlertCircle, Eye as EyeIcon, EyeOff, Users, UserCheck, Clock, GraduationCap } from 'lucide-react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
+import Avatar from '@/components/Avatar'
+import StatCard, { StatGrid } from '@/components/StatCard'
 
 type Teacher = {
   id: string
@@ -14,11 +16,51 @@ type Teacher = {
   jlpt_level?: string | null
   status?: string | null
   created_at: string
+  avatar_url?: string | null
 }
 
 type Batch = {
   id: string; name: string; jlpt_level: string
   time_slot: string | null; status: string; enrolled: number; capacity: number
+  days: string | null
+}
+
+// ── Weekly-availability helpers ────────────────────────────────────────
+const WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const DAY_WINDOW: [number, number] = [9 * 60, 19 * 60] // working hours 9:00 AM – 7:00 PM
+const OCCUPYING_STATUS = ['Active', 'Upcoming']
+function tMin(t?: string | null): number | null {
+  if (!t) return null
+  const m = t.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
+  if (!m) return null
+  let h = parseInt(m[1], 10) % 12
+  if (/pm/i.test(m[3])) h += 12
+  return h * 60 + parseInt(m[2], 10)
+}
+function slotRange(slot?: string | null): [number, number] | null {
+  if (!slot) return null
+  const p = slot.split(/[–-]/).map(s => s.trim()).filter(Boolean)
+  if (p.length !== 2) return null
+  const a = tMin(p[0]), b = tMin(p[1])
+  return a != null && b != null ? [a, b] : null
+}
+function minLabel(m: number): string {
+  const h24 = Math.floor(m / 60), mm = m % 60
+  const ap = h24 >= 12 ? 'PM' : 'AM'
+  const h = h24 % 12 === 0 ? 12 : h24 % 12
+  return `${h}:${String(mm).padStart(2, '0')} ${ap}`
+}
+function freeGaps(busy: [number, number][]): [number, number][] {
+  const sorted = [...busy].sort((a, b) => a[0] - b[0])
+  const gaps: [number, number][] = []
+  let cursor = DAY_WINDOW[0]
+  for (const [s, e] of sorted) {
+    if (s > cursor) gaps.push([cursor, Math.min(s, DAY_WINDOW[1])])
+    cursor = Math.max(cursor, e)
+    if (cursor >= DAY_WINDOW[1]) break
+  }
+  if (cursor < DAY_WINDOW[1]) gaps.push([cursor, DAY_WINDOW[1]])
+  return gaps.filter(([s, e]) => e > s)
 }
 
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1']
@@ -134,7 +176,7 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
   async function openView(t: Teacher) {
     setViewTeacher(t); setTeacherBatches([]); setBatchesLoading(true)
     const supabase = createClient()
-    const { data } = await supabase.from('batches').select('id, name, jlpt_level, time_slot, status, enrolled, capacity').eq('teacher_id', t.id).order('created_at', { ascending: false })
+    const { data } = await supabase.from('batches').select('id, name, jlpt_level, time_slot, status, enrolled, capacity, days').eq('teacher_id', t.id).order('created_at', { ascending: false })
     setTeacherBatches(data || []); setBatchesLoading(false)
   }
 
@@ -190,31 +232,23 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
         <Btn variant="primary" onClick={() => setShowAdd(true)}><Plus size={16} /> Add Teacher</Btn>
       </div>
 
-      {/* Stats */}
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
-        <div style={{ background: '#fff', borderRadius: '12px', padding: '14px 20px', display: 'flex', gap: '22px', border: '1px solid #ececef', flexWrap: 'wrap' }}>
-          {[{ label: 'Total', value: teachers.length, color: 'var(--navy)' }, { label: 'Active', value: totalActive, color: '#22c55e' }, { label: 'On Leave', value: onLeave, color: '#f59e0b' }].map(({ label, value, color }, i, arr) => (
-            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: i < arr.length - 1 ? '22px' : '0' }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '20px', fontWeight: '700', color, letterSpacing: '-0.02em' }}>{value}</div>
-                <div style={{ fontSize: '11px', color: '#9ca3af', fontWeight: '500' }}>{label}</div>
-              </div>
-              {i < arr.length - 1 && <div style={{ width: '1px', height: '36px', background: '#f3f4f6' }} />}
-            </div>
-          ))}
-        </div>
-        {LEVELS.map(l => {
-          const count = teachers.filter(t => t.jlpt_level === l).length
-          if (count === 0) return null
-          return (
-            <div key={l} style={{ background: '#fff', borderRadius: '12px', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid #ececef' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: levelColor[l] }} />
-              <span style={{ fontSize: '13px', fontWeight: '700', color: levelColor[l] }}>{l}</span>
-              <span style={{ fontSize: '13px', color: '#6b7280' }}>{count}</span>
-            </div>
-          )
-        })}
-      </div>
+      {/* Stats — summary + level breakdown (standard cards) */}
+      <StatGrid>
+        <StatCard label="Total teachers" value={teachers.length} color="#1a1f3c" icon={<Users size={18} strokeWidth={2.2} />} />
+        <StatCard label="Active" value={totalActive} color="#22c55e" icon={<UserCheck size={18} strokeWidth={2.2} />} />
+        <StatCard label="On leave" value={onLeave} color="#f59e0b" icon={<Clock size={18} strokeWidth={2.2} />} />
+        {LEVELS.map(l => (
+          <StatCard
+            key={l}
+            label={`${l} teachers`}
+            value={teachers.filter(t => t.jlpt_level === l).length}
+            icon={<GraduationCap size={18} strokeWidth={2.2} />}
+            color={levelColor[l]}
+            active={filterLevel === l}
+            onClick={() => setFilterLevel(filterLevel === l ? '' : l)}
+          />
+        ))}
+      </StatGrid>
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '18px', flexWrap: 'wrap' }}>
@@ -222,10 +256,6 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
           <Search size={15} style={{ position: 'absolute', left: '13px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', pointerEvents: 'none' }} />
           <input className="input-field" placeholder="Search name, email, phone…" value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: '38px' }} />
         </div>
-        <select value={filterLevel} onChange={e => setFilterLevel(e.target.value)} style={{ ...selectStyle, width: '140px', flex: 'none' }}>
-          <option value="">All Levels</option>
-          {LEVELS.map(l => <option key={l}>{l}</option>)}
-        </select>
         <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ ...selectStyle, width: '140px', flex: 'none' }}>
           <option value="">All Status</option>
           {STATUS_OPTIONS.map(s => <option key={s}>{s}</option>)}
@@ -255,11 +285,9 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                 <td style={{ padding: '13px 16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0, background: levelColor[t.jlpt_level || 'N3'] || '#2d7dd2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '700', fontSize: '14px' }}>
-                      {(t.full_name || t.email || '?').charAt(0).toUpperCase()}
-                    </div>
-                    <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{t.full_name || '—'}</span>
+                  <div onClick={() => openView(t)} title="View profile" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                    <Avatar url={t.avatar_url} name={t.full_name || t.email} size={36} bg={levelColor[t.jlpt_level || 'N3'] || '#2d7dd2'} />
+                    <span className="row-name" style={{ fontWeight: '600', color: 'var(--navy)' }}>{t.full_name || '—'}</span>
                   </div>
                 </td>
                 <td style={{ padding: '13px 16px', color: '#6b7280' }}>{t.email || '—'}</td>
@@ -275,7 +303,6 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
                 </td>
                 <td style={{ padding: '13px 16px' }}>
                   <div style={{ display: 'flex', gap: '5px' }}>
-                    <ActionBtn onClick={() => openView(t)} color="#6b7280"><Eye size={13} />View</ActionBtn>
                     <ActionBtn onClick={() => openEdit(t)} color="#2d7dd2"><Pencil size={13} />Edit</ActionBtn>
                     <ActionBtn onClick={() => handleDeactivate(t.id)} color="#e84040"><Trash2 size={13} /></ActionBtn>
                   </div>
@@ -328,8 +355,8 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
       {viewTeacher && (
         <Modal title="Teacher Profile" onClose={() => setViewTeacher(null)}>
           <div style={{ textAlign: 'center', marginBottom: '22px' }}>
-            <div style={{ width: '68px', height: '68px', borderRadius: '50%', margin: '0 auto 12px', background: levelColor[viewTeacher.jlpt_level || 'N3'] || '#2d7dd2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '800', fontSize: '26px' }}>
-              {(viewTeacher.full_name || viewTeacher.email || '?').charAt(0).toUpperCase()}
+            <div style={{ margin: '0 auto 12px', width: '68px' }}>
+              <Avatar url={viewTeacher.avatar_url} name={viewTeacher.full_name || viewTeacher.email} size={68} bg={levelColor[viewTeacher.jlpt_level || 'N3'] || '#2d7dd2'} fontSize={26} />
             </div>
             <h3 style={{ fontSize: '17px', fontWeight: '700', color: 'var(--navy)', margin: '0 0 4px' }}>{viewTeacher.full_name || 'Unknown'}</h3>
             <p style={{ color: '#9ca3af', fontSize: '13px', margin: '0 0 6px' }}>{viewTeacher.email}</p>
@@ -358,16 +385,87 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
                       <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--navy)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.name}</div>
                       <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '1px' }}>{b.time_slot || 'No timing set'}</div>
                     </div>
-                    <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
-                      <span className="badge" style={{ background: levelColor[b.jlpt_level] + '18', color: levelColor[b.jlpt_level] }}>{b.jlpt_level}</span>
-                      <span style={{ fontSize: '11px', color: '#9ca3af' }}>{b.enrolled}/{b.capacity}</span>
-                      <span className="badge" style={{ background: (batchStatusColor[b.status] || '#9ca3af') + '18', color: batchStatusColor[b.status] || '#9ca3af' }}>{b.status}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px', flexShrink: 0 }}>
+                      <span style={{ fontSize: '11px', fontWeight: 600, color: '#9ca3af', whiteSpace: 'nowrap' }}>{b.enrolled}/{b.capacity}</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, lineHeight: 1, padding: '3px 8px', borderRadius: '20px', background: levelColor[b.jlpt_level] + '18', color: levelColor[b.jlpt_level] }}>{b.jlpt_level}</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, lineHeight: 1, padding: '3px 8px', borderRadius: '20px', background: (batchStatusColor[b.status] || '#9ca3af') + '18', color: batchStatusColor[b.status] || '#9ca3af' }}>{b.status}</span>
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
+
+          {/* Total working hours */}
+          {!batchesLoading && teacherBatches.length > 0 && (() => {
+            const occ = teacherBatches.filter(b => OCCUPYING_STATUS.includes(b.status))
+            let weekMin = 0, sessions = 0
+            for (const b of occ) {
+              const r = slotRange(b.time_slot)
+              const nDays = new Set((b.days || '').split(',').map(x => x.trim()).filter(Boolean)).size
+              if (r && r[1] > r[0]) { weekMin += (r[1] - r[0]) * nDays; sessions += nDays }
+            }
+            const hrs = weekMin / 60
+            const stats = [
+              { label: 'Weekly hours', value: `${hrs % 1 === 0 ? hrs : hrs.toFixed(1)} hrs`, color: '#e84040' },
+              { label: 'Sessions / week', value: sessions, color: '#2d7dd2' },
+              { label: 'Active batches', value: occ.length, color: '#22c55e' },
+            ]
+            return (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '16px' }}>
+                {stats.map(s => (
+                  <div key={s.label} style={{ background: '#f9fafb', border: '1px solid #f0f0f2', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '19px', fontWeight: 800, color: s.color, lineHeight: 1.1 }}>{s.value}</div>
+                    <div style={{ fontSize: '10.5px', fontWeight: 600, color: '#9ca3af', marginTop: '3px' }}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
+
+          {/* Weekly availability */}
+          {!batchesLoading && (
+            <div style={{ borderTop: '1px solid #f3f4f6', paddingTop: '16px', marginBottom: '16px' }}>
+              <div style={{ fontSize: '12px', fontWeight: '700', color: '#374151', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Weekly Availability</div>
+              <div style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '10px' }}>Working hours 9:00 AM – 7:00 PM · only active &amp; upcoming batches count</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+                {WEEK.map(day => {
+                  const booked = teacherBatches
+                    .filter(b => OCCUPYING_STATUS.includes(b.status) && new Set((b.days || '').split(',').map(x => x.trim())).has(day))
+                    .map(b => ({ b, r: slotRange(b.time_slot) }))
+                    .filter((x): x is { b: Batch; r: [number, number] } => x.r != null)
+                    .sort((a, z) => a.r[0] - z.r[0])
+                  const gaps = freeGaps(booked.map(x => x.r))
+                  const fullyFree = booked.length === 0
+                  return (
+                    <div key={day} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                      <div style={{ width: '38px', flexShrink: 0, fontSize: '12px', fontWeight: 700, color: '#6b7280', paddingTop: '4px' }}>{day}</div>
+                      <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                        {fullyFree ? (
+                          <span style={{ fontSize: '11px', fontWeight: 600, padding: '3px 9px', borderRadius: '7px', background: '#f0fdf4', color: '#16a34a' }}>Free all day</span>
+                        ) : (
+                          <>
+                            {booked.map(({ b, r }) => (
+                              <span key={b.id} title={b.name} style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, padding: '3px 9px', borderRadius: '7px', background: 'rgba(26,31,60,0.07)', color: 'var(--navy)', border: '1px solid rgba(26,31,60,0.1)' }}>
+                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: levelColor[b.jlpt_level] || '#9ca3af', flexShrink: 0 }} />
+                                {minLabel(r[0])}–{minLabel(r[1])} · {b.name}
+                              </span>
+                            ))}
+                            {gaps.map(([s, e], i) => (
+                              <span key={`g${i}`} style={{ fontSize: '11px', fontWeight: 600, padding: '3px 9px', borderRadius: '7px', background: '#f0fdf4', color: '#16a34a' }}>
+                                Free {minLabel(s)}–{minLabel(e)}
+                              </span>
+                            ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
           <Btn variant="primary" style={{ width: '100%' }} onClick={() => openEdit(viewTeacher)}><Pencil size={15} /> Edit Teacher</Btn>
         </Modal>
       )}
@@ -376,6 +474,9 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
       {editTeacher && (
         <Modal title="Edit Teacher" onClose={() => setEditTeacher(null)}>
           <form onSubmit={handleUpdate}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
+              <Avatar url={editTeacher.avatar_url} name={editTeacher.full_name || editTeacher.email} size={64} bg={levelColor[editTeacher.jlpt_level || 'N3'] || '#2d7dd2'} fontSize={26} />
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <Field label="Full Name" required><input style={inputStyle} value={editTeacher.full_name || ''} onChange={e => setEditTeacher(t => t ? { ...t, full_name: e.target.value } : t)} /></Field>
               <Field label="Phone"><input style={inputStyle} value={editTeacher.phone || ''} onChange={e => setEditTeacher(t => t ? { ...t, phone: e.target.value } : t)} /></Field>

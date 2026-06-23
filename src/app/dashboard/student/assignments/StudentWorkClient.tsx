@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
+import StatCard, { StatGrid } from '@/components/StatCard'
 import type { StudentWorkItem } from './load'
 
 const LEVEL_COLORS: Record<string, string> = {
@@ -85,20 +86,16 @@ export default function StudentWorkClient({
       </div>
 
       {/* KPI */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '20px' }}>
+      <StatGrid>
         {[
           { label: 'To do', value: stats.pending, icon: <Clock size={18} />, color: '#e84040' },
           { label: 'Submitted', value: stats.submitted, icon: <Upload size={18} />, color: '#2d7dd2' },
           { label: 'Graded', value: stats.graded, icon: <CheckCircle2 size={18} />, color: '#22c55e' },
           { label: 'Average', value: stats.avg != null ? `${stats.avg}%` : '—', icon: <Award size={18} />, color: '#8b5cf6' },
         ].map(s => (
-          <div key={s.label} style={{ background: '#fff', border: '1px solid #ececef', borderRadius: '12px', padding: '16px' }}>
-            <div style={{ width: '34px', height: '34px', borderRadius: '9px', background: `${s.color}14`, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}>{s.icon}</div>
-            <div style={{ fontSize: '28px', fontWeight: 700, color: '#1d1d1f', lineHeight: 1 }}>{s.value}</div>
-            <div style={{ fontSize: '12px', color: '#6e6e73', marginTop: '4px' }}>{s.label}</div>
-          </div>
+          <StatCard key={s.label} label={s.label} value={s.value} icon={s.icon} color={s.color} />
         ))}
-      </div>
+      </StatGrid>
 
       {items.length === 0 ? (
         <div style={{ background: '#fff', border: '1px solid #ececef', borderRadius: '12px', padding: '48px', textAlign: 'center', color: '#9ca3af' }}>

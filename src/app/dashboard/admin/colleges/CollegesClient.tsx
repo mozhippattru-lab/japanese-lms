@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
+import StatCard, { StatGrid } from '@/components/StatCard'
 
 type College = {
   id: string; name: string; category: string | null; city: string | null
@@ -177,23 +178,16 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
       </div>
 
       {/* KPI cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' }}>
+      <StatGrid>
         {[
-          { label: 'Total Colleges', value: String(colleges.length), sub: `${activeCount} active`, icon: <Building2 size={16} />, color: '#2d7dd2' },
-          { label: 'College Students', value: String(totalStudents), sub: 'enrolled via colleges', icon: <Users size={16} />, color: '#8b5cf6' },
-          { label: 'Contract Revenue', value: fmt(totalRevenue), sub: 'collected from colleges', icon: <Wallet size={16} />, color: '#22c55e' },
-          { label: 'College Batches', value: String(batches.length), sub: 'mode = College', icon: <FileText size={16} />, color: '#e84040' },
+          { label: 'Total Colleges', value: String(colleges.length), sub: `${activeCount} active`, icon: <Building2 size={18} />, color: '#2d7dd2' },
+          { label: 'College Students', value: String(totalStudents), icon: <Users size={18} />, color: '#8b5cf6' },
+          { label: 'Contract Revenue', value: fmt(totalRevenue), icon: <Wallet size={18} />, color: '#22c55e' },
+          { label: 'College Batches', value: String(batches.length), icon: <FileText size={18} />, color: '#e84040' },
         ].map(({ label, value, sub, icon, color }) => (
-          <div key={label} style={{ background: '#fff', borderRadius: '12px', padding: '18px', border: '1px solid #ececef', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '12px', color: '#6e6e73', fontWeight: 500 }}>{label}</span>
-              <span style={{ color, display: 'flex' }}>{icon}</span>
-            </div>
-            <div style={{ fontSize: '24px', fontWeight: 700, color: '#1d1d1f', lineHeight: 1, letterSpacing: '-0.02em' }}>{value}</div>
-            <div style={{ fontSize: '11px', color: '#9ca3af' }}>{sub}</div>
-          </div>
+          <StatCard key={label} label={label} value={value} sub={sub} icon={icon} color={color} />
         ))}
-      </div>
+      </StatGrid>
 
       {/* Category filter */}
       {usedCategories.length > 0 && (

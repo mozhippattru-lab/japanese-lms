@@ -1,4 +1,5 @@
 'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -6,7 +7,7 @@ import {
   LayoutDashboard, Users, GraduationCap, BookOpen, Calendar,
   ClipboardList, DollarSign, Target, BarChart2, Settings,
   Video, FileText, ClipboardCheck, TrendingUp, Award, MessageSquare,
-  LogOut, School,
+  LogOut, School, UserCircle, Menu, X,
 } from 'lucide-react'
 
 type NavItem = { label: string; href: string; icon: React.ReactNode }
@@ -21,6 +22,7 @@ const studentNav: NavItem[] = [
   { label: 'Progress',       href: '/dashboard/student/progress',     icon: <TrendingUp      size={16} /> },
   { label: 'Certificates',   href: '/dashboard/student/certificates', icon: <Award           size={16} /> },
   { label: 'Messages',       href: '/dashboard/student/messages',     icon: <MessageSquare   size={16} /> },
+  { label: 'My Profile',     href: '/dashboard/student/profile',      icon: <UserCircle      size={16} /> },
 ]
 
 const teacherNav: NavItem[] = [
@@ -32,6 +34,7 @@ const teacherNav: NavItem[] = [
   { label: 'Grading',         href: '/dashboard/teacher/grading',      icon: <ClipboardCheck  size={16} /> },
   { label: 'Content Library', href: '/dashboard/teacher/content',      icon: <BookOpen        size={16} /> },
   { label: 'Messages',        href: '/dashboard/teacher/messages',     icon: <MessageSquare   size={16} /> },
+  { label: 'My Profile',      href: '/dashboard/teacher/profile',      icon: <UserCircle      size={16} /> },
 ]
 
 const adminNav: NavItem[] = [
@@ -97,6 +100,10 @@ export default function Sidebar({ role, userName }: { role: string; userName: st
   const roleLabel      = role === 'admin' ? 'Admin' : role === 'teacher' ? 'Teacher' : 'Student'
   const roleBadgeColor = role === 'admin' ? '#8b5cf6' : role === 'teacher' ? '#2d7dd2' : '#22c55e'
 
+  const [open, setOpen] = useState(false)
+  // Close the mobile drawer whenever the route changes
+  useEffect(() => { setOpen(false) }, [pathname])
+
   async function handleLogout() {
     const supabase = createClient()
     await supabase.auth.signOut()
@@ -104,11 +111,23 @@ export default function Sidebar({ role, userName }: { role: string; userName: st
   }
 
   return (
-    <aside style={{
+    <>
+      {/* Mobile hamburger (hidden on desktop via CSS) */}
+      <button className="sidebar-toggle" aria-label="Open menu" onClick={() => setOpen(true)}>
+        <Menu size={20} />
+      </button>
+      {/* Dim overlay behind the drawer on mobile */}
+      <div className={`sidebar-overlay${open ? ' show' : ''}`} onClick={() => setOpen(false)} />
+
+    <aside className={`app-sidebar${open ? ' open' : ''}`} style={{
       width: '260px', background: 'var(--navy)', position: 'fixed',
       top: 0, left: 0, bottom: 0, display: 'flex', flexDirection: 'column',
-      overflowY: 'auto', zIndex: 50,
+      overflowY: 'auto', zIndex: 60,
     }}>
+      {/* Mobile close button */}
+      <button className="sidebar-close" aria-label="Close menu" onClick={() => setOpen(false)}>
+        <X size={20} />
+      </button>
       {/* Brand */}
       <div style={{ padding: '22px 20px 18px', borderBottom: '1px solid var(--navy-border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -186,5 +205,6 @@ export default function Sidebar({ role, userName }: { role: string; userName: st
         </button>
       </div>
     </aside>
+    </>
   )
 }

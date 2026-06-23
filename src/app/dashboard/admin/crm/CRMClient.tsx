@@ -11,6 +11,7 @@ import type { ReactNode } from 'react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
 import DataToolbar from '@/components/DataToolbar'
+import StatCard, { StatGrid } from '@/components/StatCard'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -380,22 +381,16 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
       </div>
 
       {/* ── Stat Cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' }}>
+      <StatGrid>
         {[
-          { label: 'Total Leads',     value: leads.length,        icon: <Users size={16} />,       color: '#2d7dd2' },
-          { label: 'Hot Prospects',   value: counts['Interested'], icon: <Flame size={16} />,       color: '#e84040' },
-          { label: 'Enrolled / Month',value: thisMonthEnrolled,   icon: <CheckCircle2 size={16} />, color: '#22c55e' },
-          { label: 'Conversion Rate', value: `${conversionRate}%`, icon: <TrendingUp size={16} />,  color: '#8b5cf6' },
+          { label: 'Total Leads',     value: leads.length,        icon: <Users size={18} />,       color: '#2d7dd2' },
+          { label: 'Hot Prospects',   value: counts['Interested'], icon: <Flame size={18} />,       color: '#e84040' },
+          { label: 'Enrolled / Month',value: thisMonthEnrolled,   icon: <CheckCircle2 size={18} />, color: '#22c55e' },
+          { label: 'Conversion Rate', value: `${conversionRate}%`, icon: <TrendingUp size={18} />,  color: '#8b5cf6' },
         ].map(({ label, value, icon, color }) => (
-          <div key={label} style={{ background: '#fff', borderRadius: '10px', padding: '16px', border: '1px solid #ececef', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '12px', color: '#6e6e73', fontWeight: '500' }}>{label}</span>
-              <span style={{ color, display: 'flex', alignItems: 'center' }}>{icon}</span>
-            </div>
-            <div style={{ fontSize: '22px', fontWeight: '600', color: '#1d1d1f', lineHeight: 1, letterSpacing: '-0.02em' }}>{value}</div>
-          </div>
+          <StatCard key={label} label={label} value={value} icon={icon} color={color} />
         ))}
-      </div>
+      </StatGrid>
 
       {/* ── Pipeline Strip ── */}
       <div style={{ background: '#fff', borderRadius: '12px', padding: '16px 20px', marginBottom: '16px', border: '1px solid #ececef', display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto' }}>
