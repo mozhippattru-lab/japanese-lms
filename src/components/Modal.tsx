@@ -40,25 +40,25 @@ export default function Modal({ title, onClose, children, wide, maxWidth }: Prop
       >
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '22px 24px 0',
+          padding: '20px 24px 16px', borderBottom: '1px solid var(--line-warm)',
         }}>
-          <h2 style={{ fontSize: '17px', fontWeight: '700', color: 'var(--navy)', margin: 0 }}>{title}</h2>
+          <h2 style={{ fontFamily: 'var(--display)', fontSize: '19px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>{title}</h2>
           <button
             onClick={onClose}
             aria-label="Close modal"
             style={{
-              background: '#f3f4f6', border: 'none', borderRadius: '8px',
+              background: 'var(--paper-2)', border: 'none', borderRadius: '8px',
               width: '32px', height: '32px', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', cursor: 'pointer', color: '#6b7280',
-              transition: 'background 150ms ease', flexShrink: 0,
+              justifyContent: 'center', cursor: 'pointer', color: 'var(--ink-soft)',
+              transition: 'all 150ms ease', flexShrink: 0,
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#e5e7eb')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#f3f4f6')}
+            onMouseEnter={e => { e.currentTarget.style.background = '#e6dcc7'; e.currentTarget.style.color = 'var(--ink)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'var(--paper-2)'; e.currentTarget.style.color = 'var(--ink-soft)' }}
           >
             <X size={16} />
           </button>
         </div>
-        <div style={{ padding: '18px 24px 24px' }}>{children}</div>
+        <div style={{ padding: '20px 24px 24px' }}>{children}</div>
       </div>
     </div>
   )

@@ -9,6 +9,7 @@ import {
 
 import DataToolbar from '@/components/DataToolbar'
 import StatCard, { StatGrid } from '@/components/StatCard'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 import { printReceipt, printBankStatement, type StatementRow } from '@/lib/receipt'
 
 type Tab = 'overview' | 'invoices' | 'fees' | 'colleges' | 'report'
@@ -464,33 +465,33 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
         </StatGrid>
 
         {/* Ledger */}
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-            <thead>
-              <tr style={{ background: '#f9fafb', borderBottom: '1px solid #f0f0f0' }}>
+        <div style={{ background: '#fff', borderRadius: '14px', border: '1px solid var(--line-warm)', overflow: 'hidden', boxShadow: '0 2px 12px rgba(40,32,20,0.04)' }}>
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
                 {['Date', 'Reference', 'Description', 'Mode', 'Credit', 'Balance', ''].map((h, i) => (
-                  <th key={h} style={{ padding: '11px 14px', textAlign: i >= 4 && i < 6 ? 'right' : 'left', color: '#9ca3af', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                  <TableHead key={h || 'act'} style={{ textAlign: i >= 4 && i < 6 ? 'right' : 'left' }}>{h}</TableHead>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {ledger.length === 0 ? (
-                <tr><td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: '#9ca3af' }}>No transactions in this period.</td></tr>
+                <TableRow className="hover:bg-transparent"><TableCell colSpan={7} style={{ padding: '48px', textAlign: 'center', color: 'var(--ink-soft)' }}>No transactions in this period.</TableCell></TableRow>
               ) : ledger.map((t, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #f9fafb' }}>
-                  <td style={{ padding: '11px 14px', whiteSpace: 'nowrap', color: '#6b7280' }}>{fmtDate(t.date)}</td>
-                  <td style={{ padding: '11px 14px', color: '#9ca3af', fontSize: '12px' }}>{t.ref || '—'}</td>
-                  <td style={{ padding: '11px 14px' }}><div style={{ fontWeight: 600, color: '#1d1d1f' }}>{t.desc}</div><div style={{ fontSize: '11px', color: '#9ca3af' }}>{t.party}</div></td>
-                  <td style={{ padding: '11px 14px', color: '#6b7280' }}>{t.method}</td>
-                  <td style={{ padding: '11px 14px', textAlign: 'right', fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap' }}>{fmt(t.credit)}</td>
-                  <td style={{ padding: '11px 14px', textAlign: 'right', fontWeight: 600, color: '#1d1d1f', whiteSpace: 'nowrap' }}>{fmt(t.balance)}</td>
-                  <td style={{ padding: '11px 14px', textAlign: 'right' }}>
+                <TableRow key={i}>
+                  <TableCell style={{ whiteSpace: 'nowrap', color: 'var(--ink-soft)' }}>{fmtDate(t.date)}</TableCell>
+                  <TableCell style={{ color: '#a39e93', fontSize: '12px' }}>{t.ref || '—'}</TableCell>
+                  <TableCell><div style={{ fontWeight: 600, color: 'var(--ink)' }}>{t.desc}</div><div style={{ fontSize: '11px', color: '#a39e93' }}>{t.party}</div></TableCell>
+                  <TableCell style={{ color: 'var(--ink-soft)' }}>{t.method}</TableCell>
+                  <TableCell style={{ textAlign: 'right', fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap' }}>{fmt(t.credit)}</TableCell>
+                  <TableCell style={{ textAlign: 'right', fontWeight: 600, color: 'var(--ink)', whiteSpace: 'nowrap' }}>{fmt(t.balance)}</TableCell>
+                  <TableCell style={{ textAlign: 'right' }}>
                     {t.payment && <button onClick={() => openReceipt(t.payment!)} style={{ padding: '5px 10px', background: '#eff6ff', color: '#2d7dd2', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>Receipt</button>}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </>
     )
@@ -544,10 +545,10 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
           </div>
         </div>
 
-        <div style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', border: '1px solid #ececef' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.5fr 100px 110px 90px 130px', gap: '10px', padding: '12px 20px', background: '#fafafa', borderBottom: '1px solid #f3f4f6' }}>
+        <div style={{ background: '#fff', borderRadius: '14px', overflow: 'hidden', border: '1px solid var(--line-warm)', boxShadow: '0 2px 12px rgba(40,32,20,0.04)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.5fr 100px 110px 90px 130px', gap: '10px', padding: '12px 20px', background: 'var(--paper)', borderBottom: '1px solid var(--line-warm)' }}>
             {['Student', 'Description', 'Amount', 'Due Date', 'Status', 'Action'].map(h => (
-              <div key={h} style={{ fontSize: '11px', fontWeight: '700', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</div>
+              <div key={h} style={{ fontFamily: 'var(--display)', fontSize: '11px', fontWeight: '600', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</div>
             ))}
           </div>
           {filtered.length === 0 ? (

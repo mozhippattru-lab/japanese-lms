@@ -12,6 +12,7 @@ import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
 import DataToolbar from '@/components/DataToolbar'
 import StatCard, { StatGrid } from '@/components/StatCard'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -444,79 +445,72 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
       </div>
 
       {/* ── Table ── */}
-      <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-          <thead>
-            <tr style={{ background: '#f9fafb', borderBottom: '1px solid #f0f0f0' }}>
+      <div style={{ background: '#fff', borderRadius: '14px', border: '1px solid var(--line-warm)', overflow: 'hidden', boxShadow: '0 2px 12px rgba(40,32,20,0.04)' }}>
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
               {['Lead', 'Contact', 'Source', 'Level', 'Status', 'Follow-up', 'Added', 'Actions'].map(h => (
-                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#9ca3af', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                <TableHead key={h}>{h}</TableHead>
               ))}
-            </tr>
-          </thead>
-          <tbody>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={8} style={{ padding: '64px 20px', textAlign: 'center' }}>
-                  <div style={{ color: '#9ca3af', fontSize: '14px' }}>
-                    {search || filterStatus || filterSource || filterLevel
-                      ? 'No leads match your filters.'
-                      : 'No leads yet. Click "+ Add Lead" to capture your first prospect.'}
-                  </div>
-                </td>
-              </tr>
-            ) : filtered.map((l, i) => {
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={8} style={{ padding: '56px 20px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: '14px' }}>
+                  {search || filterStatus || filterSource || filterLevel
+                    ? 'No leads match your filters.'
+                    : 'No leads yet. Click "+ Add Lead" to capture your first prospect.'}
+                </TableCell>
+              </TableRow>
+            ) : filtered.map((l) => {
               const overdue = isOverdue(l)
               return (
-                <tr
-                  key={l.id}
-                  style={{ borderBottom: i < filtered.length - 1 ? '1px solid #f9fafb' : 'none', transition: 'background 120ms', background: overdue ? '#fffbeb' : 'transparent' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = overdue ? '#fef9c3' : '#fafafa')}
-                  onMouseLeave={e => (e.currentTarget.style.background = overdue ? '#fffbeb' : 'transparent')}
-                >
+                <TableRow key={l.id} style={overdue ? { background: '#fdf6e6' } : undefined} className={overdue ? 'hover:bg-[#f8edcf]' : undefined}>
                   {/* Name */}
-                  <td style={{ padding: '13px 16px' }}>
+                  <TableCell>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <div style={{ width: '34px', height: '34px', borderRadius: '50%', flexShrink: 0, background: statusColor[l.status] + '22', border: `2px solid ${statusColor[l.status]}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: statusColor[l.status], fontWeight: '700', fontSize: '13px' }}>
                         {l.full_name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <div style={{ fontWeight: '600', color: '#1d1d1f' }}>{l.full_name}</div>
-                        {overdue && <div style={{ fontSize: '10px', color: '#f59e0b', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '3px', marginTop: '2px' }}><Clock size={10} />Follow-up overdue</div>}
+                        <div style={{ fontWeight: 600, color: 'var(--ink)' }}>{l.full_name}</div>
+                        {overdue && <div style={{ fontSize: '10px', color: '#c2974b', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '3px', marginTop: '2px' }}><Clock size={10} />Follow-up overdue</div>}
                       </div>
                     </div>
-                  </td>
+                  </TableCell>
                   {/* Contact */}
-                  <td style={{ padding: '13px 16px' }}>
+                  <TableCell>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                      {l.phone && <span style={{ color: '#374151', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}><Phone size={11} color="#9ca3af" />{l.phone}</span>}
-                      {l.email && <span style={{ color: '#6b7280', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}><Mail size={11} color="#9ca3af" />{l.email}</span>}
-                      {!l.phone && !l.email && <span style={{ color: '#9ca3af' }}>—</span>}
+                      {l.phone && <span style={{ color: 'var(--ink)', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}><Phone size={11} color="#9ca3af" />{l.phone}</span>}
+                      {l.email && <span style={{ color: 'var(--ink-soft)', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}><Mail size={11} color="#9ca3af" />{l.email}</span>}
+                      {!l.phone && !l.email && <span style={{ color: '#a39e93' }}>—</span>}
                     </div>
-                  </td>
+                  </TableCell>
                   {/* Source */}
-                  <td style={{ padding: '13px 16px', color: '#6e6e73', fontSize: '12px' }}>
+                  <TableCell style={{ color: 'var(--ink-soft)', fontSize: '12px' }}>
                     <SourceTag source={l.source} />
-                  </td>
+                  </TableCell>
                   {/* Level */}
-                  <td style={{ padding: '13px 16px' }}>
+                  <TableCell>
                     <span style={{ display: 'inline-flex', alignItems: 'center', fontSize: '12px', fontWeight: '700', padding: '3px 10px', borderRadius: '99px', background: levelColor[l.interested_level] + '18', color: levelColor[l.interested_level] }}>
                       {l.interested_level}
                     </span>
-                  </td>
+                  </TableCell>
                   {/* Status */}
-                  <td style={{ padding: '13px 16px' }}><StatusPill status={l.status} /></td>
+                  <TableCell><StatusPill status={l.status} /></TableCell>
                   {/* Follow-up */}
-                  <td style={{ padding: '13px 16px' }}>
+                  <TableCell>
                     {l.follow_up_date
-                      ? <span style={{ fontSize: '12px', color: overdue ? '#f59e0b' : '#374151', fontWeight: overdue ? '700' : '400', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Calendar size={11} color={overdue ? '#f59e0b' : '#9ca3af'} />{fmtDate(l.follow_up_date)}
+                      ? <span style={{ fontSize: '12px', color: overdue ? '#c2974b' : 'var(--ink)', fontWeight: overdue ? '700' : '400', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <Calendar size={11} color={overdue ? '#c2974b' : '#9ca3af'} />{fmtDate(l.follow_up_date)}
                         </span>
-                      : <span style={{ color: '#9ca3af', fontSize: '12px' }}>—</span>}
-                  </td>
+                      : <span style={{ color: '#a39e93', fontSize: '12px' }}>—</span>}
+                  </TableCell>
                   {/* Added */}
-                  <td style={{ padding: '13px 16px', color: '#9ca3af', fontSize: '12px' }}>{fmtShort(l.created_at)}</td>
+                  <TableCell style={{ color: '#a39e93', fontSize: '12px' }}>{fmtShort(l.created_at)}</TableCell>
                   {/* Actions */}
-                  <td style={{ padding: '13px 16px' }}>
+                  <TableCell>
                     <div style={{ display: 'flex', gap: '5px' }}>
                       <ActionBtn onClick={() => setViewLead(l)} color="#6b7280"><Eye size={13} />View</ActionBtn>
                       <ActionBtn onClick={() => openEdit(l)} color="#2d7dd2"><Pencil size={13} />Edit</ActionBtn>
@@ -526,14 +520,14 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
                         </ActionBtn>
                       )}
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )
             })}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
         {filtered.length > 0 && (
-          <div style={{ padding: '10px 16px', borderTop: '1px solid #f3f4f6', color: '#9ca3af', fontSize: '12px' }}>
+          <div style={{ padding: '11px 16px', borderTop: '1px solid var(--line-warm)', color: 'var(--ink-soft)', fontSize: '12px' }}>
             Showing {filtered.length} of {leads.length} leads
           </div>
         )}
