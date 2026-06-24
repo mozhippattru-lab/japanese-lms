@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
+import { DashStyles } from '@/components/DashboardKit'
 import SettingsClient, { type AppSettings } from './SettingsClient'
 
 export default async function SettingsPage() {
@@ -10,19 +12,24 @@ export default async function SettingsPage() {
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
   if (profile?.role !== 'admin') redirect(`/dashboard/${profile?.role || 'student'}`)
 
-  const { data: settings } = await supabase.from('app_settings').select('*').eq('id', 'default').single()
-
-  // Quick counts for the read-only "system" panel
-  const [{ count: students }, { count: teachers }, { count: batches }] = await Promise.all([
-    supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student'),
-    supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'teacher'),
-    supabase.from('batches').select('id', { count: 'exact', head: true }),
+  const db = createAdminClient()
+  const [
+    { data: settings },
+    { count: students },
+    { count: teachers },
+    { count: batches },
+  ] = await Promise.all([
+    db.from('app_settings').select('*').eq('id', 'default').single(),
+    db.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student').eq('status', 'active'),
+    db.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'teacher').eq('status', 'active'),
+    db.from('batches').select('id', { count: 'exact', head: true }).eq('status', 'active'),
   ])
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ivory)' }}>
+    <div className="dash-shell">
       <Sidebar role="admin" userName={profile?.full_name || user.email || 'Admin'} />
-      <main style={{ marginLeft: '260px', flex: 1, padding: '32px' }}>
+      <main className="dash-main">
+        <DashStyles />
         <SettingsClient
           initial={(settings || { id: 'default' }) as AppSettings}
           counts={{ students: students || 0, teachers: teachers || 0, batches: batches || 0 }}

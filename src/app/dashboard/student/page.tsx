@@ -5,31 +5,6 @@ import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
 import { Reveal, Stagger, StaggerItem } from '@/components/motion/Motion'
 import { BookOpen, CalendarCheck, ClipboardList, Target, Clock } from 'lucide-react'
 
-const UPCOMING = [
-  { time: 'Today · 6:00 PM',    title: 'N4 Grammar — て-form',  teacher: 'Sensei Priya' },
-  { time: 'Tomorrow · 9:00 AM', title: 'N4 Vocabulary Set 12',  teacher: 'Sensei Ravi'  },
-  { time: 'Wed · 6:00 PM',      title: 'JLPT Mock Practice',    teacher: 'Sensei Priya' },
-]
-
-const PROGRESS = [
-  { skill: 'Vocabulary', jp: '語彙',  pct: 72, color: '#e84040' },
-  { skill: 'Grammar',    jp: '文法',  pct: 58, color: '#2d7dd2' },
-  { skill: 'Reading',    jp: '読解',  pct: 64, color: '#22c55e' },
-  { skill: 'Listening',  jp: '聴解',  pct: 45, color: '#c2974b' },
-]
-
-const ASSIGNMENTS = [
-  { title: 'N4 Kanji Practice Sheet',       due: 'Due tomorrow',  urgent: true  },
-  { title: 'Reading Comprehension #8',      due: 'Due in 3 days', urgent: false },
-  { title: 'Grammar Worksheet — Lesson 12', due: 'Due in 5 days', urgent: false },
-]
-
-const SCORES = [
-  { test: 'N4 Mock Exam #3',     score: 68, max: 100, date: 'Jun 10' },
-  { test: 'Vocabulary Quiz #12', score: 18, max: 20,  date: 'Jun 8'  },
-  { test: 'Grammar Test #7',     score: 14, max: 20,  date: 'Jun 5'  },
-]
-
 export default async function StudentDashboard() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -42,6 +17,43 @@ export default async function StudentDashboard() {
   const firstName = name.split(' ')[0]
   const level = profile?.jlpt_level || 'N5'
   const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
+
+  // Fetch real student data (RLS scoped to own rows)
+  const [
+    { data: attendanceRows },
+    { data: pendingSubmissions },
+    { data: testScores },
+    { data: assignments },
+  ] = await Promise.all([
+    supabase.from('attendance').select('present').eq('student_id', user.id),
+    supabase.from('submissions').select('id, status, assignment_id').eq('student_id', user.id).eq('status', 'pending'),
+    supabase.from('test_scores').select('test_name, score, max_score, test_date').eq('student_id', user.id).order('test_date', { ascending: false }).limit(3),
+    supabase.from('assignments').select('id, title, due_date').order('due_date', { ascending: true }).limit(5),
+  ])
+
+  // Attendance %
+  const total = attendanceRows?.length ?? 0
+  const present = attendanceRows?.filter(r => r.present).length ?? 0
+  const attendancePct = total > 0 ? `${Math.round((present / total) * 100)}%` : '—'
+
+  // Pending assignments
+  const pendingCount = pendingSubmissions?.length ?? 0
+
+  // Last mock score
+  const lastScore = testScores?.[0]
+  const lastScoreStr = lastScore ? `${lastScore.score}/${lastScore.max_score}` : '—'
+
+  // Format due date
+  function dueSoon(dateStr: string | null) {
+    if (!dateStr) return 'No due date'
+    const d = new Date(dateStr)
+    const now = new Date()
+    const diff = Math.ceil((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+    if (diff < 0) return 'Overdue'
+    if (diff === 0) return 'Due today'
+    if (diff === 1) return 'Due tomorrow'
+    return `Due in ${diff} days`
+  }
 
   return (
     <div className="dash-shell">
@@ -64,79 +76,88 @@ export default async function StudentDashboard() {
         </Reveal>
 
         <Stagger className="dash-kpis">
-          <StaggerItem><Kpi label="Current Level" value={level}  sub="your level" icon={<BookOpen size={18} />}      color="#e84040" /></StaggerItem>
-          <StaggerItem><Kpi label="Attendance"    value="87%"    sub="this month" icon={<CalendarCheck size={18} />} color="#22c55e" /></StaggerItem>
-          <StaggerItem><Kpi label="Assignments"   value="3"      sub="pending"    icon={<ClipboardList size={18} />} color="#c2974b" /></StaggerItem>
-          <StaggerItem><Kpi label="Mock Score"    value="68/100" sub="last test"  icon={<Target size={18} />}        color="#2d7dd2" /></StaggerItem>
+          <StaggerItem><Kpi label="Current Level" value={level}          sub="your level"  icon={<BookOpen size={18} />}      color="#e84040" /></StaggerItem>
+          <StaggerItem><Kpi label="Attendance"    value={attendancePct}  sub={`${present}/${total} classes`} icon={<CalendarCheck size={18} />} color="#22c55e" /></StaggerItem>
+          <StaggerItem><Kpi label="Assignments"   value={String(pendingCount)} sub="pending" icon={<ClipboardList size={18} />} color="#c2974b" /></StaggerItem>
+          <StaggerItem><Kpi label="Mock Score"    value={lastScoreStr}   sub="last test"   icon={<Target size={18} />}        color="#2d7dd2" /></StaggerItem>
         </Stagger>
 
         <Reveal delay={0.12} className="dash-grid">
-          {/* Upcoming */}
+          {/* Upcoming assignments */}
           <section className="dash-card">
-            <CardHead jp="授業" title="Upcoming Classes" href="/dashboard/student/classes" />
-            <div className="dash-list">
-              {UPCOMING.map((c, i) => (
-                <div key={i} className="dash-row accent" style={{ display: 'block' }}>
-                  <div className="dash-row-meta"><Clock size={12} /> {c.time}</div>
-                  <div className="dash-row-title">{c.title}</div>
-                  <div className="dash-row-sub">{c.teacher}</div>
-                </div>
-              ))}
-            </div>
+            <CardHead jp="課題" title="Upcoming Assignments" href="/dashboard/student/assignments" />
+            {(!assignments || assignments.length === 0) ? (
+              <p style={{ color: 'var(--ink-soft)', fontSize: '13px', padding: '12px 0' }}>No assignments yet.</p>
+            ) : (
+              <div className="dash-list">
+                {assignments.map((a) => {
+                  const label = dueSoon(a.due_date)
+                  const urgent = label === 'Due today' || label === 'Due tomorrow' || label === 'Overdue'
+                  return (
+                    <div key={a.id} className="dash-row">
+                      <div>
+                        <div className="dash-row-title">{a.title}</div>
+                        <div className="dash-row-sub" style={urgent ? { color: '#dc2626', fontWeight: 600 } : undefined}>{label}</div>
+                      </div>
+                      <button className="dash-btn dash-btn-red">Submit</button>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </section>
 
-          {/* Progress */}
-          <section className="dash-card">
-            <CardHead jp="進捗" title="JLPT Progress" href="/dashboard/student/progress" />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {PROGRESS.map(({ skill, jp, pct, color }) => (
-                <div key={skill}>
-                  <div className="dash-barrow">
-                    <span style={{ fontSize: '13px', color: 'var(--ink)', fontWeight: 500 }}>
-                      <i style={{ fontFamily: 'var(--display)', fontStyle: 'normal', color: 'var(--ink-soft)', fontSize: '12px', marginRight: '5px' }}>{jp}</i>{skill}
-                    </span>
-                    <span className="dash-pct" style={{ color }}>{pct}%</span>
-                  </div>
-                  <div className="dash-bar"><div className="dash-bar-fill" style={{ width: `${pct}%`, background: color }} /></div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Assignments */}
-          <section className="dash-card">
-            <CardHead jp="課題" title="Pending Assignments" href="/dashboard/student/assignments" />
-            <div className="dash-list">
-              {ASSIGNMENTS.map((a, i) => (
-                <div key={i} className="dash-row">
-                  <div>
-                    <div className="dash-row-title">{a.title}</div>
-                    <div className="dash-row-sub" style={a.urgent ? { color: '#dc2626', fontWeight: 600 } : undefined}>{a.due}</div>
-                  </div>
-                  <button className="dash-btn dash-btn-red">Submit</button>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Scores */}
+          {/* Test scores */}
           <section className="dash-card">
             <CardHead jp="成績" title="Recent Test Scores" href="/dashboard/student/tests" />
-            <div>
-              {SCORES.map((t, i) => {
-                const pct = t.score / t.max
-                const sc = pct > 0.7 ? '#22c55e' : pct > 0.5 ? '#c2974b' : '#e84040'
-                return (
-                  <div key={i} className="dash-divrow">
-                    <div>
-                      <div className="dash-row-title">{t.test}</div>
-                      <div className="dash-row-sub">{t.date}</div>
+            {(!testScores || testScores.length === 0) ? (
+              <p style={{ color: 'var(--ink-soft)', fontSize: '13px', padding: '12px 0' }}>No test scores yet.</p>
+            ) : (
+              <div>
+                {testScores.map((t, i) => {
+                  const pct = t.score / t.max_score
+                  const sc = pct > 0.7 ? '#22c55e' : pct > 0.5 ? '#c2974b' : '#e84040'
+                  return (
+                    <div key={i} className="dash-divrow">
+                      <div>
+                        <div className="dash-row-title">{t.test_name}</div>
+                        <div className="dash-row-sub">{new Date(t.test_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
+                      </div>
+                      <div className="dash-num"><span style={{ color: sc }}>{t.score}</span><small>/{t.max_score}</small></div>
                     </div>
-                    <div className="dash-num"><span style={{ color: sc }}>{t.score}</span><small>/{t.max}</small></div>
+                  )
+                })}
+              </div>
+            )}
+          </section>
+
+          {/* Attendance summary */}
+          <section className="dash-card dash-span2">
+            <CardHead jp="出席" title="Attendance Summary" href="/dashboard/student/attendance" />
+            {total === 0 ? (
+              <p style={{ color: 'var(--ink-soft)', fontSize: '13px', padding: '12px 0' }}>No attendance records yet.</p>
+            ) : (
+              <div style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontFamily: 'var(--display)', fontSize: '42px', fontWeight: 700, color: 'var(--ink)', lineHeight: 1 }}>
+                    {attendancePct}
+                  </span>
+                  <span style={{ fontSize: '12px', color: 'var(--ink-soft)' }}>attendance rate</span>
+                </div>
+                <div style={{ flex: 1, minWidth: '160px' }}>
+                  <div className="dash-barrow" style={{ marginBottom: '6px' }}>
+                    <span style={{ fontSize: '12px', color: 'var(--ink-soft)' }}>Present</span>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#22c55e' }}>{present}</span>
                   </div>
-                )
-              })}
-            </div>
+                  <div className="dash-bar"><div className="dash-bar-fill" style={{ width: `${total > 0 ? (present / total) * 100 : 0}%`, background: '#22c55e' }} /></div>
+                  <div className="dash-barrow" style={{ marginTop: '10px', marginBottom: '6px' }}>
+                    <span style={{ fontSize: '12px', color: 'var(--ink-soft)' }}>Absent</span>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#e84040' }}>{total - present}</span>
+                  </div>
+                  <div className="dash-bar"><div className="dash-bar-fill" style={{ width: `${total > 0 ? ((total - present) / total) * 100 : 0}%`, background: '#e84040' }} /></div>
+                </div>
+              </div>
+            )}
           </section>
         </Reveal>
       </main>
