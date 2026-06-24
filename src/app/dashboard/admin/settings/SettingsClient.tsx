@@ -68,8 +68,9 @@ export default function SettingsClient({ initial, counts, adminEmail }: {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', gap: '12px', flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Settings</h1>
-          <p style={{ color: '#6e6e73', fontSize: '13px', marginTop: '3px' }}>Institute details and preferences — used across receipts and reports</p>
+          <p style={{ fontFamily: 'var(--display)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '0.04em', margin: '0 0 6px' }}>設定 · Settings</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: '28px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Settings</h1>
+          <p style={{ color: 'var(--ink-soft)', fontSize: '13px', marginTop: '6px' }}>Institute details and preferences — used across receipts and reports</p>
         </div>
         <button onClick={save} disabled={saving} style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', padding: '11px 20px', background: 'var(--red)', color: '#fff', border: 'none', borderRadius: '9px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
           <Save size={16} /> {saving ? 'Saving…' : 'Save changes'}

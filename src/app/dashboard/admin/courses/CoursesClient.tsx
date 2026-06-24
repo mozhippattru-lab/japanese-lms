@@ -299,7 +299,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
                 <span style={{ background: (levelColor[activeCourse.jlpt_level] || '#e84040') + '20', color: levelColor[activeCourse.jlpt_level] || '#e84040', fontSize: '12px', fontWeight: '700', padding: '3px 12px', borderRadius: '20px' }}>
                   {activeCourse.jlpt_level}
                 </span>
-                <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>{activeCourse.title}</h1>
+                <h1 style={{ fontFamily: 'var(--display)', fontSize: '24px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>{activeCourse.title}</h1>
               </div>
               <p style={{ color: '#9ca3af', fontSize: '13px', margin: 0 }}>
                 {modules.length} modules · {allLessons.length} lessons · {Math.floor(totalMins / 60)}h {totalMins % 60}m total
@@ -314,7 +314,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
         {contentLoading ? (
           <div style={{ textAlign: 'center', padding: '64px', color: '#9ca3af', fontSize: '14px' }}>Loading content…</div>
         ) : modules.length === 0 ? (
-          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', padding: '56px', textAlign: 'center', color: '#9ca3af' }}>
+          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid var(--line-warm)', padding: '56px', textAlign: 'center', color: '#9ca3af' }}>
             <FolderOpen size={36} style={{ margin: '0 auto 16px', display: 'block', color: '#d1d5db' }} strokeWidth={1.5} />
             <p style={{ fontSize: '15px', fontWeight: '600', color: '#6e6e73' }}>No modules yet</p>
             <p style={{ fontSize: '13px', marginTop: '6px' }}>Click &ldquo;Add Module&rdquo; to start building this course</p>
@@ -325,7 +325,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
               const expanded = expandedMods.has(mod.id)
               const modLessons = lessons[mod.id] || []
               return (
-                <div key={mod.id} style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', overflow: 'hidden' }}>
+                <div key={mod.id} style={{ background: '#fff', borderRadius: '12px', border: '1px solid var(--line-warm)', overflow: 'hidden' }}>
                   {/* Module row */}
                   <div
                     onClick={() => setExpandedMods(prev => { const s = new Set(prev); s.has(mod.id) ? s.delete(mod.id) : s.add(mod.id); return s })}
@@ -497,8 +497,9 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Courses</h1>
-          <p style={{ color: '#6e6e73', fontSize: '13px', marginTop: '3px' }}>Manage JLPT course content and structure</p>
+          <p style={{ fontFamily: 'var(--display)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '0.04em', margin: '0 0 6px' }}>コース · Courses</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: '28px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Courses</h1>
+          <p style={{ color: 'var(--ink-soft)', fontSize: '13px', marginTop: '6px' }}>Manage JLPT course content and structure</p>
         </div>
         <button onClick={() => { setShowAdd(true); setCourseForm(emptyCourseForm) }} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 16px', background: 'var(--red)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
           <Plus size={15} /> New Course
@@ -513,7 +514,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
           { label: 'Draft', value: courses.filter(c => c.status === 'Draft').length, icon: <FileText size={16} />, color: '#f59e0b' },
           { label: 'Total Enrolled', value: courses.reduce((s, c) => s + (c.enrolled_count || 0), 0), icon: <Users size={16} />, color: '#2d7dd2' },
         ].map(({ label, value, icon, color }) => (
-          <div key={label} style={{ background: '#fff', borderRadius: '10px', padding: '16px', border: '1px solid #ececef', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div key={label} style={{ background: '#fff', borderRadius: '10px', padding: '16px', border: '1px solid var(--line-warm)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span style={{ fontSize: '12px', color: '#6e6e73', fontWeight: '500' }}>{label}</span>
               <span style={{ color, display: 'flex', alignItems: 'center' }}>{icon}</span>
@@ -525,7 +526,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
 
       {/* Cards */}
       {courses.length === 0 ? (
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', padding: '56px', textAlign: 'center', color: '#9ca3af' }}>
+        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid var(--line-warm)', padding: '56px', textAlign: 'center', color: '#9ca3af' }}>
           <BookOpen size={36} style={{ margin: '0 auto 16px', display: 'block', color: '#d1d5db' }} strokeWidth={1.5} />
           <p style={{ fontSize: '15px', fontWeight: '600', color: '#6e6e73' }}>No courses yet</p>
           <p style={{ fontSize: '13px', marginTop: '6px' }}>Click &ldquo;New Course&rdquo; to create your first JLPT course</p>
@@ -534,7 +535,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
           {courses.map(course => (
             <div key={course.id}
-              style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', border: '1px solid #ececef', transition: 'border-color 0.15s' }}
+              style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--line-warm)', transition: 'border-color 0.15s' }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = '#d1d5db')}
               onMouseLeave={e => (e.currentTarget.style.borderColor = '#ececef')}>
               <div style={{ padding: '18px' }}>

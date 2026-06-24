@@ -169,8 +169,9 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Colleges</h1>
-          <p style={{ color: '#6e6e73', fontSize: '13px', marginTop: '3px' }}>Institutional partners — batches paid by contract, not per student</p>
+          <p style={{ fontFamily: 'var(--display)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '0.04em', margin: '0 0 6px' }}>大学 · Colleges</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: '28px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Colleges</h1>
+          <p style={{ color: 'var(--ink-soft)', fontSize: '13px', marginTop: '6px' }}>Institutional partners — batches paid by contract, not per student</p>
         </div>
         <button onClick={() => { setShowAdd(true); setForm(emptyForm) }} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 18px', background: 'var(--red)', color: '#fff', border: 'none', borderRadius: '9px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 2px 8px rgba(232,64,64,0.2)' }}>
           <Plus size={16} /> Add College
@@ -203,7 +204,7 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
 
       {/* College cards */}
       {filtered.length === 0 ? (
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', padding: '56px', textAlign: 'center', color: '#9ca3af' }}>
+        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid var(--line-warm)', padding: '56px', textAlign: 'center', color: '#9ca3af' }}>
           <Building2 size={36} style={{ margin: '0 auto 16px', display: 'block', color: '#d1d5db' }} strokeWidth={1.5} />
           <p style={{ fontSize: '15px', fontWeight: 600, color: '#6e6e73' }}>No colleges yet</p>
           <p style={{ fontSize: '13px', marginTop: '6px' }}>Add a college, then share its join link so students can register themselves.</p>
@@ -213,7 +214,7 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
           {filtered.map(c => {
             const cc = catColor[c.category || 'Other'] || '#6b7280'
             return (
-              <div key={c.id} style={{ background: '#fff', borderRadius: '14px', border: '1px solid #ececef', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div key={c.id} style={{ background: '#fff', borderRadius: '14px', border: '1px solid var(--line-warm)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ height: '4px', background: cc }} />
                 <div style={{ padding: '18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '10px' }}>
