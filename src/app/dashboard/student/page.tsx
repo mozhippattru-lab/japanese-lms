@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/Sidebar'
 import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
+import { Reveal, Stagger, StaggerItem } from '@/components/motion/Motion'
 import { BookOpen, CalendarCheck, ClipboardList, Target, Clock } from 'lucide-react'
 
 const UPCOMING = [
@@ -48,26 +49,28 @@ export default async function StudentDashboard() {
       <main className="dash-main">
         <DashStyles />
 
-        <header className="dash-header">
-          <div>
-            <p className="dash-eyebrow">学生ダッシュボード · Student</p>
-            <h1 className="dash-title">おかえりなさい、<span>{firstName}</span></h1>
-            <p className="dash-subtitle">Let&apos;s continue your journey to fluent Japanese.</p>
-          </div>
-          <div className="dash-datechip">
-            <span className="dash-datechip-jp">{level}</span>
-            <span className="dash-datechip-sub">{today}</span>
-          </div>
-        </header>
+        <Reveal>
+          <header className="dash-header">
+            <div>
+              <p className="dash-eyebrow">学生ダッシュボード · Student</p>
+              <h1 className="dash-title">おかえりなさい、<span>{firstName}</span></h1>
+              <p className="dash-subtitle">Let&apos;s continue your journey to fluent Japanese.</p>
+            </div>
+            <div className="dash-datechip">
+              <span className="dash-datechip-jp">{level}</span>
+              <span className="dash-datechip-sub">{today}</span>
+            </div>
+          </header>
+        </Reveal>
 
-        <section className="dash-kpis">
-          <Kpi label="Current Level" value={level}    sub="your level"  icon={<BookOpen size={18} />}      color="#e84040" />
-          <Kpi label="Attendance"    value="87%"      sub="this month"  icon={<CalendarCheck size={18} />} color="#22c55e" />
-          <Kpi label="Assignments"   value="3"        sub="pending"     icon={<ClipboardList size={18} />} color="#c2974b" />
-          <Kpi label="Mock Score"    value="68/100"   sub="last test"   icon={<Target size={18} />}        color="#2d7dd2" />
-        </section>
+        <Stagger className="dash-kpis">
+          <StaggerItem><Kpi label="Current Level" value={level}  sub="your level" icon={<BookOpen size={18} />}      color="#e84040" /></StaggerItem>
+          <StaggerItem><Kpi label="Attendance"    value="87%"    sub="this month" icon={<CalendarCheck size={18} />} color="#22c55e" /></StaggerItem>
+          <StaggerItem><Kpi label="Assignments"   value="3"      sub="pending"    icon={<ClipboardList size={18} />} color="#c2974b" /></StaggerItem>
+          <StaggerItem><Kpi label="Mock Score"    value="68/100" sub="last test"  icon={<Target size={18} />}        color="#2d7dd2" /></StaggerItem>
+        </Stagger>
 
-        <div className="dash-grid">
+        <Reveal delay={0.12} className="dash-grid">
           {/* Upcoming */}
           <section className="dash-card">
             <CardHead jp="授業" title="Upcoming Classes" href="/dashboard/student/classes" />
@@ -135,7 +138,7 @@ export default async function StudentDashboard() {
               })}
             </div>
           </section>
-        </div>
+        </Reveal>
       </main>
     </div>
   )

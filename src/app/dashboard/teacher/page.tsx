@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/Sidebar'
 import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
+import { Reveal, Stagger, StaggerItem } from '@/components/motion/Motion'
 import { Users, GraduationCap, ClipboardList, Calendar } from 'lucide-react'
 
 const SCHEDULE = [
@@ -45,26 +46,28 @@ export default async function TeacherDashboard() {
       <main className="dash-main">
         <DashStyles />
 
-        <header className="dash-header">
-          <div>
-            <p className="dash-eyebrow">先生ダッシュボード · Teacher</p>
-            <h1 className="dash-title">ようこそ、<span>{firstName}</span> 先生</h1>
-            <p className="dash-subtitle">Your classes, students and grading at a glance.</p>
-          </div>
-          <div className="dash-datechip">
-            <span className="dash-datechip-jp">先生</span>
-            <span className="dash-datechip-sub">{today}</span>
-          </div>
-        </header>
+        <Reveal>
+          <header className="dash-header">
+            <div>
+              <p className="dash-eyebrow">先生ダッシュボード · Teacher</p>
+              <h1 className="dash-title">ようこそ、<span>{firstName}</span> 先生</h1>
+              <p className="dash-subtitle">Your classes, students and grading at a glance.</p>
+            </div>
+            <div className="dash-datechip">
+              <span className="dash-datechip-jp">先生</span>
+              <span className="dash-datechip-sub">{today}</span>
+            </div>
+          </header>
+        </Reveal>
 
-        <section className="dash-kpis">
-          <Kpi label="Students"       value="48" sub="all batches" icon={<Users size={18} />}         color="#2d7dd2" />
-          <Kpi label="Batches"        value="4"  sub="active"      icon={<GraduationCap size={18} />} color="#e84040" />
-          <Kpi label="Pending Grades" value="12" sub="to grade"    icon={<ClipboardList size={18} />} color="#c2974b" />
-          <Kpi label="Classes Today"  value="3"  sub="next 6 PM"   icon={<Calendar size={18} />}      color="#22c55e" />
-        </section>
+        <Stagger className="dash-kpis">
+          <StaggerItem><Kpi label="Students"       value="48" sub="all batches" icon={<Users size={18} />}         color="#2d7dd2" /></StaggerItem>
+          <StaggerItem><Kpi label="Batches"        value="4"  sub="active"      icon={<GraduationCap size={18} />} color="#e84040" /></StaggerItem>
+          <StaggerItem><Kpi label="Pending Grades" value="12" sub="to grade"    icon={<ClipboardList size={18} />} color="#c2974b" /></StaggerItem>
+          <StaggerItem><Kpi label="Classes Today"  value="3"  sub="next 6 PM"   icon={<Calendar size={18} />}      color="#22c55e" /></StaggerItem>
+        </Stagger>
 
-        <div className="dash-grid">
+        <Reveal delay={0.12} className="dash-grid">
           {/* Schedule */}
           <section className="dash-card">
             <CardHead jp="本日の授業" title="Today's Classes" href="/dashboard/teacher/classes" />
@@ -124,7 +127,7 @@ export default async function TeacherDashboard() {
               </table>
             </div>
           </section>
-        </div>
+        </Reveal>
       </main>
     </div>
   )
