@@ -179,7 +179,7 @@ export default function Landing() {
                     {c.points.map(p => <li key={p}><Check size={15} /> {p}</li>)}
                   </ul>
                   <footer className="lp-course-foot">
-                    <div className="lp-course-price">{inr(c.price)}</div>
+                    <a href="#pricing" className="lp-course-fees">See fees</a>
                     <a href="#demo" className="lp-course-link">Enquire <ArrowUpRight size={15} /></a>
                   </footer>
                 </article>
@@ -612,7 +612,8 @@ function LandingStyles() {
       .lp-course-points li { display: flex; align-items: flex-start; gap: 9px; font-size: 13.5px; color: var(--ink); line-height: 1.45; }
       .lp-course-points li svg { flex-shrink: 0; margin-top: 2px; color: var(--c); }
       .lp-course-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--line); }
-      .lp-course-price { font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--ink); }
+      .lp-course-fees { font-size: 13px; font-weight: 600; color: var(--ink-soft); text-decoration: none; transition: color 150ms; }
+      .lp-course-fees:hover { color: var(--gold); }
       .lp-course-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;
         color: var(--c); text-decoration: none; }
       .lp-course-link:hover { gap: 7px; }
