@@ -8,6 +8,7 @@ import ToastContainer, { useToast } from '@/components/Toast'
 import DataToolbar from '@/components/DataToolbar'
 import Avatar from '@/components/Avatar'
 import StatCard, { StatGrid } from '@/components/StatCard'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 
 type Student = {
   id: string
@@ -307,61 +308,54 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
       </div>
 
       {/* Table */}
-      <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-          <thead>
-            <tr style={{ background: '#f9fafb', borderBottom: '1px solid #f0f0f0' }}>
+      <div style={{ background: '#fff', borderRadius: '14px', border: '1px solid var(--line-warm)', overflow: 'hidden', boxShadow: '0 2px 12px rgba(40,32,20,0.04)' }}>
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
               {['Student', 'Email', 'Phone', 'Level', 'Batch', 'Status', 'Joined', 'Actions'].map(h => (
-                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#9ca3af', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                <TableHead key={h}>{h}</TableHead>
               ))}
-            </tr>
-          </thead>
-          <tbody>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={8} style={{ padding: '60px 20px', textAlign: 'center' }}>
-                  <div style={{ color: '#9ca3af', fontSize: '14px' }}>
-                    {search || filterLevel || filterStatus ? 'No students match your filters.' : 'No students yet. Click "Add Student" to get started.'}
-                  </div>
-                </td>
-              </tr>
-            ) : filtered.map((s, i) => (
-              <tr
-                key={s.id}
-                style={{ borderBottom: i < filtered.length - 1 ? '1px solid #f9fafb' : 'none', transition: 'background 120ms' }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-              >
-                <td style={{ padding: '13px 16px' }}>
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={8} style={{ padding: '56px 20px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: '14px' }}>
+                  {search || filterLevel || filterStatus ? 'No students match your filters.' : 'No students yet. Click "Add Student" to get started.'}
+                </TableCell>
+              </TableRow>
+            ) : filtered.map(s => (
+              <TableRow key={s.id}>
+                <TableCell>
                   <div onClick={() => openView(s)} title="View profile" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                     <Avatar url={s.avatar_url} name={s.full_name || s.email} size={34} bg={levelColor[s.jlpt_level || 'N5'] || 'var(--red)'} />
-                    <span className="row-name" style={{ fontWeight: '600', color: 'var(--navy)' }}>{s.full_name || '—'}</span>
+                    <span className="row-name" style={{ fontWeight: 600, color: 'var(--ink)' }}>{s.full_name || '—'}</span>
                   </div>
-                </td>
-                <td style={{ padding: '13px 16px', color: '#6b7280' }}>{s.email || '—'}</td>
-                <td style={{ padding: '13px 16px', color: '#6b7280' }}>{s.phone || '—'}</td>
-                <td style={{ padding: '13px 16px' }}>
+                </TableCell>
+                <TableCell style={{ color: 'var(--ink-soft)' }}>{s.email || '—'}</TableCell>
+                <TableCell style={{ color: 'var(--ink-soft)' }}>{s.phone || '—'}</TableCell>
+                <TableCell>
                   {s.jlpt_level ? <span className="badge" style={{ background: levelColor[s.jlpt_level] + '18', color: levelColor[s.jlpt_level] }}>{s.jlpt_level}</span> : '—'}
-                </td>
-                <td style={{ padding: '13px 16px', color: '#6b7280' }}>{s.batch || '—'}</td>
-                <td style={{ padding: '13px 16px' }}>
+                </TableCell>
+                <TableCell style={{ color: 'var(--ink-soft)' }}>{s.batch || '—'}</TableCell>
+                <TableCell>
                   {s.status ? <span className="badge" style={{ background: (statusColor[s.status] || '#9ca3af') + '18', color: statusColor[s.status] || '#9ca3af' }}>{s.status}</span> : '—'}
-                </td>
-                <td style={{ padding: '13px 16px', color: '#9ca3af', fontSize: '12px' }}>
+                </TableCell>
+                <TableCell style={{ color: '#a39e93', fontSize: '12px' }}>
                   {new Date(s.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })}
-                </td>
-                <td style={{ padding: '13px 16px' }}>
+                </TableCell>
+                <TableCell>
                   <div style={{ display: 'flex', gap: '5px' }}>
                     <ActionBtn onClick={() => openEdit(s)} color="#2d7dd2"><Pencil size={13} />Edit</ActionBtn>
                     <ActionBtn onClick={() => handleDelete(s.id)} color="#e84040"><Trash2 size={13} /></ActionBtn>
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
         {filtered.length > 0 && (
-          <div style={{ padding: '10px 16px', borderTop: '1px solid #f3f4f6', color: '#9ca3af', fontSize: '12px' }}>
+          <div style={{ padding: '11px 16px', borderTop: '1px solid var(--line-warm)', color: 'var(--ink-soft)', fontSize: '12px' }}>
             Showing {filtered.length} of {students.length} students
           </div>
         )}
