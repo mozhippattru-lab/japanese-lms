@@ -241,8 +241,9 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Students</h1>
-          <p style={{ color: '#6e6e73', fontSize: '13px', marginTop: '3px' }}>{students.length} students enrolled</p>
+          <p style={{ fontFamily: 'var(--display)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '0.04em', margin: '0 0 6px' }}>学生 · Students</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: '28px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Students</h1>
+          <p style={{ color: 'var(--ink-soft)', fontSize: '13px', marginTop: '6px' }}>{students.length} students enrolled</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <DataToolbar

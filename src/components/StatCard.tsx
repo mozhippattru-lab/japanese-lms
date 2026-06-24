@@ -18,10 +18,11 @@ export default function StatCard({
   const clickable = !!onClick
 
   const style: React.CSSProperties = {
-    textAlign: 'left', display: 'flex', alignItems: 'center', gap: '12px',
-    padding: '15px 16px', borderRadius: '12px', background: '#fff',
-    border: `1px solid ${active ? color : '#ececef'}`,
-    boxShadow: active ? `0 4px 14px ${color}1f` : '0 1px 2px rgba(0,0,0,0.04)',
+    textAlign: 'left', display: 'flex', alignItems: 'center', gap: '13px',
+    padding: '15px 17px', borderRadius: '14px', background: '#fff',
+    border: `1px solid ${active ? color : 'var(--line-warm)'}`,
+    borderLeft: `3px solid ${color}`,
+    boxShadow: active ? `0 8px 22px ${color}1f` : '0 2px 10px rgba(40,32,20,0.04)',
     cursor: clickable ? 'pointer' : 'default',
     fontFamily: 'inherit', width: '100%',
     transition: 'all 160ms cubic-bezier(0.4,0,0.2,1)',
@@ -30,16 +31,16 @@ export default function StatCard({
   const inner = (
     <>
       {icon != null && (
-        <div style={{ width: '38px', height: '38px', borderRadius: '10px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: color + '14', color }}>
+        <div style={{ width: '40px', height: '40px', borderRadius: '11px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: color + '16', color }}>
           {icon}
         </div>
       )}
       <div style={{ minWidth: 0, flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '7px' }}>
-          <span style={{ fontSize: '22px', fontWeight: 700, color: '#1d1d1f', lineHeight: 1.15, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>{value}</span>
+          <span style={{ fontFamily: 'var(--display)', fontSize: '24px', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.1, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>{value}</span>
           {sub && <span style={{ fontSize: '11px', fontWeight: 600, color: trendColor }}>{sub}</span>}
         </div>
-        <div style={{ fontSize: '12px', fontWeight: 500, color: '#86868b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</div>
+        <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--ink-soft)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</div>
       </div>
     </>
   )

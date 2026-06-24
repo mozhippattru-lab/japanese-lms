@@ -321,8 +321,9 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
 
   const pageHeader = (
     <div style={{ marginBottom: '24px' }}>
-      <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Finance</h1>
-      <p style={{ color: '#6e6e73', fontSize: '13px', marginTop: '3px' }}>Manage fees, invoices, and payments</p>
+      <p style={{ fontFamily: 'var(--display)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '0.04em', margin: '0 0 6px' }}>授業料 · Finance</p>
+      <h1 style={{ fontFamily: 'var(--display)', fontSize: '28px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Finance</h1>
+      <p style={{ color: 'var(--ink-soft)', fontSize: '13px', marginTop: '6px' }}>Manage fees, invoices, and payments</p>
     </div>
   )
 
