@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import TeacherAssignmentsClient from './TeacherAssignmentsClient'
+import { DashStyles } from '@/components/DashboardKit'
 
 export default async function TeacherAssignmentsPage() {
   const supabase = await createClient()
@@ -48,9 +49,10 @@ export default async function TeacherAssignmentsPage() {
   }))
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#fafafa' }}>
+    <div className="dash-shell">
       <Sidebar role="teacher" userName={profile?.full_name || user.email || 'Teacher'} />
-      <main style={{ marginLeft: '260px', flex: 1, padding: '28px 32px' }}>
+      <main className="dash-main">
+        <DashStyles />
         <TeacherAssignmentsClient
           teacherId={user.id}
           batches={batches || []}

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import StudentWorkClient from '../assignments/StudentWorkClient'
 import { loadStudentWork } from '../assignments/load'
+import { DashStyles } from '@/components/DashboardKit'
 
 export default async function StudentTestsPage() {
   const supabase = await createClient()
@@ -14,9 +15,10 @@ export default async function StudentTestsPage() {
   const items = await loadStudentWork(supabase, user.id, 'Test')
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#fafafa' }}>
+    <div className="dash-shell">
       <Sidebar role="student" userName={profile?.full_name || user.email || 'Student'} />
-      <main style={{ marginLeft: '260px', flex: 1, padding: '28px 32px' }}>
+      <main className="dash-main">
+        <DashStyles />
         <StudentWorkClient kind="Test" studentId={user.id} initialItems={items} />
       </main>
     </div>

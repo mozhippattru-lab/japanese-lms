@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import DataToolbar from '@/components/DataToolbar'
 import { Users, DollarSign, CalendarCheck, TrendingUp } from 'lucide-react'
+import { DashStyles } from '@/components/DashboardKit'
 
 const LEVEL_COLORS: Record<string, string> = {
   N5: '#22c55e', N4: '#2d7dd2', N3: '#f59e0b', N2: '#e84040', N1: '#8b5cf6',
@@ -103,9 +104,11 @@ export default async function ReportsPage() {
   const eyebrow: React.CSSProperties = { fontSize: '10px', fontWeight: '700', color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '3px' }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ivory)' }}>
+    <div className="dash-shell">
       <Sidebar role="admin" userName={profile?.full_name || user.email || 'Admin'} />
-      <main style={{ marginLeft: '260px', flex: 1, padding: '32px' }}>
+      <main className="dash-main">
+
+        <DashStyles />
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', gap: '12px', flexWrap: 'wrap' }}>
           <div>

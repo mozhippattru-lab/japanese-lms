@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import CollegesClient from './CollegesClient'
+import { DashStyles } from '@/components/DashboardKit'
 
 export default async function CollegesPage() {
   const supabase = await createClient()
@@ -39,9 +40,10 @@ export default async function CollegesPage() {
   }))
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ivory)' }}>
+    <div className="dash-shell">
       <Sidebar role="admin" userName={profile?.full_name || user.email || 'Admin'} />
-      <main style={{ marginLeft: '260px', flex: 1, padding: '32px' }}>
+      <main className="dash-main">
+        <DashStyles />
         <CollegesClient
           initialColleges={enriched}
           batches={batches || []}

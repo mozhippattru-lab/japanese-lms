@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import AttendanceClient from './AttendanceClient'
+import { DashStyles } from '@/components/DashboardKit'
 
 export default async function AttendancePage() {
   const supabase = await createClient()
@@ -17,9 +18,10 @@ export default async function AttendancePage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ivory)' }}>
+    <div className="dash-shell">
       <Sidebar role="admin" userName={profile?.full_name || user.email || 'Admin'} />
-      <main style={{ marginLeft: '260px', flex: 1, padding: '32px' }}>
+      <main className="dash-main">
+        <DashStyles />
         <AttendanceClient initialBatches={batches || []} />
       </main>
     </div>

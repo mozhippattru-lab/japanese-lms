@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import ProfileClient from '@/components/ProfileClient'
+import { DashStyles } from '@/components/DashboardKit'
 
 export default async function TeacherProfilePage() {
   const supabase = await createClient()
@@ -11,9 +12,10 @@ export default async function TeacherProfilePage() {
   if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#fafafa' }}>
+    <div className="dash-shell">
       <Sidebar role="teacher" userName={profile?.full_name || user.email || 'Teacher'} />
-      <main style={{ marginLeft: '260px', flex: 1, padding: '28px 32px' }}>
+      <main className="dash-main">
+        <DashStyles />
         <ProfileClient profile={{
           id: user.id,
           full_name: profile?.full_name ?? null,

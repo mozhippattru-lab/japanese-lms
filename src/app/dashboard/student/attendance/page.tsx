@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import { CheckCircle2, XCircle, Clock, CalendarCheck } from 'lucide-react'
+import { DashStyles } from '@/components/DashboardKit'
 
 const LEVEL_COLORS: Record<string, string> = {
   N5: '#22c55e', N4: '#2d7dd2', N3: '#f59e0b', N2: '#e84040', N1: '#8b5cf6',
@@ -70,9 +71,11 @@ export default async function StudentAttendancePage() {
   const card: React.CSSProperties = { background: '#fff', borderRadius: '12px', border: '1px solid #ececef' }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#fafafa' }}>
+    <div className="dash-shell">
       <Sidebar role="student" userName={profile?.full_name || user.email || 'Student'} />
-      <main style={{ marginLeft: '260px', flex: 1, padding: '28px 32px' }}>
+      <main className="dash-main">
+
+        <DashStyles />
 
         <div style={{ marginBottom: '24px' }}>
           <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>My Attendance</h1>
