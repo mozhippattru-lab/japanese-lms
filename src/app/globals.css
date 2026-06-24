@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Shippori+Mincho:wght@500;600;700;800&family=Noto+Serif+Tamil:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -15,6 +15,15 @@
   --green: #22c55e;
   --amber: #f59e0b;
   --purple: #8b5cf6;
+  /* Premium brand layer (matches the marketing site) — warm washi + kintsugi gold */
+  --gold: #c2974b;
+  --gold-soft: #d8b878;
+  --paper: #f6f1e7;
+  --paper-2: #efe7d8;
+  --ink: #2a2724;
+  --ink-soft: #6b665e;
+  --line-warm: rgba(40,32,20,0.10);
+  --display: 'Shippori Mincho', 'Noto Serif Tamil', serif;
   --sidebar-w: 260px;
   --background: #f8f7f4;
   --foreground: #1a1f3c;

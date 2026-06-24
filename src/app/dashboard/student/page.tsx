@@ -1,25 +1,25 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/Sidebar'
-import StatCard from '@/components/StatCard'
-import { BookOpen, CalendarCheck, ClipboardList, Target } from 'lucide-react'
+import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
+import { BookOpen, CalendarCheck, ClipboardList, Target, Clock } from 'lucide-react'
 
 const UPCOMING = [
-  { time: 'Today, 6:00 PM',    title: 'N4 Grammar — て-form',  teacher: 'Sensei Priya' },
-  { time: 'Tomorrow, 9:00 AM', title: 'N4 Vocabulary Set 12',   teacher: 'Sensei Ravi'  },
-  { time: 'Wed, 6:00 PM',      title: 'JLPT Mock Practice',     teacher: 'Sensei Priya' },
+  { time: 'Today · 6:00 PM',    title: 'N4 Grammar — て-form',  teacher: 'Sensei Priya' },
+  { time: 'Tomorrow · 9:00 AM', title: 'N4 Vocabulary Set 12',  teacher: 'Sensei Ravi'  },
+  { time: 'Wed · 6:00 PM',      title: 'JLPT Mock Practice',    teacher: 'Sensei Priya' },
 ]
 
 const PROGRESS = [
-  { skill: 'Vocabulary', pct: 72, color: '#e84040' },
-  { skill: 'Grammar',    pct: 58, color: '#2d7dd2' },
-  { skill: 'Reading',    pct: 64, color: '#22c55e' },
-  { skill: 'Listening',  pct: 45, color: '#f59e0b' },
+  { skill: 'Vocabulary', jp: '語彙',  pct: 72, color: '#e84040' },
+  { skill: 'Grammar',    jp: '文法',  pct: 58, color: '#2d7dd2' },
+  { skill: 'Reading',    jp: '読解',  pct: 64, color: '#22c55e' },
+  { skill: 'Listening',  jp: '聴解',  pct: 45, color: '#c2974b' },
 ]
 
 const ASSIGNMENTS = [
-  { title: 'N4 Kanji Practice Sheet',       due: 'Due Tomorrow', urgent: true  },
-  { title: 'Reading Comprehension #8',       due: 'Due in 3 days', urgent: false },
+  { title: 'N4 Kanji Practice Sheet',       due: 'Due tomorrow',  urgent: true  },
+  { title: 'Reading Comprehension #8',      due: 'Due in 3 days', urgent: false },
   { title: 'Grammar Worksheet — Lesson 12', due: 'Due in 5 days', urgent: false },
 ]
 
@@ -28,17 +28,6 @@ const SCORES = [
   { test: 'Vocabulary Quiz #12', score: 18, max: 20,  date: 'Jun 8'  },
   { test: 'Grammar Test #7',     score: 14, max: 20,  date: 'Jun 5'  },
 ]
-
-const cardStyle: React.CSSProperties = {
-  background: '#fff', borderRadius: '12px', padding: '20px', border: '1px solid #ececef',
-}
-const eyebrow: React.CSSProperties = {
-  fontSize: '10px', fontWeight: '600', color: '#9ca3af',
-  letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '3px',
-}
-const cardTitle: React.CSSProperties = {
-  fontSize: '14px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.01em',
-}
 
 export default async function StudentDashboard() {
   const supabase = await createClient()
@@ -50,116 +39,102 @@ export default async function StudentDashboard() {
 
   const name = profile?.full_name || user.email || 'Student'
   const firstName = name.split(' ')[0]
+  const level = profile?.jlpt_level || 'N5'
+  const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#fafafa' }}>
+    <div className="dash-shell">
       <Sidebar role="student" userName={name} />
+      <main className="dash-main">
+        <DashStyles />
 
-      <main style={{ marginLeft: '260px', flex: 1, padding: '28px 32px' }}>
+        <header className="dash-header">
+          <div>
+            <p className="dash-eyebrow">学生ダッシュボード · Student</p>
+            <h1 className="dash-title">おかえりなさい、<span>{firstName}</span></h1>
+            <p className="dash-subtitle">Let&apos;s continue your journey to fluent Japanese.</p>
+          </div>
+          <div className="dash-datechip">
+            <span className="dash-datechip-jp">{level}</span>
+            <span className="dash-datechip-sub">{today}</span>
+          </div>
+        </header>
 
-        {/* Header */}
-        <div style={{ marginBottom: '24px' }}>
-          <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>
-            おはようございます, {firstName}
-          </h1>
-          <p style={{ color: '#6e6e73', margin: '3px 0 0', fontSize: '13px' }}>
-            Welcome back to your Japanese learning journey.
-          </p>
-        </div>
+        <section className="dash-kpis">
+          <Kpi label="Current Level" value={level}    sub="your level"  icon={<BookOpen size={18} />}      color="#e84040" />
+          <Kpi label="Attendance"    value="87%"      sub="this month"  icon={<CalendarCheck size={18} />} color="#22c55e" />
+          <Kpi label="Assignments"   value="3"        sub="pending"     icon={<ClipboardList size={18} />} color="#c2974b" />
+          <Kpi label="Mock Score"    value="68/100"   sub="last test"   icon={<Target size={18} />}        color="#2d7dd2" />
+        </section>
 
-        {/* KPI */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '16px' }}>
-          <StatCard icon={<BookOpen      size={16} />} label="Current Level" value="N4"     color="#e84040" sub="Intermediate" trend="neutral" />
-          <StatCard icon={<CalendarCheck size={16} />} label="Attendance"    value="87%"    color="#22c55e" sub="this month"   trend="up"      />
-          <StatCard icon={<ClipboardList size={16} />} label="Assignments"   value="3"      color="#f59e0b" sub="pending"      trend="down"    />
-          <StatCard icon={<Target        size={16} />} label="Mock Score"    value="68/100" color="#2d7dd2" sub="last test"    trend="neutral" />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-
-          {/* Upcoming Classes */}
-          <div style={cardStyle}>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={eyebrow}>Schedule</div>
-              <h2 style={cardTitle}>Upcoming Classes</h2>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div className="dash-grid">
+          {/* Upcoming */}
+          <section className="dash-card">
+            <CardHead jp="授業" title="Upcoming Classes" href="/dashboard/student/classes" />
+            <div className="dash-list">
               {UPCOMING.map((c, i) => (
-                <div key={i} style={{ padding: '11px 13px', background: '#fafafa', borderRadius: '9px', borderLeft: '3px solid var(--red)' }}>
-                  <div style={{ fontSize: '10px', color: '#9ca3af', marginBottom: '3px' }}>{c.time}</div>
-                  <div style={{ fontSize: '13px', fontWeight: '500', color: '#1d1d1f' }}>{c.title}</div>
-                  <div style={{ fontSize: '11px', color: '#6e6e73', marginTop: '1px' }}>{c.teacher}</div>
+                <div key={i} className="dash-row accent" style={{ display: 'block' }}>
+                  <div className="dash-row-meta"><Clock size={12} /> {c.time}</div>
+                  <div className="dash-row-title">{c.title}</div>
+                  <div className="dash-row-sub">{c.teacher}</div>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* JLPT Progress */}
-          <div style={cardStyle}>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={eyebrow}>Performance</div>
-              <h2 style={cardTitle}>JLPT Progress</h2>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {PROGRESS.map(({ skill, pct, color }) => (
+          {/* Progress */}
+          <section className="dash-card">
+            <CardHead jp="進捗" title="JLPT Progress" href="/dashboard/student/progress" />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {PROGRESS.map(({ skill, jp, pct, color }) => (
                 <div key={skill}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                    <span style={{ fontSize: '12px', color: '#1d1d1f' }}>{skill}</span>
-                    <span style={{ fontSize: '12px', color, fontWeight: '600' }}>{pct}%</span>
+                  <div className="dash-barrow">
+                    <span style={{ fontSize: '13px', color: 'var(--ink)', fontWeight: 500 }}>
+                      <i style={{ fontFamily: 'var(--display)', fontStyle: 'normal', color: 'var(--ink-soft)', fontSize: '12px', marginRight: '5px' }}>{jp}</i>{skill}
+                    </span>
+                    <span className="dash-pct" style={{ color }}>{pct}%</span>
                   </div>
-                  <div style={{ height: '4px', background: '#f3f4f6', borderRadius: '2px' }}>
-                    <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '2px' }} />
-                  </div>
+                  <div className="dash-bar"><div className="dash-bar-fill" style={{ width: `${pct}%`, background: color }} /></div>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* Pending Assignments */}
-          <div style={cardStyle}>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={eyebrow}>Tasks</div>
-              <h2 style={cardTitle}>Pending Assignments</h2>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {/* Assignments */}
+          <section className="dash-card">
+            <CardHead jp="課題" title="Pending Assignments" href="/dashboard/student/assignments" />
+            <div className="dash-list">
               {ASSIGNMENTS.map((a, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 13px', background: '#fafafa', borderRadius: '9px' }}>
+                <div key={i} className="dash-row">
                   <div>
-                    <div style={{ fontSize: '13px', fontWeight: '500', color: '#1d1d1f' }}>{a.title}</div>
-                    <div style={{ fontSize: '11px', color: a.urgent ? '#dc2626' : '#9ca3af', marginTop: '2px', fontWeight: a.urgent ? '600' : '400' }}>{a.due}</div>
+                    <div className="dash-row-title">{a.title}</div>
+                    <div className="dash-row-sub" style={a.urgent ? { color: '#dc2626', fontWeight: 600 } : undefined}>{a.due}</div>
                   </div>
-                  <button style={{ padding: '6px 14px', background: 'var(--red)', color: '#fff', border: 'none', borderRadius: '7px', fontSize: '12px', fontWeight: '500', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>Submit</button>
+                  <button className="dash-btn dash-btn-red">Submit</button>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* Recent Scores */}
-          <div style={cardStyle}>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={eyebrow}>Results</div>
-              <h2 style={cardTitle}>Recent Test Scores</h2>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {/* Scores */}
+          <section className="dash-card">
+            <CardHead jp="成績" title="Recent Test Scores" href="/dashboard/student/tests" />
+            <div>
               {SCORES.map((t, i) => {
                 const pct = t.score / t.max
-                const sc = pct > 0.7 ? '#22c55e' : pct > 0.5 ? '#f59e0b' : '#e84040'
+                const sc = pct > 0.7 ? '#22c55e' : pct > 0.5 ? '#c2974b' : '#e84040'
                 return (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < SCORES.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                  <div key={i} className="dash-divrow">
                     <div>
-                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#1d1d1f' }}>{t.test}</div>
-                      <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '2px' }}>{t.date}</div>
+                      <div className="dash-row-title">{t.test}</div>
+                      <div className="dash-row-sub">{t.date}</div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
-                      <span style={{ fontSize: '17px', fontWeight: '700', color: sc, letterSpacing: '-0.02em' }}>{t.score}</span>
-                      <span style={{ fontSize: '11px', color: '#9ca3af' }}>/{t.max}</span>
-                    </div>
+                    <div className="dash-num"><span style={{ color: sc }}>{t.score}</span><small>/{t.max}</small></div>
                   </div>
                 )
               })}
             </div>
-          </div>
-
+          </section>
         </div>
       </main>
     </div>

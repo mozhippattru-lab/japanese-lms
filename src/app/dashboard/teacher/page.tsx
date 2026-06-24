@@ -1,19 +1,19 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/Sidebar'
-import StatCard from '@/components/StatCard'
+import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
 import { Users, GraduationCap, ClipboardList, Calendar } from 'lucide-react'
 
 const SCHEDULE = [
-  { time: '9:00 AM', batch: 'N5 — Morning Batch',  students: 14, status: 'Completed' },
-  { time: '2:00 PM', batch: 'N4 — Afternoon Batch', students: 18, status: 'Ongoing'   },
-  { time: '6:00 PM', batch: 'N4 — Evening Batch',   students: 16, status: 'Upcoming'  },
+  { time: '9:00 AM', batch: 'N5 — Morning Batch',   students: 14, status: 'Completed' },
+  { time: '2:00 PM', batch: 'N4 — Afternoon Batch',  students: 18, status: 'Ongoing'   },
+  { time: '6:00 PM', batch: 'N4 — Evening Batch',    students: 16, status: 'Upcoming'  },
 ]
 
-const ASSIGNMENTS = [
-  { student: 'Ananya S.',  assignment: 'N4 Kanji Sheet',      submitted: '2h ago'   },
-  { student: 'Rohan M.',   assignment: 'Grammar Worksheet 12', submitted: '5h ago'   },
-  { student: 'Preethi K.', assignment: 'Reading Comp #8',      submitted: 'Yesterday' },
+const SUBMISSIONS = [
+  { student: 'Ananya S.',  assignment: 'N4 Kanji Sheet',       submitted: '2h ago'    },
+  { student: 'Rohan M.',   assignment: 'Grammar Worksheet 12',  submitted: '5h ago'    },
+  { student: 'Preethi K.', assignment: 'Reading Comp #8',       submitted: 'Yesterday' },
 ]
 
 const ATTENDANCE_ROWS = [
@@ -24,18 +24,7 @@ const ATTENDANCE_ROWS = [
 ]
 
 const STATUS_COLORS: Record<string, string> = {
-  Completed: '#22c55e', Ongoing: '#e84040', Upcoming: '#f59e0b',
-}
-
-const cardStyle: React.CSSProperties = {
-  background: '#fff', borderRadius: '12px', padding: '20px', border: '1px solid #ececef',
-}
-const eyebrow: React.CSSProperties = {
-  fontSize: '10px', fontWeight: '600', color: '#9ca3af',
-  letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '3px',
-}
-const cardTitle: React.CSSProperties = {
-  fontSize: '14px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.01em',
+  Completed: '#22c55e', Ongoing: '#e84040', Upcoming: '#c2974b',
 }
 
 export default async function TeacherDashboard() {
@@ -48,98 +37,85 @@ export default async function TeacherDashboard() {
 
   const name = profile?.full_name || user.email || 'Teacher'
   const firstName = name.split(' ')[0]
+  const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#fafafa' }}>
+    <div className="dash-shell">
       <Sidebar role="teacher" userName={name} />
+      <main className="dash-main">
+        <DashStyles />
 
-      <main style={{ marginLeft: '260px', flex: 1, padding: '28px 32px' }}>
-
-        {/* Header */}
-        <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <header className="dash-header">
           <div>
-            <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>
-              Welcome, {firstName} Sensei
-            </h1>
-            <p style={{ color: '#6e6e73', margin: '3px 0 0', fontSize: '13px' }}>
-              Manage your classes, students, and content below.
-            </p>
+            <p className="dash-eyebrow">先生ダッシュボード · Teacher</p>
+            <h1 className="dash-title">ようこそ、<span>{firstName}</span> 先生</h1>
+            <p className="dash-subtitle">Your classes, students and grading at a glance.</p>
           </div>
-          <span style={{ fontSize: '13px', color: '#6e6e73', fontWeight: '500' }}>June 20, 2026</span>
-        </div>
+          <div className="dash-datechip">
+            <span className="dash-datechip-jp">先生</span>
+            <span className="dash-datechip-sub">{today}</span>
+          </div>
+        </header>
 
-        {/* KPI */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '16px' }}>
-          <StatCard icon={<Users         size={16} />} label="Students"       value="48" color="#2d7dd2" sub="all batches" trend="neutral" />
-          <StatCard icon={<GraduationCap size={16} />} label="Batches"        value="4"  color="#e84040" sub="active"      trend="neutral" />
-          <StatCard icon={<ClipboardList size={16} />} label="Pending Grades" value="12" color="#f59e0b" sub="to grade"    trend="down"    />
-          <StatCard icon={<Calendar      size={16} />} label="Classes Today"  value="3"  color="#22c55e" sub="next 6PM"    trend="neutral" />
-        </div>
+        <section className="dash-kpis">
+          <Kpi label="Students"       value="48" sub="all batches" icon={<Users size={18} />}         color="#2d7dd2" />
+          <Kpi label="Batches"        value="4"  sub="active"      icon={<GraduationCap size={18} />} color="#e84040" />
+          <Kpi label="Pending Grades" value="12" sub="to grade"    icon={<ClipboardList size={18} />} color="#c2974b" />
+          <Kpi label="Classes Today"  value="3"  sub="next 6 PM"   icon={<Calendar size={18} />}      color="#22c55e" />
+        </section>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-
-          {/* Today's Schedule */}
-          <div style={cardStyle}>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={eyebrow}>Schedule</div>
-              <h2 style={cardTitle}>Today&apos;s Classes</h2>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div className="dash-grid">
+          {/* Schedule */}
+          <section className="dash-card">
+            <CardHead jp="本日の授業" title="Today's Classes" href="/dashboard/teacher/classes" />
+            <div className="dash-list">
               {SCHEDULE.map((c, i) => {
                 const sc = STATUS_COLORS[c.status]
                 return (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 13px', background: '#fafafa', borderRadius: '9px', borderLeft: `3px solid ${sc}` }}>
+                  <div key={i} className="dash-row accent" style={{ ['--c' as string]: sc }}>
                     <div>
-                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#1d1d1f' }}>{c.batch}</div>
-                      <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '1px' }}>{c.time} &middot; {c.students} students</div>
+                      <div className="dash-row-title">{c.batch}</div>
+                      <div className="dash-row-sub">{c.time} · {c.students} students</div>
                     </div>
-                    <span style={{ fontSize: '10px', fontWeight: '600', color: sc, background: sc + '18', padding: '3px 9px', borderRadius: '99px' }}>{c.status}</span>
+                    <span className="dash-chip" style={{ color: sc, background: sc + '18' }}>{c.status}</span>
                   </div>
                 )
               })}
             </div>
-          </div>
+          </section>
 
-          {/* Grade Assignments */}
-          <div style={cardStyle}>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={eyebrow}>Grading</div>
-              <h2 style={cardTitle}>Pending Submissions</h2>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {ASSIGNMENTS.map((a, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 13px', background: '#fafafa', borderRadius: '9px' }}>
+          {/* Submissions */}
+          <section className="dash-card">
+            <CardHead jp="採点" title="Pending Submissions" href="/dashboard/teacher/grading" />
+            <div className="dash-list">
+              {SUBMISSIONS.map((a, i) => (
+                <div key={i} className="dash-row">
                   <div>
-                    <div style={{ fontSize: '13px', fontWeight: '500', color: '#1d1d1f' }}>{a.student}</div>
-                    <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '1px' }}>{a.assignment} &middot; {a.submitted}</div>
+                    <div className="dash-row-title">{a.student}</div>
+                    <div className="dash-row-sub">{a.assignment} · {a.submitted}</div>
                   </div>
-                  <button style={{ padding: '6px 14px', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '7px', fontSize: '12px', fontWeight: '500', cursor: 'pointer', fontFamily: 'inherit' }}>Grade</button>
+                  <button className="dash-btn dash-btn-navy">Grade</button>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* Attendance Table */}
-          <div style={{ ...cardStyle, gridColumn: 'span 2' }}>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={eyebrow}>Weekly Report</div>
-              <h2 style={cardTitle}>Batch Attendance This Week</h2>
-            </div>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          {/* Attendance table */}
+          <section className="dash-card dash-span2">
+            <CardHead jp="週間出席" title="Batch Attendance This Week" href="/dashboard/teacher/attendance" />
+            <div className="dash-tablewrap">
+              <table className="dash-table">
                 <thead>
-                  <tr>
-                    {['Batch', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Avg'].map(h => (
-                      <th key={h} style={{ padding: '8px 12px', textAlign: 'left', color: '#9ca3af', fontWeight: '600', borderBottom: '1px solid #f3f4f6', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</th>
-                    ))}
-                  </tr>
+                  <tr>{['Batch', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Avg'].map(h => <th key={h}>{h}</th>)}</tr>
                 </thead>
                 <tbody>
                   {ATTENDANCE_ROWS.map((row, i) => (
-                    <tr key={i} style={{ borderBottom: i < ATTENDANCE_ROWS.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                    <tr key={i}>
                       {row.map((cell, j) => (
-                        <td key={j} style={{ padding: '10px 12px', color: '#1d1d1f', fontWeight: j === 0 ? '500' : '400', fontSize: '12px' }}>
-                          {j === 6 ? <span style={{ background: '#f0fdf4', color: '#16a34a', padding: '2px 8px', borderRadius: '99px', fontWeight: '600', fontSize: '11px' }}>{cell}</span> : cell}
+                        <td key={j} style={j === 0 ? { fontWeight: 600 } : undefined}>
+                          {j === 6
+                            ? <span className="dash-chip" style={{ background: '#eefaf1', color: '#16a34a' }}>{cell}</span>
+                            : cell}
                         </td>
                       ))}
                     </tr>
@@ -147,8 +123,7 @@ export default async function TeacherDashboard() {
                 </tbody>
               </table>
             </div>
-          </div>
-
+          </section>
         </div>
       </main>
     </div>

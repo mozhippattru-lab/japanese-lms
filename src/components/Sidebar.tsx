@@ -130,17 +130,18 @@ export default function Sidebar({ role, userName }: { role: string; userName: st
       </button>
       {/* Brand */}
       <div style={{ padding: '22px 20px 18px', borderBottom: '1px solid var(--navy-border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
           <div style={{
-            width: '40px', height: '40px', background: 'var(--red)', borderRadius: '10px',
+            width: '42px', height: '42px', background: 'var(--red)', borderRadius: '10px',
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            boxShadow: '0 4px 12px rgba(232,64,64,0.35)',
+            boxShadow: '0 6px 16px rgba(232,64,64,0.35)',
+            fontFamily: 'var(--display)', fontWeight: 700, fontSize: '23px', color: '#fff',
           }}>
-            <School size={20} color="#fff" strokeWidth={2} />
+            日
           </div>
           <div>
-            <div style={{ color: '#fff', fontSize: '13px', fontWeight: '700', letterSpacing: '-0.01em' }}>日本語センター</div>
-            <div style={{ color: '#6b7280', fontSize: '10px', marginTop: '1px' }}>Japanese Language Center</div>
+            <div style={{ color: '#fff', fontFamily: 'var(--display)', fontSize: '17px', fontWeight: '600', lineHeight: 1.3 }}>மொழிப்பற்று</div>
+            <div style={{ color: 'var(--gold-soft)', fontSize: '9.5px', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '1px' }}>Japanese Language Center</div>
           </div>
         </div>
       </div>
