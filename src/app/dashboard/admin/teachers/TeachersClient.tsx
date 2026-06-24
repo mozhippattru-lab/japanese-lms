@@ -6,6 +6,7 @@ import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
 import Avatar from '@/components/Avatar'
 import StatCard, { StatGrid } from '@/components/StatCard'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 
 type Teacher = {
   id: string
@@ -226,8 +227,9 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Teachers</h1>
-          <p style={{ color: '#6e6e73', fontSize: '13px', marginTop: '3px' }}>{teachers.length} teacher{teachers.length !== 1 ? 's' : ''} on staff</p>
+          <p style={{ fontFamily: 'var(--display)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '0.04em', margin: '0 0 6px' }}>先生 · Teachers</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: '28px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Teachers</h1>
+          <p style={{ color: 'var(--ink-soft)', fontSize: '13px', marginTop: '6px' }}>{teachers.length} teacher{teachers.length !== 1 ? 's' : ''} on staff</p>
         </div>
         <Btn variant="primary" onClick={() => setShowAdd(true)}><Plus size={16} /> Add Teacher</Btn>
       </div>
@@ -266,53 +268,51 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
       </div>
 
       {/* Table */}
-      <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-          <thead>
-            <tr style={{ background: '#f9fafb', borderBottom: '1px solid #f0f0f0' }}>
+      <div style={{ background: '#fff', borderRadius: '14px', border: '1px solid var(--line-warm)', overflow: 'hidden', boxShadow: '0 2px 12px rgba(40,32,20,0.04)' }}>
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
               {['Teacher', 'Email', 'Phone', 'Specialization', 'Status', 'Joined', 'Actions'].map(h => (
-                <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#9ca3af', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                <TableHead key={h}>{h}</TableHead>
               ))}
-            </tr>
-          </thead>
-          <tbody>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filtered.length === 0 ? (
-              <tr><td colSpan={7} style={{ padding: '60px', textAlign: 'center', color: '#9ca3af', fontSize: '14px' }}>
+              <TableRow className="hover:bg-transparent"><TableCell colSpan={7} style={{ padding: '56px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: '14px' }}>
                 {search || filterLevel || filterStatus ? 'No teachers match your filters.' : 'No teachers yet. Click "Add Teacher" to get started.'}
-              </td></tr>
-            ) : filtered.map((t, i) => (
-              <tr key={t.id} style={{ borderBottom: i < filtered.length - 1 ? '1px solid #f9fafb' : 'none', transition: 'background 120ms' }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                <td style={{ padding: '13px 16px' }}>
+              </TableCell></TableRow>
+            ) : filtered.map((t) => (
+              <TableRow key={t.id}>
+                <TableCell>
                   <div onClick={() => openView(t)} title="View profile" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                     <Avatar url={t.avatar_url} name={t.full_name || t.email} size={36} bg={levelColor[t.jlpt_level || 'N3'] || '#2d7dd2'} />
-                    <span className="row-name" style={{ fontWeight: '600', color: 'var(--navy)' }}>{t.full_name || '—'}</span>
+                    <span className="row-name" style={{ fontWeight: 600, color: 'var(--ink)' }}>{t.full_name || '—'}</span>
                   </div>
-                </td>
-                <td style={{ padding: '13px 16px', color: '#6b7280' }}>{t.email || '—'}</td>
-                <td style={{ padding: '13px 16px', color: '#6b7280' }}>{t.phone || '—'}</td>
-                <td style={{ padding: '13px 16px' }}>
+                </TableCell>
+                <TableCell style={{ color: 'var(--ink-soft)' }}>{t.email || '—'}</TableCell>
+                <TableCell style={{ color: 'var(--ink-soft)' }}>{t.phone || '—'}</TableCell>
+                <TableCell>
                   {t.jlpt_level ? <span className="badge" style={{ background: levelColor[t.jlpt_level] + '18', color: levelColor[t.jlpt_level] }}>{t.jlpt_level}</span> : '—'}
-                </td>
-                <td style={{ padding: '13px 16px' }}>
+                </TableCell>
+                <TableCell>
                   {t.status ? <span className="badge" style={{ background: (statusColor[t.status] || '#9ca3af') + '18', color: statusColor[t.status] || '#9ca3af' }}>{t.status}</span> : '—'}
-                </td>
-                <td style={{ padding: '13px 16px', color: '#9ca3af', fontSize: '12px' }}>
+                </TableCell>
+                <TableCell style={{ color: '#a39e93', fontSize: '12px' }}>
                   {new Date(t.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })}
-                </td>
-                <td style={{ padding: '13px 16px' }}>
+                </TableCell>
+                <TableCell>
                   <div style={{ display: 'flex', gap: '5px' }}>
                     <ActionBtn onClick={() => openEdit(t)} color="#2d7dd2"><Pencil size={13} />Edit</ActionBtn>
                     <ActionBtn onClick={() => handleDeactivate(t.id)} color="#e84040"><Trash2 size={13} /></ActionBtn>
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
         {filtered.length > 0 && (
-          <div style={{ padding: '10px 16px', borderTop: '1px solid #f3f4f6', color: '#9ca3af', fontSize: '12px' }}>
+          <div style={{ padding: '11px 16px', borderTop: '1px solid var(--line-warm)', color: 'var(--ink-soft)', fontSize: '12px' }}>
             Showing {filtered.length} of {teachers.length} teachers
           </div>
         )}

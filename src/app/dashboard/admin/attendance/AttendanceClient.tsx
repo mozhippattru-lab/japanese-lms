@@ -228,7 +228,7 @@ export default function AttendanceClient({ initialBatches }: { initialBatches: B
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
           <div>
-            <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Take Attendance</h1>
+            <h1 style={{ fontFamily: 'var(--display)', fontSize: '24px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Take Attendance</h1>
             <p style={{ color: '#9ca3af', fontSize: '13px', marginTop: '4px' }}>{activeBatch.name} · {activeBatch.jlpt_level}</p>
           </div>
           <button onClick={saveAttendance} disabled={saving || enrolled.length === 0} style={{
@@ -325,7 +325,7 @@ export default function AttendanceClient({ initialBatches }: { initialBatches: B
               <span style={{ background: (levelColor[activeBatch.jlpt_level] || '#e84040') + '20', color: levelColor[activeBatch.jlpt_level] || '#e84040', fontSize: '12px', fontWeight: '700', padding: '3px 12px', borderRadius: '20px' }}>
                 {activeBatch.jlpt_level}
               </span>
-              <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>{activeBatch.name}</h1>
+              <h1 style={{ fontFamily: 'var(--display)', fontSize: '24px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>{activeBatch.name}</h1>
             </div>
             <p style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9ca3af', fontSize: '13px', margin: 0 }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Clock size={13} /> {activeBatch.time_slot || '—'}</span>
@@ -491,8 +491,9 @@ export default function AttendanceClient({ initialBatches }: { initialBatches: B
   return (
     <>
       <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Attendance</h1>
-        <p style={{ color: '#6e6e73', fontSize: '13px', marginTop: '3px' }}>Track class attendance by batch</p>
+        <p style={{ fontFamily: 'var(--display)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '0.04em', margin: '0 0 6px' }}>出席 · Attendance</p>
+        <h1 style={{ fontFamily: 'var(--display)', fontSize: '28px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Attendance</h1>
+        <p style={{ color: 'var(--ink-soft)', fontSize: '13px', marginTop: '6px' }}>Track class attendance by batch</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '20px' }}>

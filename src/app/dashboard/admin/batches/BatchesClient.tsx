@@ -334,8 +334,9 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '20px', fontWeight: '600', color: '#1d1d1f', margin: 0, letterSpacing: '-0.02em' }}>Batches</h1>
-          <p style={{ color: '#6e6e73', fontSize: '13px', marginTop: '3px' }}>Manage class groups and schedules</p>
+          <p style={{ fontFamily: 'var(--display)', fontSize: '12px', color: 'var(--gold)', letterSpacing: '0.04em', margin: '0 0 6px' }}>クラス · Batches</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: '28px', fontWeight: 700, color: 'var(--ink)', margin: 0, letterSpacing: '-0.01em' }}>Batches</h1>
+          <p style={{ color: 'var(--ink-soft)', fontSize: '13px', marginTop: '6px' }}>Manage class groups and schedules</p>
         </div>
         <button onClick={() => setShowAdd(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 16px', background: 'var(--red)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
           <Plus size={15} /> New Batch
@@ -356,9 +357,9 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
 
       {/* Batch Cards Grid */}
       {batches.length === 0 ? (
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', padding: '56px', textAlign: 'center', color: '#9ca3af' }}>
-          <Calendar size={36} style={{ margin: '0 auto 16px', display: 'block', color: '#d1d5db' }} strokeWidth={1.5} />
-          <p style={{ fontSize: '15px', fontWeight: '600', color: '#6e6e73' }}>No batches yet</p>
+        <div style={{ background: '#fff', borderRadius: '14px', border: '1px solid var(--line-warm)', padding: '56px', textAlign: 'center', color: 'var(--ink-soft)', boxShadow: '0 2px 12px rgba(40,32,20,0.04)' }}>
+          <Calendar size={36} style={{ margin: '0 auto 16px', display: 'block', color: 'var(--gold-soft)' }} strokeWidth={1.5} />
+          <p style={{ fontSize: '15px', fontWeight: '600', color: 'var(--ink)' }}>No batches yet</p>
           <p style={{ fontSize: '13px', marginTop: '6px' }}>Click &ldquo;New Batch&rdquo; to create your first class group</p>
         </div>
       ) : (
@@ -367,9 +368,9 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
             const fillPct = batch.capacity > 0 ? Math.min(100, Math.round((batch.enrolled / batch.capacity) * 100)) : 0
             const fillColor = fillPct >= 90 ? '#e84040' : fillPct >= 70 ? '#f59e0b' : '#22c55e'
             return (
-              <div key={batch.id} style={{ background: '#fff', borderRadius: '12px', padding: '20px', border: '1px solid #ececef', transition: 'border-color 0.15s' }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = '#d1d5db')}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = '#ececef')}>
+              <div key={batch.id} style={{ background: '#fff', borderRadius: '14px', padding: '20px', border: '1px solid var(--line-warm)', boxShadow: '0 2px 12px rgba(40,32,20,0.04)', transition: 'border-color 0.15s, transform 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--line-warm)'; e.currentTarget.style.transform = 'none' }}>
                 {/* Card Header */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
                   <div>
@@ -378,7 +379,7 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
                       <span style={{ background: (modeColor[batch.mode || 'Office'] || '#6b7280') + '18', color: modeColor[batch.mode || 'Office'] || '#6b7280', fontSize: '11px', fontWeight: '700', padding: '2px 10px', borderRadius: '20px' }}>{batch.mode || 'Office'}</span>
                       <span style={{ background: (statusColor[batch.status] || '#9ca3af') + '18', color: statusColor[batch.status] || '#9ca3af', fontSize: '11px', fontWeight: '600', padding: '2px 10px', borderRadius: '20px' }}>{batch.status}</span>
                     </div>
-                    <h3 style={{ fontSize: '15px', fontWeight: '600', color: '#1d1d1f', letterSpacing: '-0.01em' }}>{batch.name}</h3>
+                    <h3 style={{ fontFamily: 'var(--display)', fontSize: '17px', fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em' }}>{batch.name}</h3>
                   </div>
                   <div style={{ display: 'flex', gap: '6px' }}>
                     <button onClick={() => openView(batch)} style={{ padding: '5px 10px', background: '#f3f4f6', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', color: '#374151', fontWeight: 600 }}>View</button>
@@ -407,8 +408,8 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
                     <span style={{ fontSize: '12px', color: '#6b7280' }}>Seats filled</span>
                     <span style={{ fontSize: '12px', fontWeight: '700', color: fillColor }}>{batch.enrolled}/{batch.capacity}</span>
                   </div>
-                  <div style={{ height: '6px', background: '#f3f4f6', borderRadius: '3px' }}>
-                    <div style={{ height: '100%', width: `${fillPct}%`, background: fillColor, borderRadius: '3px', transition: 'width 0.5s' }} />
+                  <div style={{ height: '6px', background: 'var(--paper-2)', borderRadius: '99px' }}>
+                    <div style={{ height: '100%', width: `${fillPct}%`, background: fillColor, borderRadius: '99px', transition: 'width 0.5s' }} />
                   </div>
                 </div>
               </div>
