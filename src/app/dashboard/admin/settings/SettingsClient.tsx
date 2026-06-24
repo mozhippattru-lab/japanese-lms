@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import ToastContainer, { useToast } from '@/components/Toast'
 import { Building2, Clock, Users, GraduationCap, CalendarDays, Save } from 'lucide-react'
 
@@ -50,14 +49,13 @@ export default function SettingsClient({ initial, counts, adminEmail }: {
 
   async function save() {
     setSaving(true)
-    const supabase = createClient()
-    const { error } = await supabase.from('app_settings').update({
-      institute_name_ta: s.institute_name_ta, institute_name_en: s.institute_name_en, tagline: s.tagline,
-      address: s.address || null, phone: s.phone || null, email: s.email || null, registration_no: s.registration_no || null,
-      working_start: s.working_start, working_end: s.working_end, currency: s.currency, academic_year: s.academic_year || null,
-      updated_at: new Date().toISOString(),
-    }).eq('id', 'default')
-    if (error) { toast(error.message, 'error'); setSaving(false); return }
+    const res = await fetch('/api/settings', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(s),
+    })
+    const data = await res.json()
+    if (!res.ok) { toast(data.error || 'Failed to save', 'error'); setSaving(false); return }
     toast('Settings saved', 'success')
     setSaving(false)
   }
