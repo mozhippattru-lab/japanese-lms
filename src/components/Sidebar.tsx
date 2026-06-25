@@ -141,7 +141,7 @@ export default function Sidebar({ role, userName }: { role: string; userName: st
           </div>
           <div>
             <div style={{ color: '#fff', fontFamily: 'var(--display)', fontSize: '17px', fontWeight: '600', lineHeight: 1.3 }}>மொழிப்பற்று</div>
-            <div style={{ color: 'var(--gold-soft)', fontSize: '9.5px', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '1px' }}>ஜப்பானிய மொழிப் பள்ளி</div>
+            <div style={{ color: 'var(--gold-soft)', fontSize: '9.5px', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '1px' }}>ஜப்பானிய மொழிப் பள்ளிக்கூடம்</div>
           </div>
         </div>
       </div>
