@@ -80,7 +80,16 @@ export default function LoginPage() {
         position: 'relative', zIndex: 1,
         display: 'flex', maxWidth: '780px', width: '100%',
         borderRadius: '24px', overflow: 'hidden',
-        boxShadow: '0 32px 100px rgba(0,0,0,0.7)',
+        boxShadow: `
+          0 1px 0 rgba(255,255,255,0.18),
+          0 -1px 0 rgba(0,0,0,0.3) inset,
+          0 8px 16px rgba(0,0,0,0.4),
+          0 24px 48px rgba(0,0,0,0.5),
+          0 48px 96px rgba(0,0,0,0.35),
+          0 80px 140px rgba(180,50,100,0.2)
+        `,
+        border: '1px solid rgba(255,255,255,0.14)',
+        transform: 'translateY(-2px)',
       }}>
 
         {/* ── Left: fist panel ── */}
