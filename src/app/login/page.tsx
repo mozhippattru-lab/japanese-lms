@@ -106,7 +106,7 @@ export default function LoginPage() {
             }}>本</div>
             <div>
               <div style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: '18px', color: '#fff', letterSpacing: '-0.01em', lineHeight: 1.3 }}>மொழிப்பற்று</div>
-              <div style={{ fontSize: '9px', color: 'var(--gold-soft)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: '4px' }}>Japanese Language School</div>
+              <div style={{ fontSize: '9px', color: 'var(--gold-soft)', letterSpacing: '0.09em', textTransform: 'uppercase', marginTop: '4px' }}>ஜப்பானிய மொழிப் பள்ளி</div>
             </div>
           </div>
         </div>
