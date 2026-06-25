@@ -322,14 +322,18 @@ export default function Landing() {
         <section id="donate" className="lp-section lp-donate-section">
           <div className="lp-container">
             <div className="lp-donate-inner">
+
+              {/* Left — copy + stats */}
               <div className="lp-donate-copy">
                 <SectionTag light ta="தானம்" jp="寄付・車椅子">Support</SectionTag>
-                <h2 className="lp-h2" style={{ color: '#fff' }}>Support Our Electric Wheelchair Mission</h2>
-                <p style={{ fontSize: '16px', lineHeight: 1.75, color: 'rgba(255,255,255,0.72)', margin: '0 0 28px' }}>
-                  Students receiving free education, parents, alumni, and supporters are welcome to contribute
-                  voluntarily to our Electric Wheelchair Donation Fund. Every contribution helps someone
-                  regain independence and mobility. Donations are completely optional.
+                <h2 className="lp-h2 lp-on-dark">Support Our Electric Wheelchair Mission</h2>
+                <p className="lp-p lp-p-light">
+                  Students, parents, alumni, and supporters can voluntarily contribute to our Electric
+                  Wheelchair Donation Fund. Every contribution helps someone with a disability regain
+                  independence. <em style={{ color: 'rgba(255,255,255,0.55)', fontStyle: 'normal' }}>Donations are completely optional.</em>
                 </p>
+
+                {/* 3-stat row */}
                 <div className="lp-donate-stats-row">
                   <div className="lp-dstat">
                     <div className="lp-dstat-val">{inr(DONATION_STATS.raised)}</div>
@@ -338,14 +342,16 @@ export default function Landing() {
                   <div className="lp-dstat-div" />
                   <div className="lp-dstat">
                     <div className="lp-dstat-val">{DONATION_STATS.wheelchairs}</div>
-                    <div className="lp-dstat-label">Wheelchairs Sponsored</div>
+                    <div className="lp-dstat-label">Wheelchairs Gifted</div>
                   </div>
                   <div className="lp-dstat-div" />
                   <div className="lp-dstat">
                     <div className="lp-dstat-val">{Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100)}%</div>
-                    <div className="lp-dstat-label">Towards Next Batch</div>
+                    <div className="lp-dstat-label">To Next Batch</div>
                   </div>
                 </div>
+
+                {/* Progress bar */}
                 <div className="lp-donate-bar-wrap">
                   <div className="lp-donate-bar-track">
                     <div className="lp-donate-bar-fill" style={{ width: `${Math.min(100, Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100))}%` }} />
@@ -355,20 +361,47 @@ export default function Landing() {
                     <span>Goal: {inr(DONATION_STATS.target)}</span>
                   </div>
                 </div>
-                <a href="#demo" className="lp-btn lp-btn-donate">
-                  ❤️ Donate Now
-                </a>
+
+                <div className="lp-donate-actions">
+                  <a href="#demo" className="lp-btn lp-btn-donate">❤️ Donate Now</a>
+                  <span className="lp-donate-note">Voluntary · No minimum amount</span>
+                </div>
               </div>
 
-              <div className="lp-donate-illustration">
-                <div className="lp-donate-icon-wrap">
-                  <div className="lp-donate-big-icon">♿</div>
-                  <div className="lp-donate-heart">❤️</div>
+              {/* Right — impact card */}
+              <div className="lp-donate-impact-card">
+                <div className="lp-dic-header">
+                  <div className="lp-dic-icon">♿</div>
+                  <div>
+                    <div className="lp-dic-title">Impact So Far</div>
+                    <div className="lp-dic-sub">Every student who learns, gives back</div>
+                  </div>
                 </div>
-                <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '14px', textAlign: 'center', lineHeight: 1.7, margin: '20px 0 0' }}>
-                  Every student who enrolls helps someone with a physical disability regain independence and mobility.
-                </p>
+
+                <div className="lp-dic-milestones">
+                  {[
+                    { label: 'Electric wheelchairs gifted', val: `${DONATION_STATS.wheelchairs} people`, done: true },
+                    { label: 'Families regained mobility', val: `${DONATION_STATS.wheelchairs} families`, done: true },
+                    { label: 'Current batch fundraising', val: `${Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100)}% funded`, done: false },
+                  ].map((m, i) => (
+                    <div key={i} className={`lp-dic-row ${m.done ? 'lp-dic-done' : 'lp-dic-pending'}`}>
+                      <span className="lp-dic-dot">{m.done ? '✓' : '○'}</span>
+                      <span className="lp-dic-item-label">{m.label}</span>
+                      <span className="lp-dic-item-val">{m.val}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="lp-dic-cost">
+                  <div className="lp-dic-cost-label">Cost of one electric wheelchair</div>
+                  <div className="lp-dic-cost-val">≈ ₹37,500</div>
+                </div>
+
+                <div className="lp-dic-quote">
+                  &ldquo;When you learn Japanese here, someone somewhere gains the freedom to move.&rdquo;
+                </div>
               </div>
+
             </div>
           </div>
         </section>
@@ -903,12 +936,34 @@ function LandingStyles() {
       .lp-donate-section { background: var(--navy);
         background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.14), transparent 55%),
           radial-gradient(80% 60% at 5% 90%, rgba(194,151,75,0.08), transparent 50%); }
-      .lp-donate-illustration { display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 40px 20px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 16px; }
-      .lp-donate-icon-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
-      .lp-donate-big-icon { font-size: 96px; line-height: 1; filter: drop-shadow(0 4px 24px rgba(124,58,237,0.4)); }
-      .lp-donate-heart { position: absolute; bottom: -8px; right: -12px; font-size: 36px; }
+      /* Donation impact card (right panel) */
+      .lp-donate-impact-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 0; }
+      .lp-dic-header { display: flex; align-items: center; gap: 18px; padding-bottom: 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px; }
+      .lp-dic-icon { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, var(--red), #f97316);
+        display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;
+        box-shadow: 0 8px 20px rgba(226,65,56,0.35); }
+      .lp-dic-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+      .lp-dic-sub { font-size: 12.5px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+      .lp-dic-milestones { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+      .lp-dic-row { display: flex; align-items: center; gap: 12px; }
+      .lp-dic-dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+      .lp-dic-done .lp-dic-dot { background: rgba(226,65,56,0.2); color: var(--red); border: 1.5px solid rgba(226,65,56,0.4); }
+      .lp-dic-pending .lp-dic-dot { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); border: 1.5px solid rgba(255,255,255,0.15); }
+      .lp-dic-item-label { font-size: 13.5px; color: rgba(255,255,255,0.72); flex: 1; line-height: 1.45; }
+      .lp-dic-done .lp-dic-item-label { color: rgba(255,255,255,0.88); }
+      .lp-dic-item-val { font-size: 12.5px; font-weight: 700; color: var(--gold-soft); white-space: nowrap; }
+      .lp-dic-pending .lp-dic-item-val { color: rgba(255,255,255,0.45); }
+      .lp-dic-cost { background: rgba(194,151,75,0.1); border: 1px solid rgba(194,151,75,0.25); border-radius: 10px;
+        padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+      .lp-dic-cost-label { font-size: 12.5px; color: rgba(255,255,255,0.6); }
+      .lp-dic-cost-val { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--gold-soft); }
+      .lp-dic-quote { font-size: 13px; font-style: italic; color: rgba(255,255,255,0.45); line-height: 1.65;
+        border-left: 2px solid rgba(226,65,56,0.5); padding-left: 14px; }
+      .lp-donate-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+      .lp-donate-note { font-size: 12px; color: rgba(255,255,255,0.4); }
       .lp-donate-inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: start; }
       .lp-donate-stats-row { display: flex; align-items: center; gap: 0; margin: 32px 0 24px;
         background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
