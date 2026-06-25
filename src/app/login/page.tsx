@@ -43,8 +43,8 @@ export default function LoginPage() {
         {/* ── Left: fist panel ── */}
         <div className="login-img-panel" style={{
           flex: '0 0 260px', background: '#0d1228',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '40px 24px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          padding: '40px 24px', gap: '24px',
         }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -53,26 +53,23 @@ export default function LoginPage() {
             aria-hidden="true"
             style={{ width: '100%', maxWidth: '200px', height: 'auto', filter: 'invert(1)', opacity: 0.9 }}
           />
+          {/* Brand below fist */}
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '6px' }}>
+              <div style={{
+                width: '36px', height: '36px', background: 'var(--red)', borderRadius: '10px', flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 6px 20px rgba(232,64,64,0.4)',
+                fontFamily: 'var(--display)', fontWeight: 700, fontSize: '18px', color: '#fff',
+              }}>学</div>
+              <div style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: '17px', color: '#fff', letterSpacing: '-0.01em' }}>மொழிப்பற்று</div>
+            </div>
+            <div style={{ fontSize: '9px', color: 'var(--gold-soft)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Japanese Language Center</div>
+          </div>
         </div>
 
-        {/* ── Right: brand + form ── */}
+        {/* ── Right: form only ── */}
         <div style={{ flex: 1, background: '#fff', padding: '44px 40px' }}>
-
-          {/* Brand */}
-          <div style={{ marginBottom: '32px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-              <div style={{
-                width: '40px', height: '40px', background: 'var(--red)', borderRadius: '11px', flexShrink: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 6px 20px rgba(232,64,64,0.35)',
-                fontFamily: 'var(--display)', fontWeight: 700, fontSize: '20px', color: '#fff',
-              }}>学</div>
-              <div>
-                <div style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: '17px', color: 'var(--navy)', letterSpacing: '-0.01em' }}>மொழிப்பற்று</div>
-                <div style={{ fontSize: '10px', color: '#9ca3af', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Japanese Language Center</div>
-              </div>
-            </div>
-          </div>
 
           <h2 style={{ fontSize: '22px', fontWeight: '800', margin: '0 0 4px', color: 'var(--navy)', letterSpacing: '-0.02em' }}>Welcome back</h2>
           <p style={{ fontSize: '13px', color: '#9ca3af', margin: '0 0 26px' }}>Sign in to your account to continue</p>
