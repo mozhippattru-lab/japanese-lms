@@ -70,7 +70,7 @@ export default function Landing() {
             <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
             <a href="#why" onClick={() => setMenuOpen(false)}>Why Us</a>
             <Link href="/login" className="lp-nav-login" onClick={() => setMenuOpen(false)}>Login</Link>
-            <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>இலவச செயல்முறை விளக்கம்</a>
+            <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>Free Demo</a>
           </nav>
 
           <button className="lp-burger" aria-label="Menu" onClick={() => setMenuOpen(o => !o)}>
@@ -253,7 +253,7 @@ export default function Landing() {
         <section id="demo" className="lp-section lp-demo">
           <div className="lp-container lp-demo-grid">
             <div className="lp-demo-copy">
-              <SectionTag light ta="இலவச டெமோ" jp="無料体験">Free demo</SectionTag>
+              <SectionTag light ta="இலவச செயல்முறை விளக்கம்" jp="無料体験">Free demo</SectionTag>
               <h2 className="lp-h2 lp-on-dark">Sit in on a class. On us.</h2>
               <p className="lp-p lp-p-light">
                 Experience the teaching first-hand — no fees, no commitment. Tell us a little about yourself and
