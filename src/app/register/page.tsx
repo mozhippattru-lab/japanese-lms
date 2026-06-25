@@ -5,6 +5,27 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Eye, EyeOff, AlertCircle, Building2 } from 'lucide-react'
 
+const PETALS = [
+  { left: '8%',  delay: '0s',    dur: '7s',  size: 9,  drift: 25 },
+  { left: '15%', delay: '1.2s',  dur: '9s',  size: 7,  drift: -20 },
+  { left: '22%', delay: '3s',    dur: '8s',  size: 11, drift: 30 },
+  { left: '30%', delay: '0.5s',  dur: '10s', size: 8,  drift: -15 },
+  { left: '38%', delay: '2s',    dur: '6s',  size: 6,  drift: 20 },
+  { left: '45%', delay: '4s',    dur: '8.5s',size: 10, drift: -25 },
+  { left: '52%', delay: '1s',    dur: '7.5s',size: 7,  drift: 18 },
+  { left: '60%', delay: '3.5s',  dur: '9s',  size: 9,  drift: -30 },
+  { left: '67%', delay: '0.8s',  dur: '8s',  size: 6,  drift: 22 },
+  { left: '74%', delay: '2.5s',  dur: '11s', size: 12, drift: -18 },
+  { left: '80%', delay: '1.5s',  dur: '7s',  size: 8,  drift: 28 },
+  { left: '88%', delay: '3.8s',  dur: '9.5s',size: 7,  drift: -22 },
+  { left: '5%',  delay: '5s',    dur: '8s',  size: 10, drift: 15 },
+  { left: '93%', delay: '4.5s',  dur: '7.5s',size: 8,  drift: -28 },
+  { left: '55%', delay: '6s',    dur: '10s', size: 6,  drift: 20 },
+  { left: '42%', delay: '7s',    dur: '8s',  size: 9,  drift: -15 },
+  { left: '71%', delay: '5.5s',  dur: '9s',  size: 7,  drift: 25 },
+  { left: '27%', delay: '6.5s',  dur: '11s', size: 11, drift: -20 },
+]
+
 type CollegeOpt = { id: string; name: string; join_code: string | null }
 
 export default function RegisterPage() {
@@ -63,21 +84,52 @@ export default function RegisterPage() {
 
   return (
     <div style={{
-      minHeight: '100vh', background: 'var(--navy)',
+      minHeight: '100vh', position: 'relative', overflow: 'hidden',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: '20px', fontFamily: 'Inter, sans-serif',
     }}>
+
+      {/* ── Cherry blossom night background ── */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', inset: 0, zIndex: 0,
+        background: 'linear-gradient(180deg, #050210 0%, #0e0720 18%, #1c0d35 36%, #30104a 52%, #4a1040 68%, #2a0c2e 84%, #120818 100%)',
+      }}>
+        <div style={{ position: 'absolute', top: '7%', right: '14%', width: '70px', height: '70px', borderRadius: '50%', background: 'radial-gradient(circle at 38% 38%, #fffde8 0%, #fef9c3 40%, #fef08a 100%)', boxShadow: '0 0 40px 20px rgba(254,249,195,0.18), 0 0 80px 40px rgba(254,240,138,0.09)' }} />
+        <svg aria-hidden="true" viewBox="0 0 260 520" style={{ position: 'absolute', bottom: 0, left: '-10px', height: '70%', width: 'auto', opacity: 0.92 }} fill="#1a0828">
+          <rect x="115" y="280" width="30" height="240" rx="8" />
+          <path d="M130 300 Q60 240 10 200 Q50 220 100 250 Q70 180 30 140 Q80 180 120 230 Q100 160 80 100 Q120 160 128 240 Q140 160 160 100 Q140 160 130 230 Q170 180 210 140 Q180 190 165 250 Q200 220 240 200 Q200 240 155 295 Z" />
+          <circle cx="15"  cy="190" r="28" fill="#3d1540" /><circle cx="40"  cy="170" r="22" fill="#4a1848" /><circle cx="75"  cy="130" r="24" fill="#3d1540" /><circle cx="95"  cy="110" r="22" fill="#4a1848" /><circle cx="120" cy="95"  r="26" fill="#3d1540" /><circle cx="160" cy="105" r="24" fill="#4a1848" /><circle cx="220" cy="165" r="26" fill="#3d1540" /><circle cx="238" cy="190" r="20" fill="#4a1848" />
+          <circle cx="15"  cy="190" r="25" fill="#c06090" opacity="0.35" /><circle cx="75"  cy="130" r="21" fill="#c06090" opacity="0.35" /><circle cx="120" cy="95"  r="23" fill="#c06090" opacity="0.35" /><circle cx="220" cy="165" r="23" fill="#c06090" opacity="0.35" />
+        </svg>
+        <svg aria-hidden="true" viewBox="0 0 220 480" style={{ position: 'absolute', bottom: 0, right: '-10px', height: '63%', width: 'auto', opacity: 0.88 }} fill="#1a0828">
+          <rect x="95" y="270" width="26" height="210" rx="7" />
+          <path d="M108 280 Q50 225 5 185 Q45 210 90 240 Q55 170 20 120 Q70 168 105 225 Q90 145 75 85 Q110 150 110 225 Q125 140 145 80 Q130 155 118 230 Q155 168 190 120 Q165 178 140 245 Q185 210 215 185 Q185 228 135 278 Z" />
+          <circle cx="8"   cy="178" r="24" fill="#3d1540" /><circle cx="65"  cy="118" r="22" fill="#3d1540" /><circle cx="108" cy="82"  r="24" fill="#3d1540" /><circle cx="155" cy="110" r="22" fill="#3d1540" /><circle cx="210" cy="175" r="22" fill="#3d1540" />
+          <circle cx="8"   cy="178" r="21" fill="#d070a0" opacity="0.35" /><circle cx="108" cy="82"  r="21" fill="#d070a0" opacity="0.35" /><circle cx="210" cy="175" r="19" fill="#d070a0" opacity="0.35" />
+        </svg>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '180px', background: 'linear-gradient(0deg, rgba(180,60,120,0.18) 0%, transparent 100%)' }} />
+        {PETALS.map((p, i) => (
+          <div key={i} className="sakura-petal" style={{
+            left: p.left, width: p.size + 'px', height: p.size + 'px',
+            animationDelay: p.delay, animationDuration: p.dur,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ['--drift' as any]: p.drift + 'px',
+          }} />
+        ))}
+      </div>
+
       {/* Unified split card */}
       <div style={{
+        position: 'relative', zIndex: 1,
         display: 'flex', maxWidth: '820px', width: '100%',
         borderRadius: '24px', overflow: 'hidden',
-        boxShadow: '0 32px 100px rgba(0,0,0,0.5)',
+        boxShadow: '0 32px 100px rgba(0,0,0,0.7)',
         alignItems: 'stretch',
       }}>
 
         {/* ── Left: fist panel ── */}
         <div className="login-img-panel" style={{
-          flex: '0 0 300px', background: '#0d1228',
+          flex: '0 0 300px', background: 'rgba(13,18,40,0.92)', backdropFilter: 'blur(12px)',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           padding: '32px 28px', gap: '16px',
         }}>
@@ -103,7 +155,8 @@ export default function RegisterPage() {
         </div>
 
         {/* ── Right: form ── */}
-        <div style={{ flex: 1, background: '#fff', padding: '40px 36px', overflowY: 'auto' }}>
+        <div style={{ flex: 1, background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)', padding: '40px 36px', overflowY: 'auto' }}>
+          <p style={{ fontFamily: 'var(--display)', fontSize: '13px', color: '#c06080', letterSpacing: '0.04em', margin: '0 0 4px' }}>はじめまして</p>
           <h2 style={{ fontSize: '22px', fontWeight: '800', margin: '0 0 4px', color: 'var(--navy)', letterSpacing: '-0.02em' }}>Create your account</h2>
           <p style={{ fontSize: '13px', color: '#9ca3af', margin: '0 0 22px' }}>Fill in your details to get started</p>
 
@@ -218,7 +271,25 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      <style>{`.login-img-panel { display: flex !important; } @media (max-width: 580px) { .login-img-panel { display: none !important; } }`}</style>
+      <style>{`
+        .login-img-panel { display: flex !important; }
+        @media (max-width: 580px) { .login-img-panel { display: none !important; } }
+        .sakura-petal {
+          position: absolute; top: -20px;
+          border-radius: 150% 0 150% 0;
+          background: radial-gradient(circle at 40% 40%, #ffccd5, #f472b6);
+          opacity: 0.85;
+          animation: sakura-fall linear infinite;
+          transform-origin: center center;
+        }
+        @keyframes sakura-fall {
+          0%   { transform: translateY(-30px) translateX(0px) rotate(0deg); opacity: 0.9; }
+          25%  { transform: translateY(25vh) translateX(var(--drift)) rotate(90deg); opacity: 0.8; }
+          50%  { transform: translateY(50vh) translateX(0px) rotate(180deg); opacity: 0.7; }
+          75%  { transform: translateY(75vh) translateX(calc(var(--drift) * -0.5)) rotate(270deg); opacity: 0.5; }
+          100% { transform: translateY(110vh) translateX(var(--drift)) rotate(360deg); opacity: 0; }
+        }
+      `}</style>
     </div>
   )
 }
