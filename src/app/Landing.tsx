@@ -847,23 +847,24 @@ function LandingStyles() {
       .lp-footer-jp { font-family: var(--jp); color: var(--gold-soft); }
 
       /* Kids course card */
-      .lp-kids-card { margin-top: 36px; background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);
-        border: 1.5px solid #c4b5fd; border-radius: 12px; overflow: hidden; position: relative; }
-      .lp-kids-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-        background: linear-gradient(90deg, #7c3aed, #a855f7, #ec4899); }
-      .lp-kids-badge { background: #7c3aed; color: #fff; font-size: 11.5px; font-weight: 700;
-        letter-spacing: .04em; padding: 7px 22px; display: inline-block; }
+      .lp-kids-card { margin-top: 36px; background: #fff; border: 1px solid var(--line);
+        border-radius: 8px; overflow: hidden; position: relative;
+        box-shadow: 0 4px 24px -8px rgba(40,32,20,0.12); }
+      .lp-kids-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, var(--red), var(--gold)); }
+      .lp-kids-badge { background: var(--navy); color: var(--gold-soft); font-size: 11.5px; font-weight: 700;
+        letter-spacing: .04em; padding: 7px 22px; display: inline-block; font-family: var(--jp); }
       .lp-kids-inner { display: grid; grid-template-columns: 1fr 1.6fr auto; gap: 32px; padding: 28px 32px; align-items: center; }
       .lp-kids-left { display: flex; align-items: flex-start; gap: 18px; }
       .lp-kids-emoji { font-size: 52px; line-height: 1; flex-shrink: 0; }
-      .lp-kids-jp { font-family: var(--jp); font-size: 13px; color: #7c3aed; font-weight: 600; margin-bottom: 4px; }
+      .lp-kids-jp { font-family: var(--jp); font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
       .lp-kids-title { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin: 0 0 6px; }
       .lp-kids-meta { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 10px; }
-      .lp-kids-price-tag { font-family: var(--serif); font-size: 28px; font-weight: 700; color: #7c3aed; }
+      .lp-kids-price-tag { font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--red); }
       .lp-kids-desc p { font-size: 14px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 14px; }
       .lp-kids-points { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
       .lp-kids-points li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink); }
-      .lp-kids-points li svg { color: #7c3aed; flex-shrink: 0; }
+      .lp-kids-points li svg { color: var(--red); flex-shrink: 0; }
       .lp-kids-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; }
       .lp-kids-note { font-size: 11px; color: var(--ink-soft); text-align: center; }
 
@@ -899,10 +900,9 @@ function LandingStyles() {
       .lp-de-amt { font-family: var(--serif); font-weight: 700; font-size: 15px; color: var(--ink); }
 
       /* Donation section */
-      .lp-donate-section { background-color: #1a0a2e;
-        background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.12), transparent 55%),
-          radial-gradient(80% 60% at 10% 85%, rgba(124,58,237,0.15), transparent 50%),
-          linear-gradient(135deg, #1a0a2e 0%, #161a33 60%, #1a1232 100%); }
+      .lp-donate-section { background: var(--navy);
+        background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.14), transparent 55%),
+          radial-gradient(80% 60% at 5% 90%, rgba(194,151,75,0.08), transparent 50%); }
       .lp-donate-illustration { display: flex; flex-direction: column; align-items: center; justify-content: center;
         padding: 40px 20px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
         border-radius: 16px; }
