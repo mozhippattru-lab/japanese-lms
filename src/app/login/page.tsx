@@ -54,16 +54,14 @@ export default function LoginPage() {
             style={{ width: '100%', maxWidth: '240px', height: 'auto', filter: 'invert(1)', opacity: 0.9 }}
           />
           {/* Brand below fist */}
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '5px', flexWrap: 'wrap' }}>
-              <div style={{
-                width: '36px', height: '36px', background: 'var(--red)', borderRadius: '10px', flexShrink: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 6px 20px rgba(232,64,64,0.4)',
-                fontFamily: 'var(--display)', fontWeight: 700, fontSize: '18px', color: '#fff',
-              }}>学</div>
-              <div style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: '18px', color: '#fff', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>மொழிப்பற்று</div>
-            </div>
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+            <div style={{
+              width: '40px', height: '40px', background: 'var(--red)', borderRadius: '11px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 6px 20px rgba(232,64,64,0.4)',
+              fontFamily: 'var(--display)', fontWeight: 700, fontSize: '20px', color: '#fff',
+            }}>学</div>
+            <div style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: '18px', color: '#fff', letterSpacing: '-0.01em' }}>மொழிப்பற்று</div>
             <div style={{ fontSize: '9px', color: 'var(--gold-soft)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Japanese Language Center</div>
           </div>
         </div>
