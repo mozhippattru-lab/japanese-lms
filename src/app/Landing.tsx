@@ -57,7 +57,7 @@ export default function Landing() {
       <header className="lp-nav">
         <div className="lp-container lp-nav-inner">
           <a href="#top" className="lp-brand" onClick={() => setMenuOpen(false)}>
-            <span className="lp-logo">学</span>
+            <span className="lp-logo">本</span>
             <span className="lp-brand-text">
               <span className="lp-brand-ta">{TAMIL}</span>
               <span className="lp-brand-en">{ENG} · Japanese Language School</span>
@@ -275,7 +275,7 @@ export default function Landing() {
         <div className="lp-container lp-footer-grid">
           <div>
             <div className="lp-brand">
-              <span className="lp-logo">学</span>
+              <span className="lp-logo">本</span>
               <span className="lp-brand-text">
                 <span className="lp-brand-ta lp-on-dark">{TAMIL}</span>
                 <span className="lp-brand-en">{ENG}</span>

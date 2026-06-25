@@ -137,7 +137,7 @@ export default function Sidebar({ role, userName }: { role: string; userName: st
             boxShadow: '0 6px 16px rgba(232,64,64,0.35)',
             fontFamily: 'var(--display)', fontWeight: 700, fontSize: '23px', color: '#fff',
           }}>
-            学
+            本
           </div>
           <div>
             <div style={{ color: '#fff', fontFamily: 'var(--display)', fontSize: '17px', fontWeight: '600', lineHeight: 1.3 }}>மொழிப்பற்று</div>
