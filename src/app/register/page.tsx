@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -36,36 +36,6 @@ export default function RegisterPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [collegesLoaded, setCollegesLoaded] = useState(false)
-  const cardRef = useRef<HTMLDivElement>(null)
-  const shineRef = useRef<HTMLDivElement>(null)
-
-  function handleCardMove(e: React.MouseEvent<HTMLDivElement>) {
-    const card = cardRef.current
-    if (!card) return
-    const rect = card.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const cx = rect.width / 2
-    const cy = rect.height / 2
-    const rotX = ((y - cy) / cy) * -7
-    const rotY = ((x - cx) / cx) * 7
-    card.style.transition = 'transform 0.08s ease'
-    card.style.transform = `perspective(1100px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) scale(1.01)`
-    if (shineRef.current) {
-      const px = (x / rect.width) * 100
-      const py = (y / rect.height) * 100
-      shineRef.current.style.background = `radial-gradient(circle at ${px}% ${py}%, rgba(255,255,255,0.13) 0%, transparent 65%)`
-      shineRef.current.style.opacity = '1'
-    }
-  }
-
-  function handleCardLeave() {
-    const card = cardRef.current
-    if (!card) return
-    card.style.transition = 'transform 0.5s ease'
-    card.style.transform = 'perspective(1100px) rotateX(0deg) rotateY(0deg) translateY(-2px) scale(1)'
-    if (shineRef.current) shineRef.current.style.opacity = '0'
-  }
 
   const [colleges, setColleges] = useState<CollegeOpt[]>([])
   const [collegeId, setCollegeId] = useState('')
@@ -138,32 +108,16 @@ export default function RegisterPage() {
 
       {/* Unified split card */}
       <div
-        ref={cardRef}
-        onMouseMove={handleCardMove}
-        onMouseLeave={handleCardLeave}
+        className="auth-card"
         style={{
           position: 'relative', zIndex: 1,
           display: 'flex', maxWidth: '820px', width: '100%',
           borderRadius: '24px', overflow: 'hidden',
-          boxShadow: `
-            0 1px 0 rgba(255,255,255,0.18),
-            0 8px 16px rgba(0,0,0,0.4),
-            0 24px 48px rgba(0,0,0,0.5),
-            0 48px 96px rgba(0,0,0,0.35),
-            0 80px 140px rgba(180,50,100,0.2)
-          `,
+          boxShadow: '0 24px 60px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.3)',
           border: '1px solid rgba(255,255,255,0.14)',
-          transform: 'perspective(1100px) translateY(-2px)',
-          willChange: 'transform',
+          transition: 'transform 0.25s ease, box-shadow 0.25s ease',
           alignItems: 'stretch',
         }}>
-        {/* Shine reflection layer */}
-        <div ref={shineRef} style={{
-          position: 'absolute', inset: 0, zIndex: 10,
-          pointerEvents: 'none', opacity: 0,
-          transition: 'opacity 0.15s ease',
-          borderRadius: '24px',
-        }} />
 
         {/* ── Left: fist panel ── */}
         <div className="login-img-panel" style={{
@@ -312,6 +266,7 @@ export default function RegisterPage() {
       <style>{`
         .login-img-panel { display: flex !important; }
         @media (max-width: 580px) { .login-img-panel { display: none !important; } }
+        .auth-card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 12px 30px rgba(0,0,0,0.35); }
         .sakura-petal {
           position: absolute; top: -20px;
           border-radius: 150% 0 150% 0;
