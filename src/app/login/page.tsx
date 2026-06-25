@@ -114,7 +114,7 @@ export default function LoginPage() {
         {/* ── Right: form ── */}
         <div style={{ flex: 1, background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(22px) saturate(1.4)', WebkitBackdropFilter: 'blur(22px) saturate(1.4)', padding: '44px 40px' }}>
 
-          <p style={{ fontFamily: 'var(--display)', fontSize: '13px', color: '#c06080', letterSpacing: '0.04em', margin: '0 0 4px' }}>おかえりなさい</p>
+          <p style={{ fontFamily: 'var(--display)', fontSize: '13px', color: '#c06080', letterSpacing: '0.04em', margin: '0 0 4px' }}>ようこそ</p>
           <h2 style={{ fontSize: '22px', fontWeight: '800', margin: '0 0 4px', color: 'var(--navy)', letterSpacing: '-0.02em' }}>Welcome back</h2>
           <p style={{ fontSize: '13px', color: '#9ca3af', margin: '0 0 26px' }}>Sign in to your account to continue</p>
 
