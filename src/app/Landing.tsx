@@ -363,7 +363,7 @@ export default function Landing() {
                 </div>
 
                 <div className="lp-donate-actions">
-                  <a href="#demo" className="lp-btn lp-btn-donate">❤️ Donate Now</a>
+                  <a href="#demo" className="lp-btn lp-btn-donate">🤍 Donate Now</a>
                   <span className="lp-donate-note">Voluntary · No minimum amount</span>
                 </div>
               </div>
