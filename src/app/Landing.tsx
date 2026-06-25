@@ -977,9 +977,9 @@ function LandingStyles() {
         transition: width 1s ease; animation: barGrow 1.5s ease forwards; }
       @keyframes barGrow { from { width: 0 !important; } }
       .lp-donate-bar-labels { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.45); }
-      .lp-btn-donate { background: linear-gradient(135deg, #e24138, #f472b6); color: #fff;
-        box-shadow: 0 8px 24px rgba(226,65,56,0.35); font-size: 15px; padding: 14px 28px; }
-      .lp-btn-donate:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(226,65,56,0.48); }
+      .lp-btn-donate { background: var(--red); color: #fff;
+        box-shadow: 0 6px 18px rgba(226,65,56,0.28); font-size: 15px; padding: 14px 28px; }
+      .lp-btn-donate:hover { background: var(--red-deep); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(226,65,56,0.38); }
       .lp-donate-recent { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
         border-radius: 12px; padding: 26px; }
       .lp-donate-recent-title { font-family: var(--serif); font-size: 17px; font-weight: 700; color: #fff; margin: 0 0 20px; }
