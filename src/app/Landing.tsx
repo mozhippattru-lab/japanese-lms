@@ -42,6 +42,14 @@ const COURSES: Course[] = [
 const PACKAGE_PRICE = 30000
 const PACKAGE_ORIGINAL = 8000 + 10000 + 15000 // 33,000
 
+const KIDS_COURSE = {
+  price: 3000, hours: '40 Hours', color: '#7c3aed',
+  points: ['Basic speaking & listening', 'Hiragana reading & writing', 'Fun vocabulary & greetings', 'Interactive activities & games'],
+}
+
+// Donation stats (update these as actual donations come in)
+const DONATION_STATS = { raised: 124000, wheelchairs: 8, target: 300000 }
+
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -69,6 +77,7 @@ export default function Landing() {
             <a href="#courses" onClick={() => setMenuOpen(false)}>Courses</a>
             <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
             <a href="#why" onClick={() => setMenuOpen(false)}>Why Us</a>
+            <a href="#donate" onClick={() => setMenuOpen(false)}>Donate</a>
             <Link href="/login" className="lp-nav-login" onClick={() => setMenuOpen(false)}>Login</Link>
             <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>Free Demo</a>
           </nav>
@@ -185,6 +194,9 @@ export default function Landing() {
                 </article>
               ))}
             </div>
+
+            {/* Kids course — featured row */}
+            <KidsCourse />
           </div>
         </section>
 
@@ -231,21 +243,141 @@ export default function Landing() {
 
         {/* ─── Why us — editorial numbered ─────── */}
         <section id="why" className="lp-section lp-section-paper">
-          <div className="lp-container lp-why">
-            <div className="lp-why-head">
-              <SectionTag ta="ஏன் நாங்கள்" jp="選ばれる理由">Why Mozhippattru</SectionTag>
-              <h2 className="lp-h2">Small school. Serious results.</h2>
-              <p className="lp-p">
-                We kept the things that actually move a learner forward, and left out the rest. Here&apos;s what
-                you can count on with us.
-              </p>
+          <div className="lp-container">
+            <div className="lp-why">
+              <div className="lp-why-head">
+                <SectionTag ta="ஏன் நாங்கள்" jp="選ばれる理由">Why Mozhippattru</SectionTag>
+                <h2 className="lp-h2">Small school. Serious results.</h2>
+                <p className="lp-p">
+                  We kept the things that actually move a learner forward, and left out the rest. Here&apos;s what
+                  you can count on with us.
+                </p>
+              </div>
+              <ol className="lp-why-list">
+                <WhyItem n="一" t="N1-certified teachers" d="Learn from the highest JLPT-qualified faculty who know precisely what each level demands of you." />
+                <WhyItem n="二" t="Online & in-class" d="Join live online from anywhere, or learn in person — whichever fits your week. Same teachers, same care." />
+                <WhyItem n="三" t="Exam-aligned, life-ready" d="Every lesson maps to the JLPT syllabus, but we drill for real speaking and listening — not just the paper." />
+                <WhyItem n="四" t="A learning platform that follows you" d="Track classes, attendance, assignments and progress on your own student portal, from day one." />
+              </ol>
             </div>
-            <ol className="lp-why-list">
-              <WhyItem n="一" t="N1-certified teachers" d="Learn from the highest JLPT-qualified faculty who know precisely what each level demands of you." />
-              <WhyItem n="二" t="Online & in-class" d="Join live online from anywhere, or learn in person — whichever fits your week. Same teachers, same care." />
-              <WhyItem n="三" t="Exam-aligned, life-ready" d="Every lesson maps to the JLPT syllabus, but we drill for real speaking and listening — not just the paper." />
-              <WhyItem n="四" t="A learning platform that follows you" d="Track classes, attendance, assignments and progress on your own student portal, from day one." />
-            </ol>
+
+            {/* Special mission cards */}
+            <div className="lp-why-specials">
+              {/* Free Education */}
+              <div className="lp-mission-card lp-mission-green">
+                <div className="lp-mission-icon">🌳</div>
+                <div className="lp-mission-body">
+                  <div className="lp-mission-badge" style={{ background: '#dcfce7', color: '#15803d' }}>Free Education Initiative</div>
+                  <h3 className="lp-mission-title">Free Japanese Education for Government School Students</h3>
+                  <p className="lp-mission-desc">
+                    We provide free Japanese language education to students studying in nearby government schools.
+                    Our mission is to create equal learning opportunities for every child regardless of their
+                    financial background.
+                  </p>
+                  <div className="lp-mission-tree">
+                    <span className="lp-mission-tree-icon">🌱</span>
+                    <div>
+                      <strong>Tree Planting Initiative</strong>
+                      <p>Every student receiving free education must plant at least one tree near their home or school.</p>
+                    </div>
+                  </div>
+                  <div className="lp-mission-tagline">
+                    &ldquo;We provide education. Our students give back to nature by planting trees and creating a greener future.&rdquo;
+                  </div>
+                </div>
+              </div>
+
+              {/* Wheelchair Donation */}
+              <div className="lp-mission-card lp-mission-blue">
+                <div className="lp-mission-icon">♿</div>
+                <div className="lp-mission-body">
+                  <div className="lp-mission-badge" style={{ background: '#dbeafe', color: '#1d4ed8' }}>Learn &amp; Donate</div>
+                  <h3 className="lp-mission-title">25% of Every Fee Goes to Our Wheelchair Donation Fund</h3>
+                  <p className="lp-mission-desc">
+                    Education with a purpose. Whenever a student pays a course fee, <strong>25% of the tuition fee</strong> is
+                    automatically allocated to our Electric Wheelchair Donation Fund — helping people with
+                    physical disabilities regain independence and mobility.
+                  </p>
+                  <div className="lp-donate-example">
+                    <div className="lp-de-row">
+                      <span>Course Fee</span>
+                      <span className="lp-de-amt">₹8,000</span>
+                    </div>
+                    <div className="lp-de-row lp-de-highlight">
+                      <span>❤️ 25% Wheelchair Fund</span>
+                      <span className="lp-de-amt">₹2,000</span>
+                    </div>
+                    <div className="lp-de-row">
+                      <span>Your Course Fee</span>
+                      <span className="lp-de-amt">₹6,000</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── Donation section ────────────────── */}
+        <section id="donate" className="lp-section lp-donate-section">
+          <div className="lp-container">
+            <div className="lp-donate-inner">
+              <div className="lp-donate-copy">
+                <SectionTag ta="தானம்" jp="寄付・車椅子">Support</SectionTag>
+                <h2 className="lp-h2 lp-on-dark">Support Our Electric Wheelchair Mission</h2>
+                <p className="lp-p lp-p-light">
+                  Students receiving free education, parents, alumni, and supporters are welcome to contribute
+                  voluntarily to our Electric Wheelchair Donation Fund. Every contribution helps someone
+                  regain independence and mobility. Donations are completely optional.
+                </p>
+                <div className="lp-donate-stats-row">
+                  <div className="lp-dstat">
+                    <div className="lp-dstat-val">{inr(DONATION_STATS.raised)}</div>
+                    <div className="lp-dstat-label">Total Raised</div>
+                  </div>
+                  <div className="lp-dstat-div" />
+                  <div className="lp-dstat">
+                    <div className="lp-dstat-val">{DONATION_STATS.wheelchairs}</div>
+                    <div className="lp-dstat-label">Wheelchairs Sponsored</div>
+                  </div>
+                  <div className="lp-dstat-div" />
+                  <div className="lp-dstat">
+                    <div className="lp-dstat-val">{Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100)}%</div>
+                    <div className="lp-dstat-label">Towards Next Batch</div>
+                  </div>
+                </div>
+                <div className="lp-donate-bar-wrap">
+                  <div className="lp-donate-bar-track">
+                    <div className="lp-donate-bar-fill" style={{ width: `${Math.min(100, Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100))}%` }} />
+                  </div>
+                  <div className="lp-donate-bar-labels">
+                    <span>{inr(DONATION_STATS.raised)} raised</span>
+                    <span>Goal: {inr(DONATION_STATS.target)}</span>
+                  </div>
+                </div>
+                <a href="#demo" className="lp-btn lp-btn-donate">
+                  ❤️ Donate Now
+                </a>
+              </div>
+
+              <div className="lp-donate-recent">
+                <h4 className="lp-donate-recent-title">Recent Contributions</h4>
+                {[
+                  { name: 'Priya S.', amount: 2000, msg: 'Happy to help someone move freely 🙏' },
+                  { name: 'Karthik R.', amount: 1500, msg: 'Small step, big difference.' },
+                  { name: 'Anonymous', amount: 5000, msg: 'For a student from Chennai' },
+                  { name: 'Meera T.', amount: 2000, msg: 'After completing N5 — giving back!' },
+                ].map((d, i) => (
+                  <div key={i} className="lp-donate-card">
+                    <div className="lp-donate-avatar">{d.name[0]}</div>
+                    <div className="lp-donate-info">
+                      <div className="lp-donate-name">{d.name} <span className="lp-donate-tag">♿ {inr(d.amount)}</span></div>
+                      <div className="lp-donate-msg">&ldquo;{d.msg}&rdquo;</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -332,6 +464,37 @@ function WhyItem({ n, t, d }: { n: string; t: string; d: string }) {
         <p className="lp-why-desc">{d}</p>
       </div>
     </li>
+  )
+}
+
+function KidsCourse() {
+  return (
+    <div className="lp-kids-card">
+      <div className="lp-kids-badge">⭐ Special Course · குழந்தைகளுக்கான பாடநெறி</div>
+      <div className="lp-kids-inner">
+        <div className="lp-kids-left">
+          <div className="lp-kids-emoji">🎌</div>
+          <div>
+            <div className="lp-kids-jp">子ども向け · 초급</div>
+            <h3 className="lp-kids-title">Japanese Basics for Kids</h3>
+            <div className="lp-kids-meta">40 Hours · Ages 6–15 · Beginner Friendly</div>
+            <div className="lp-kids-price-tag">{inr(KIDS_COURSE.price)}</div>
+          </div>
+        </div>
+        <div className="lp-kids-desc">
+          <p>A beginner-friendly Japanese language course specially designed for school children.
+            The course focuses on basic Japanese speaking, listening, reading, writing, vocabulary,
+            greetings, and fun interactive activities.</p>
+          <ul className="lp-kids-points">
+            {KIDS_COURSE.points.map(p => <li key={p}><Check size={14} /> {p}</li>)}
+          </ul>
+        </div>
+        <div className="lp-kids-cta">
+          <a href="#demo" className="lp-btn lp-btn-primary">Enquire now <ArrowRight size={16} /></a>
+          <div className="lp-kids-note">Limited seats · Online &amp; in-class</div>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -691,6 +854,90 @@ function LandingStyles() {
         margin: 0 auto; font-size: 12.5px; color: rgba(255,255,255,0.4); }
       .lp-footer-jp { font-family: var(--jp); color: var(--gold-soft); }
 
+      /* Kids course card */
+      .lp-kids-card { margin-top: 36px; background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);
+        border: 1.5px solid #c4b5fd; border-radius: 12px; overflow: hidden; position: relative; }
+      .lp-kids-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+        background: linear-gradient(90deg, #7c3aed, #a855f7, #ec4899); }
+      .lp-kids-badge { background: #7c3aed; color: #fff; font-size: 11.5px; font-weight: 700;
+        letter-spacing: .04em; padding: 7px 22px; display: inline-block; }
+      .lp-kids-inner { display: grid; grid-template-columns: 1fr 1.6fr auto; gap: 32px; padding: 28px 32px; align-items: center; }
+      .lp-kids-left { display: flex; align-items: flex-start; gap: 18px; }
+      .lp-kids-emoji { font-size: 52px; line-height: 1; flex-shrink: 0; }
+      .lp-kids-jp { font-family: var(--jp); font-size: 13px; color: #7c3aed; font-weight: 600; margin-bottom: 4px; }
+      .lp-kids-title { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin: 0 0 6px; }
+      .lp-kids-meta { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 10px; }
+      .lp-kids-price-tag { font-family: var(--serif); font-size: 28px; font-weight: 700; color: #7c3aed; }
+      .lp-kids-desc p { font-size: 14px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 14px; }
+      .lp-kids-points { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+      .lp-kids-points li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink); }
+      .lp-kids-points li svg { color: #7c3aed; flex-shrink: 0; }
+      .lp-kids-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+      .lp-kids-note { font-size: 11px; color: var(--ink-soft); text-align: center; }
+
+      /* Why Us special mission cards */
+      .lp-why-specials { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 52px; }
+      .lp-mission-card { border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+        transition: transform 200ms, box-shadow 200ms; }
+      .lp-mission-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -16px rgba(40,32,20,0.3); }
+      .lp-mission-green { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1.5px solid #bbf7d0; }
+      .lp-mission-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1.5px solid #bfdbfe; }
+      .lp-mission-icon { font-size: 56px; padding: 28px 28px 0; line-height: 1; }
+      .lp-mission-body { padding: 18px 28px 28px; flex: 1; }
+      .lp-mission-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em;
+        text-transform: uppercase; padding: 4px 12px; border-radius: 99px; margin-bottom: 14px; }
+      .lp-mission-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink);
+        margin: 0 0 12px; line-height: 1.3; }
+      .lp-mission-desc { font-size: 14px; line-height: 1.7; color: var(--ink-soft); margin: 0 0 18px; }
+      .lp-mission-desc strong { color: var(--ink); }
+      .lp-mission-tree { display: flex; gap: 12px; background: rgba(255,255,255,0.7); border-radius: 8px;
+        padding: 14px 16px; margin-bottom: 16px; align-items: flex-start; }
+      .lp-mission-tree-icon { font-size: 26px; flex-shrink: 0; }
+      .lp-mission-tree strong { font-size: 13.5px; font-weight: 700; color: #15803d; display: block; margin-bottom: 4px; }
+      .lp-mission-tree p { font-size: 13px; color: var(--ink-soft); margin: 0; line-height: 1.55; }
+      .lp-mission-tagline { font-size: 13px; font-style: italic; color: #15803d; background: rgba(255,255,255,0.6);
+        border-left: 3px solid #22c55e; padding: 10px 14px; border-radius: 0 6px 6px 0; line-height: 1.55; }
+      .lp-donate-example { background: rgba(255,255,255,0.7); border-radius: 8px; padding: 14px 16px;
+        display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+      .lp-de-row { display: flex; justify-content: space-between; align-items: center;
+        font-size: 13.5px; color: var(--ink-soft); padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.08); }
+      .lp-de-row:last-child { border-bottom: none; }
+      .lp-de-highlight { background: rgba(239,68,68,0.08); border-radius: 6px; padding: 8px 10px;
+        font-weight: 600; color: #dc2626; border-bottom: none; }
+      .lp-de-amt { font-family: var(--serif); font-weight: 700; font-size: 15px; color: var(--ink); }
+
+      /* Donation section */
+      .lp-donate-section { background: linear-gradient(135deg, #1a0a2e 0%, #161a33 60%, #1a1232 100%);
+        background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.1), transparent 55%),
+          radial-gradient(80% 60% at 10% 85%, rgba(124,58,237,0.12), transparent 50%); }
+      .lp-donate-inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: start; }
+      .lp-donate-stats-row { display: flex; align-items: center; gap: 0; margin: 32px 0 24px;
+        background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
+      .lp-dstat { flex: 1; padding: 18px 20px; text-align: center; }
+      .lp-dstat-val { font-family: var(--serif); font-size: 26px; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 6px; }
+      .lp-dstat-label { font-size: 11.5px; color: rgba(255,255,255,0.5); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+      .lp-dstat-div { width: 1px; background: rgba(255,255,255,0.12); align-self: stretch; }
+      .lp-donate-bar-wrap { margin-bottom: 32px; }
+      .lp-donate-bar-track { height: 10px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
+      .lp-donate-bar-fill { height: 100%; background: linear-gradient(90deg, #e24138, #f472b6); border-radius: 99px;
+        transition: width 1s ease; animation: barGrow 1.5s ease forwards; }
+      @keyframes barGrow { from { width: 0 !important; } }
+      .lp-donate-bar-labels { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.45); }
+      .lp-btn-donate { background: linear-gradient(135deg, #e24138, #f472b6); color: #fff;
+        box-shadow: 0 8px 24px rgba(226,65,56,0.35); font-size: 15px; padding: 14px 28px; }
+      .lp-btn-donate:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(226,65,56,0.48); }
+      .lp-donate-recent { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px; padding: 26px; }
+      .lp-donate-recent-title { font-family: var(--serif); font-size: 17px; font-weight: 700; color: #fff; margin: 0 0 20px; }
+      .lp-donate-card { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .lp-donate-card:last-child { border-bottom: none; padding-bottom: 0; }
+      .lp-donate-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #e24138);
+        color: #fff; font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .lp-donate-name { font-size: 13.5px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 4px; }
+      .lp-donate-tag { font-size: 11.5px; font-weight: 700; color: #f9a8d4; margin-left: 8px; }
+      .lp-donate-msg { font-size: 12.5px; color: rgba(255,255,255,0.45); font-style: italic; line-height: 1.5; }
+      .lp-donate-info { flex: 1; min-width: 0; }
+
       /* Responsive */
       @media (max-width: 1000px) {
         .lp-hero-grid { grid-template-columns: 1fr; gap: 44px; }
@@ -703,6 +950,11 @@ function LandingStyles() {
         .lp-price-feature { transform: none; }
         .lp-demo-grid { grid-template-columns: 1fr; gap: 38px; }
         .lp-footer-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+        .lp-kids-inner { grid-template-columns: 1fr 1fr; gap: 20px; }
+        .lp-kids-cta { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; }
+        .lp-why-specials { grid-template-columns: 1fr; }
+        .lp-donate-inner { grid-template-columns: 1fr; gap: 36px; }
+        .lp-donate-stats-row { flex-wrap: wrap; }
       }
       @media (max-width: 820px) {
         .lp-burger { display: inline-flex; }
@@ -726,6 +978,11 @@ function LandingStyles() {
         .kc-hand-dot { top: -102px; }
         .kc-kana { font-size: 42px; }
         .kc-tamil { font-size: 29px; }
+        .lp-kids-inner { grid-template-columns: 1fr; }
+        .lp-kids-left { flex-direction: column; gap: 10px; }
+        .lp-kids-points { grid-template-columns: 1fr; }
+        .lp-donate-stats-row { flex-direction: column; }
+        .lp-dstat-div { width: 100%; height: 1px; }
       }
       @media (prefers-reduced-motion: reduce) {
         .kc-card { animation-duration: 0.01ms; }

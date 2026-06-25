@@ -258,6 +258,23 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
     })
     await supabase.from('invoices').update({ status: 'Paid' }).eq('id', payingInv.id)
     setInvoices(prev => prev.map(i => i.id === payingInv.id ? { ...i, status: 'Paid' } : i))
+
+    // Send congratulation email (fire-and-forget — doesn't block the UI)
+    const student = studentMap[payingInv.student_id]
+    if (student?.email) {
+      fetch('/api/send-payment-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentName: student.full_name || student.email,
+          studentEmail: student.email,
+          amount: pf.amount,
+          invoiceId: payingInv.id,
+          paymentMethod: pf.method,
+        }),
+      }).catch(() => {}) // silent fail — email is non-critical
+    }
+
     setPayingInv(null)
     setPf(emptyPF)
     setLoading(false)
