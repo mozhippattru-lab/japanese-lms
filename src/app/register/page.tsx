@@ -89,25 +89,11 @@ export default function RegisterPage() {
       padding: '20px', fontFamily: 'Inter, sans-serif',
     }}>
 
-      {/* ── Cherry blossom night background ── */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', inset: 0, zIndex: 0,
-        background: 'linear-gradient(180deg, #050210 0%, #0e0720 18%, #1c0d35 36%, #30104a 52%, #4a1040 68%, #2a0c2e 84%, #120818 100%)',
-      }}>
-        <div style={{ position: 'absolute', top: '7%', right: '14%', width: '70px', height: '70px', borderRadius: '50%', background: 'radial-gradient(circle at 38% 38%, #fffde8 0%, #fef9c3 40%, #fef08a 100%)', boxShadow: '0 0 40px 20px rgba(254,249,195,0.18), 0 0 80px 40px rgba(254,240,138,0.09)' }} />
-        <svg aria-hidden="true" viewBox="0 0 260 520" style={{ position: 'absolute', bottom: 0, left: '-10px', height: '70%', width: 'auto', opacity: 0.92 }} fill="#1a0828">
-          <rect x="115" y="280" width="30" height="240" rx="8" />
-          <path d="M130 300 Q60 240 10 200 Q50 220 100 250 Q70 180 30 140 Q80 180 120 230 Q100 160 80 100 Q120 160 128 240 Q140 160 160 100 Q140 160 130 230 Q170 180 210 140 Q180 190 165 250 Q200 220 240 200 Q200 240 155 295 Z" />
-          <circle cx="15"  cy="190" r="28" fill="#3d1540" /><circle cx="40"  cy="170" r="22" fill="#4a1848" /><circle cx="75"  cy="130" r="24" fill="#3d1540" /><circle cx="95"  cy="110" r="22" fill="#4a1848" /><circle cx="120" cy="95"  r="26" fill="#3d1540" /><circle cx="160" cy="105" r="24" fill="#4a1848" /><circle cx="220" cy="165" r="26" fill="#3d1540" /><circle cx="238" cy="190" r="20" fill="#4a1848" />
-          <circle cx="15"  cy="190" r="25" fill="#c06090" opacity="0.35" /><circle cx="75"  cy="130" r="21" fill="#c06090" opacity="0.35" /><circle cx="120" cy="95"  r="23" fill="#c06090" opacity="0.35" /><circle cx="220" cy="165" r="23" fill="#c06090" opacity="0.35" />
-        </svg>
-        <svg aria-hidden="true" viewBox="0 0 220 480" style={{ position: 'absolute', bottom: 0, right: '-10px', height: '63%', width: 'auto', opacity: 0.88 }} fill="#1a0828">
-          <rect x="95" y="270" width="26" height="210" rx="7" />
-          <path d="M108 280 Q50 225 5 185 Q45 210 90 240 Q55 170 20 120 Q70 168 105 225 Q90 145 75 85 Q110 150 110 225 Q125 140 145 80 Q130 155 118 230 Q155 168 190 120 Q165 178 140 245 Q185 210 215 185 Q185 228 135 278 Z" />
-          <circle cx="8"   cy="178" r="24" fill="#3d1540" /><circle cx="65"  cy="118" r="22" fill="#3d1540" /><circle cx="108" cy="82"  r="24" fill="#3d1540" /><circle cx="155" cy="110" r="22" fill="#3d1540" /><circle cx="210" cy="175" r="22" fill="#3d1540" />
-          <circle cx="8"   cy="178" r="21" fill="#d070a0" opacity="0.35" /><circle cx="108" cy="82"  r="21" fill="#d070a0" opacity="0.35" /><circle cx="210" cy="175" r="19" fill="#d070a0" opacity="0.35" />
-        </svg>
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '180px', background: 'linear-gradient(0deg, rgba(180,60,120,0.18) 0%, transparent 100%)' }} />
+      {/* ── Cherry blossom photo background ── */}
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/sakura-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,5,20,0.45)' }} />
         {PETALS.map((p, i) => (
           <div key={i} className="sakura-petal" style={{
             left: p.left, width: p.size + 'px', height: p.size + 'px',
