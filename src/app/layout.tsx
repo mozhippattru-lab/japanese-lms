@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "日本語センター — Japanese Language Center",
+  title: "日本語スクール — Japanese Language School",
   description: "JLPT Learning Management System",
 };
 

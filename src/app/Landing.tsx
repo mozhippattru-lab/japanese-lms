@@ -60,7 +60,7 @@ export default function Landing() {
             <span className="lp-logo">学</span>
             <span className="lp-brand-text">
               <span className="lp-brand-ta">{TAMIL}</span>
-              <span className="lp-brand-en">{ENG} · Japanese Language Center</span>
+              <span className="lp-brand-en">{ENG} · Japanese Language School</span>
             </span>
           </a>
 
@@ -87,7 +87,7 @@ export default function Landing() {
               <div className="lp-kicker">
                 <span className="lp-kicker-ta">{TAMIL}</span>
                 <span className="lp-kicker-dot" />
-                日本語センター
+                日本語スクール
               </div>
               <h1 className="lp-hero-title">
                 From your first <span className="lp-jp-accent">あ</span><br />
@@ -282,7 +282,7 @@ export default function Landing() {
               </span>
             </div>
             <p className="lp-footer-about">
-              Japanese Language Center · 日本語センター. JLPT N5–N3 coaching by N1-certified teachers,
+              Japanese Language School · 日本語スクール. JLPT N5–N3 coaching by N1-certified teachers,
               online &amp; in-class.
             </p>
           </div>
@@ -304,7 +304,7 @@ export default function Landing() {
           </div>
         </div>
         <div className="lp-footer-bar">
-          <span>© {new Date().getFullYear()} {ENG} — Japanese Language Center.</span>
+          <span>© {new Date().getFullYear()} {ENG} — Japanese Language School.</span>
           <span className="lp-footer-jp">頑張ろう。Let&apos;s learn, together.</span>
         </div>
       </footer>

@@ -69,7 +69,7 @@ export default function RegisterPage() {
           <div style={{ width: '64px', height: '64px', background: 'var(--red)', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px', boxShadow: '0 8px 32px rgba(232,64,64,0.4)' }}>
             <School size={30} color="#fff" strokeWidth={2} />
           </div>
-          <h1 style={{ color: '#fff', fontSize: '22px', fontWeight: '800', margin: '0 0 4px', letterSpacing: '-0.02em' }}>日本語センター</h1>
+          <h1 style={{ color: '#fff', fontSize: '22px', fontWeight: '800', margin: '0 0 4px', letterSpacing: '-0.02em' }}>日本語スクール</h1>
           <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Create your account</p>
         </div>
 

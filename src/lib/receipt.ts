@@ -3,7 +3,7 @@
 
 const TAMIL = 'மொழிப்பற்று'
 const ENG = 'Mozhippattru'
-const SUB = 'Japanese Language Center · 日本語センター'
+const SUB = 'Japanese Language School · 日本語スクール'
 
 const rupee = (n: number) => '₹' + Number(n || 0).toLocaleString('en-IN')
 

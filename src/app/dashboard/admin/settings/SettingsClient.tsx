@@ -34,7 +34,7 @@ export default function SettingsClient({ initial, counts, adminEmail }: {
     id: 'default',
     institute_name_ta: initial.institute_name_ta ?? 'மொழிப்பற்று',
     institute_name_en: initial.institute_name_en ?? 'Mozhippattru',
-    tagline: initial.tagline ?? 'Japanese Language Center',
+    tagline: initial.tagline ?? 'Japanese Language School',
     address: initial.address ?? '',
     phone: initial.phone ?? '',
     email: initial.email ?? '',
