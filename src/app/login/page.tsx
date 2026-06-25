@@ -85,7 +85,7 @@ export default function LoginPage() {
 
         {/* ── Left: fist panel ── */}
         <div className="login-img-panel" style={{
-          flex: '0 0 300px', background: 'rgba(13,18,40,0.92)',
+          flex: '0 0 300px', background: 'rgba(13,18,40,0.82)',
           backdropFilter: 'blur(12px)',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           padding: '32px 28px', gap: '16px',
@@ -108,7 +108,7 @@ export default function LoginPage() {
         </div>
 
         {/* ── Right: form ── */}
-        <div style={{ flex: 1, background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)', padding: '44px 40px' }}>
+        <div style={{ flex: 1, background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(12px)', padding: '44px 40px' }}>
 
           <p style={{ fontFamily: 'var(--display)', fontSize: '13px', color: '#c06080', letterSpacing: '0.04em', margin: '0 0 4px' }}>おかえりなさい</p>
           <h2 style={{ fontSize: '22px', fontWeight: '800', margin: '0 0 4px', color: 'var(--navy)', letterSpacing: '-0.02em' }}>Welcome back</h2>

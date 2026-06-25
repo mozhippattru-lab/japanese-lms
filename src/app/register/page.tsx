@@ -115,7 +115,7 @@ export default function RegisterPage() {
 
         {/* ── Left: fist panel ── */}
         <div className="login-img-panel" style={{
-          flex: '0 0 300px', background: 'rgba(13,18,40,0.92)', backdropFilter: 'blur(12px)',
+          flex: '0 0 300px', background: 'rgba(13,18,40,0.82)', backdropFilter: 'blur(12px)',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           padding: '32px 28px', gap: '16px',
         }}>
@@ -141,7 +141,7 @@ export default function RegisterPage() {
         </div>
 
         {/* ── Right: form ── */}
-        <div style={{ flex: 1, background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)', padding: '40px 36px', overflowY: 'auto' }}>
+        <div style={{ flex: 1, background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(12px)', padding: '40px 36px', overflowY: 'auto' }}>
           <p style={{ fontFamily: 'var(--display)', fontSize: '13px', color: '#c06080', letterSpacing: '0.04em', margin: '0 0 4px' }}>はじめまして</p>
           <h2 style={{ fontSize: '22px', fontWeight: '800', margin: '0 0 4px', color: 'var(--navy)', letterSpacing: '-0.02em' }}>Create your account</h2>
           <p style={{ fontSize: '13px', color: '#9ca3af', margin: '0 0 22px' }}>Fill in your details to get started</p>
