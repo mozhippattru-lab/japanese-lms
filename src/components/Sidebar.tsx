@@ -142,8 +142,6 @@ export default function Sidebar({ role, userName }: { role: string; userName: st
           <div>
             <div style={{ color: '#fff', fontFamily: 'var(--display)', fontSize: '17px', fontWeight: '600', lineHeight: 1.3 }}>மொழிப்பற்று</div>
             <div style={{ color: 'var(--gold-soft)', fontSize: '9.5px', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '1px' }}>Japanese Language Center</div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/12.png" alt="" aria-hidden="true" style={{ height: '36px', width: 'auto', marginTop: '6px', filter: 'invert(1)', opacity: 0.85 }} />
           </div>
         </div>
       </div>
