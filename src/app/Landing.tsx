@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import {
   Menu, X, ArrowRight, ArrowUpRight, Check, Phone, Mail, MapPin,
@@ -166,23 +166,7 @@ export default function Landing() {
 
             <div className="lp-course-grid">
               {COURSES.map(c => (
-                <article key={c.level} className="lp-course" style={{ ['--c' as string]: c.color }}>
-                  <span className="lp-course-ghost">{c.level}</span>
-                  <header className="lp-course-head">
-                    <span className="lp-course-jp">{c.jp}</span>
-                    <span className="lp-course-ta">{c.ta}</span>
-                  </header>
-                  <h3 className="lp-course-title">JLPT {c.level}</h3>
-                  <div className="lp-course-sub">{c.title} · {c.hours}</div>
-                  <p className="lp-course-blurb">{c.blurb}</p>
-                  <ul className="lp-course-points">
-                    {c.points.map(p => <li key={p}><Check size={15} /> {p}</li>)}
-                  </ul>
-                  <footer className="lp-course-foot">
-                    <a href="#pricing" className="lp-course-fees">See fees</a>
-                    <a href="#demo" className="lp-course-link">Enquire <ArrowUpRight size={15} /></a>
-                  </footer>
-                </article>
+                <CourseCard3D key={c.level} c={c} />
               ))}
             </div>
           </div>
@@ -313,6 +297,71 @@ export default function Landing() {
 }
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
+function CourseCard3D({ c }: { c: Course }) {
+  const ref = useRef<HTMLElement>(null)
+  const shineRef = useRef<HTMLDivElement>(null)
+
+  function onMove(e: React.MouseEvent<HTMLElement>) {
+    const el = ref.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    const x = e.clientX - r.left
+    const y = e.clientY - r.top
+    const rx = ((y - r.height / 2) / (r.height / 2)) * -8
+    const ry = ((x - r.width / 2) / (r.width / 2)) * 8
+    el.style.transition = 'transform 0.08s ease, box-shadow 0.08s ease'
+    el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px) scale(1.02)`
+    el.style.boxShadow = `0 28px 60px -16px rgba(40,32,20,0.45), 0 8px 20px rgba(40,32,20,0.15)`
+    if (shineRef.current) {
+      const px = (x / r.width) * 100
+      const py = (y / r.height) * 100
+      shineRef.current.style.background = `radial-gradient(circle at ${px}% ${py}%, rgba(255,255,255,0.22) 0%, transparent 60%)`
+      shineRef.current.style.opacity = '1'
+    }
+  }
+
+  function onLeave() {
+    const el = ref.current
+    if (!el) return
+    el.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease'
+    el.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)'
+    el.style.boxShadow = ''
+    if (shineRef.current) shineRef.current.style.opacity = '0'
+  }
+
+  return (
+    <article
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="lp-course"
+      style={{ ['--c' as string]: c.color, willChange: 'transform', position: 'relative' }}
+    >
+      {/* shine layer */}
+      <div ref={shineRef} style={{
+        position: 'absolute', inset: 0, borderRadius: 'inherit',
+        pointerEvents: 'none', opacity: 0,
+        transition: 'opacity 0.15s ease', zIndex: 2,
+      }} />
+      <span className="lp-course-ghost">{c.level}</span>
+      <header className="lp-course-head">
+        <span className="lp-course-jp">{c.jp}</span>
+        <span className="lp-course-ta">{c.ta}</span>
+      </header>
+      <h3 className="lp-course-title">JLPT {c.level}</h3>
+      <div className="lp-course-sub">{c.title} · {c.hours}</div>
+      <p className="lp-course-blurb">{c.blurb}</p>
+      <ul className="lp-course-points">
+        {c.points.map(p => <li key={p}><Check size={15} /> {p}</li>)}
+      </ul>
+      <footer className="lp-course-foot">
+        <a href="#pricing" className="lp-course-fees">See fees</a>
+        <a href="#demo" className="lp-course-link">Enquire <ArrowUpRight size={15} /></a>
+      </footer>
+    </article>
+  )
+}
+
 function SectionTag({ children, ta, jp, light }: { children: React.ReactNode; ta?: string; jp?: string; light?: boolean }) {
   return (
     <div className={`lp-tag ${light ? 'lp-tag-light' : ''}`}>
@@ -599,7 +648,7 @@ function LandingStyles() {
         padding: 30px; overflow: hidden; display: flex; flex-direction: column;
         transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
       .lp-course::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c); }
-      .lp-course:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -22px rgba(40,32,20,0.4); border-color: transparent; }
+      .lp-course:hover { border-color: transparent; }
       .lp-course-ghost { position: absolute; top: 8px; right: 16px; font-family: var(--serif); font-weight: 800;
         font-size: 96px; line-height: 1; color: var(--c); opacity: 0.08; pointer-events: none; }
       .lp-course-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
