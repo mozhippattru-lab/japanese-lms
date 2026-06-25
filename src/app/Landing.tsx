@@ -70,7 +70,7 @@ export default function Landing() {
             <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
             <a href="#why" onClick={() => setMenuOpen(false)}>Why Us</a>
             <Link href="/login" className="lp-nav-login" onClick={() => setMenuOpen(false)}>Login</Link>
-            <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>செயல்முறை விளக்கம்</a>
+            <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>இலவச செயல்முறை விளக்கம்</a>
           </nav>
 
           <button className="lp-burger" aria-label="Menu" onClick={() => setMenuOpen(o => !o)}>
