@@ -323,9 +323,9 @@ export default function Landing() {
           <div className="lp-container">
             <div className="lp-donate-inner">
               <div className="lp-donate-copy">
-                <SectionTag ta="தானம்" jp="寄付・車椅子">Support</SectionTag>
-                <h2 className="lp-h2 lp-on-dark">Support Our Electric Wheelchair Mission</h2>
-                <p className="lp-p lp-p-light">
+                <SectionTag light ta="தானம்" jp="寄付・車椅子">Support</SectionTag>
+                <h2 className="lp-h2" style={{ color: '#fff' }}>Support Our Electric Wheelchair Mission</h2>
+                <p style={{ fontSize: '16px', lineHeight: 1.75, color: 'rgba(255,255,255,0.72)', margin: '0 0 28px' }}>
                   Students receiving free education, parents, alumni, and supporters are welcome to contribute
                   voluntarily to our Electric Wheelchair Donation Fund. Every contribution helps someone
                   regain independence and mobility. Donations are completely optional.
@@ -360,22 +360,14 @@ export default function Landing() {
                 </a>
               </div>
 
-              <div className="lp-donate-recent">
-                <h4 className="lp-donate-recent-title">Recent Contributions</h4>
-                {[
-                  { name: 'Priya S.', amount: 2000, msg: 'Happy to help someone move freely 🙏' },
-                  { name: 'Karthik R.', amount: 1500, msg: 'Small step, big difference.' },
-                  { name: 'Anonymous', amount: 5000, msg: 'For a student from Chennai' },
-                  { name: 'Meera T.', amount: 2000, msg: 'After completing N5 — giving back!' },
-                ].map((d, i) => (
-                  <div key={i} className="lp-donate-card">
-                    <div className="lp-donate-avatar">{d.name[0]}</div>
-                    <div className="lp-donate-info">
-                      <div className="lp-donate-name">{d.name} <span className="lp-donate-tag">♿ {inr(d.amount)}</span></div>
-                      <div className="lp-donate-msg">&ldquo;{d.msg}&rdquo;</div>
-                    </div>
-                  </div>
-                ))}
+              <div className="lp-donate-illustration">
+                <div className="lp-donate-icon-wrap">
+                  <div className="lp-donate-big-icon">♿</div>
+                  <div className="lp-donate-heart">❤️</div>
+                </div>
+                <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '14px', textAlign: 'center', lineHeight: 1.7, margin: '20px 0 0' }}>
+                  Every student who enrolls helps someone with a physical disability regain independence and mobility.
+                </p>
               </div>
             </div>
           </div>
@@ -907,9 +899,16 @@ function LandingStyles() {
       .lp-de-amt { font-family: var(--serif); font-weight: 700; font-size: 15px; color: var(--ink); }
 
       /* Donation section */
-      .lp-donate-section { background: linear-gradient(135deg, #1a0a2e 0%, #161a33 60%, #1a1232 100%);
-        background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.1), transparent 55%),
-          radial-gradient(80% 60% at 10% 85%, rgba(124,58,237,0.12), transparent 50%); }
+      .lp-donate-section { background-color: #1a0a2e;
+        background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.12), transparent 55%),
+          radial-gradient(80% 60% at 10% 85%, rgba(124,58,237,0.15), transparent 50%),
+          linear-gradient(135deg, #1a0a2e 0%, #161a33 60%, #1a1232 100%); }
+      .lp-donate-illustration { display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 40px 20px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px; }
+      .lp-donate-icon-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+      .lp-donate-big-icon { font-size: 96px; line-height: 1; filter: drop-shadow(0 4px 24px rgba(124,58,237,0.4)); }
+      .lp-donate-heart { position: absolute; bottom: -8px; right: -12px; font-size: 36px; }
       .lp-donate-inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: start; }
       .lp-donate-stats-row { display: flex; align-items: center; gap: 0; margin: 32px 0 24px;
         background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
