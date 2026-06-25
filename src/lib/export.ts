@@ -49,7 +49,7 @@ export function printData(title: string, columns: Column[], rows: Row[], subtitl
     <div class="head"><div class="badge">日</div><div><h1>${esc(title)}</h1></div></div>
     <div class="sub">${subtitle ? esc(subtitle) + ' · ' : ''}Generated ${esc(when)} · ${rows.length} record(s)</div>
     <table><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table>
-    <div class="foot">日本語スクール — Japanese Language School</div>
+    <div class="foot">日本語学校 — Japanese Language School</div>
     <script>window.onload=function(){window.print()}</script>
   </body></html>`
 

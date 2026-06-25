@@ -37,7 +37,7 @@ export default function DataToolbar({ title, columns, rows, fileName, subtitle, 
   async function onShare() {
     const res = await shareData({
       title,
-      text: `${title} — ${rows.length} record(s) from 日本語スクール`,
+      text: `${title} — ${rows.length} record(s) from 日本語学校`,
       url: shareUrl,
     })
     if (res === 'copied') { setShareState('copied'); setTimeout(() => setShareState('idle'), 1500) }

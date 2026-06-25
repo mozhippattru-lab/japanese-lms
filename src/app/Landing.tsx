@@ -87,7 +87,7 @@ export default function Landing() {
               <div className="lp-kicker">
                 <span className="lp-kicker-ta">{TAMIL}</span>
                 <span className="lp-kicker-dot" />
-                日本語スクール
+                日本語学校
               </div>
               <h1 className="lp-hero-title">
                 From your first <span className="lp-jp-accent">あ</span><br />
@@ -282,7 +282,7 @@ export default function Landing() {
               </span>
             </div>
             <p className="lp-footer-about">
-              Japanese Language School · 日本語スクール. JLPT N5–N3 coaching by N1-certified teachers,
+              Japanese Language School · 日本語学校. JLPT N5–N3 coaching by N1-certified teachers,
               online &amp; in-class.
             </p>
           </div>
