@@ -298,6 +298,17 @@ export default function Landing() {
                     automatically allocated to our Electric Wheelchair Donation Fund — helping people with
                     physical disabilities regain independence and mobility.
                   </p>
+                  <div className="lp-mission-tree">
+                    <span className="lp-mission-tree-icon">💡</span>
+                    <div>
+                      <strong>Did you know?</strong>
+                      <p>An electric wheelchair (≈ ₹37,500) can restore independent movement for years —
+                        turning everyday things like getting to class or work from impossible into ordinary.</p>
+                    </div>
+                  </div>
+                  <div className="lp-mission-tagline">
+                    {`“So far, students’ learning has gifted ${DONATION_STATS.wheelchairs} electric wheelchairs — that’s ${DONATION_STATS.wheelchairs} people back on the move.”`}
+                  </div>
                 </div>
               </div>
             </div>
