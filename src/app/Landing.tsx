@@ -77,7 +77,6 @@ export default function Landing() {
             <a href="#courses" onClick={() => setMenuOpen(false)}>Courses</a>
             <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
             <a href="#why" onClick={() => setMenuOpen(false)}>Why Us</a>
-            <a href="#annanin" onClick={() => setMenuOpen(false)}>Annanin Parisu</a>
             <a href="#donate" onClick={() => setMenuOpen(false)}>Donate</a>
             <Link href="/login" className="lp-nav-login" onClick={() => setMenuOpen(false)}>Login</Link>
             <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>Free Demo</a>
@@ -320,7 +319,7 @@ export default function Landing() {
         <section id="annanin" className="lp-section lp-annanin">
           <div className="lp-container">
             <div className="lp-annanin-head">
-              <SectionTag ta="அண்ணனின் பரிசு" jp="無償教育">Annanin Parisu</SectionTag>
+              <SectionTag ta="அண்ணனின் பரிசு" jp="無償教育">The Elder Brother&apos;s Gift</SectionTag>
               <h2 className="lp-h2">A gift of education for those who need it most</h2>
               <p className="lp-p lp-annanin-lead">
                 Some students carry far more than their share. Through <em>Annanin Parisu</em>{' '}— the elder
@@ -362,8 +361,6 @@ export default function Landing() {
               <span className="lp-ap-chip">Verified with care</span>
               <span className="lp-ap-dot" />
               <span className="lp-ap-chip">Taught with dignity</span>
-              <span className="lp-ap-dot" />
-              <span className="lp-ap-chip">Always free</span>
               <a href="#demo" className="lp-ap-apply">Apply through our free demo <ArrowRight size={15} /></a>
             </div>
           </div>
@@ -376,7 +373,7 @@ export default function Landing() {
 
               {/* Left — copy + stats */}
               <div className="lp-donate-copy">
-                <SectionTag light ta="தானம்" jp="寄付・車椅子">Support</SectionTag>
+                <SectionTag light ta="கொடை" jp="寄付・車椅子">Support</SectionTag>
                 <h2 className="lp-h2 lp-on-dark">Support Our Electric Wheelchair Mission</h2>
                 <p className="lp-p lp-p-light">
                   Students, parents, alumni, and supporters can voluntarily contribute to our Electric
@@ -461,9 +458,9 @@ export default function Landing() {
         <section id="demo" className="lp-section lp-demo">
           <div className="lp-container lp-demo-grid">
             <div className="lp-demo-copy">
-              <SectionTag light ta="இலவச செயல்முறை விளக்கம்" jp="無料体験">Free demo</SectionTag>
-              <h2 className="lp-h2 lp-on-dark">Sit in on a class. On us.</h2>
-              <p className="lp-p lp-p-light">
+              <SectionTag ta="இலவச செயல்முறை விளக்கம்" jp="無料体験">Free demo</SectionTag>
+              <h2 className="lp-h2">Sit in on a class. On us.</h2>
+              <p className="lp-p">
                 Experience the teaching first-hand — no fees, no commitment. Tell us a little about yourself and
                 our team will reach out to schedule your free online demo with an N1-certified teacher.
               </p>
@@ -497,8 +494,7 @@ export default function Landing() {
           <div>
             <h4>Explore</h4>
             <a href="#about">About us</a><a href="#courses">Courses</a>
-            <a href="#pricing">Pricing</a><a href="#annanin">Annanin Parisu</a>
-            <a href="#demo">Free demo</a>
+            <a href="#pricing">Pricing</a><a href="#demo">Free demo</a>
           </div>
           <div>
             <h4>Portal</h4>
@@ -886,12 +882,14 @@ function LandingStyles() {
       .lp-why-desc { font-size: 14px; line-height: 1.65; color: var(--ink-soft); margin: 0; }
 
       /* Demo */
-      .lp-demo { background: var(--navy);
-        background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.14), transparent 55%); }
+      .lp-demo { background:
+          radial-gradient(100% 80% at 92% 8%, rgba(45,111,184,0.07), transparent 55%),
+          linear-gradient(180deg, #fff 0%, #fcfaf4 100%);
+        border-top: 1px solid var(--line); }
       .lp-demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
       .lp-demo-points { list-style: none; margin: 30px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-      .lp-demo-points li { display: flex; align-items: center; gap: 11px; color: rgba(255,255,255,0.88); font-size: 15px; }
-      .lp-demo-points li svg { color: var(--gold-soft); flex-shrink: 0; }
+      .lp-demo-points li { display: flex; align-items: center; gap: 11px; color: var(--ink); font-size: 15px; font-weight: 500; }
+      .lp-demo-points li svg { color: #2f9e63; flex-shrink: 0; }
 
       /* Form */
       .lp-form { background: #fff; border-radius: 10px; padding: 34px; box-shadow: 0 40px 80px -30px rgba(0,0,0,0.6); }
