@@ -35,19 +35,34 @@ export default async function AdminDashboard() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'admin') redirect(`/dashboard/${profile?.role || 'student'}`)
-
-  const name = profile?.full_name || user.email || 'Admin'
-  const firstName = name.split(' ')[0]
-  const monthYear = new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
-
   // All admin data via service role (bypasses RLS)
   const db = createAdminClient()
   const sixMonthsAgo = new Date()
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5)
   sixMonthsAgo.setDate(1)
   sixMonthsAgo.setHours(0, 0, 0, 0)
+
+  // Kick off the role check and all dashboard data in parallel — they don't
+  // depend on each other, so we avoid a sequential round-trip to Supabase.
+  const profilePromise = supabase.from('profiles').select('role, full_name').eq('id', user.id).single()
+  const dataPromise = Promise.all([
+    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student').eq('status', 'active'),
+    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'teacher').eq('status', 'active'),
+    db.from('batches').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+    db.from('leads').select('*', { count: 'exact', head: true }),
+    db.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true),
+    db.from('profiles').select('jlpt_level').eq('role', 'student').eq('status', 'active'),
+    db.from('profiles').select('full_name, jlpt_level, created_at').eq('role', 'student').order('created_at', { ascending: false }).limit(4),
+    db.from('invoices').select('amount, status'),
+    db.from('profiles').select('created_at').eq('role', 'student').gte('created_at', sixMonthsAgo.toISOString()),
+  ])
+
+  const { data: profile } = await profilePromise
+  if (profile?.role !== 'admin') redirect(`/dashboard/${profile?.role || 'student'}`)
+
+  const name = profile?.full_name || user.email || 'Admin'
+  const firstName = name.split(' ')[0]
+  const monthYear = new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
 
   const [
     { count: studentCount },
@@ -59,17 +74,7 @@ export default async function AdminDashboard() {
     { data: recentStudents },
     { data: invoices },
     { data: monthlyStudents },
-  ] = await Promise.all([
-    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student').eq('status', 'active'),
-    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'teacher').eq('status', 'active'),
-    db.from('batches').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-    db.from('leads').select('*', { count: 'exact', head: true }),
-    db.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true),
-    db.from('profiles').select('jlpt_level').eq('role', 'student').eq('status', 'active'),
-    db.from('profiles').select('full_name, jlpt_level, created_at').eq('role', 'student').order('created_at', { ascending: false }).limit(4),
-    db.from('invoices').select('amount, status'),
-    db.from('profiles').select('created_at').eq('role', 'student').gte('created_at', sixMonthsAgo.toISOString()),
-  ])
+  ] = await dataPromise
 
   // Students by level
   const levelCounts = LEVEL_META.map(lm => ({
