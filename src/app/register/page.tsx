@@ -94,8 +94,8 @@ export default function RegisterPage() {
       {/* ── Cherry blossom photo background ── */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/sakura-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,5,20,0.45)' }} />
+        <img src="/sakura-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', filter: 'brightness(1.2) saturate(1.12)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,5,20,0.2)' }} />
         {PETALS.map((p, i) => (
           <div key={i} className="sakura-petal" style={{
             left: p.left, width: p.size + 'px', height: p.size + 'px',

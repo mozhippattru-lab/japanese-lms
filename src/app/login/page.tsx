@@ -58,9 +58,9 @@ export default function LoginPage() {
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         {/* Real sakura photo */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/sakura-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
-        {/* Dark overlay so the card stays readable */}
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,5,20,0.45)' }} />
+        <img src="/sakura-bg.jpg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', filter: 'brightness(1.2) saturate(1.12)' }} />
+        {/* Light overlay so the card stays readable without dulling the photo */}
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,5,20,0.2)' }} />
 
         {/* Falling petals on top of photo */}
         {PETALS.map((p, i) => (
