@@ -298,20 +298,6 @@ export default function Landing() {
                     automatically allocated to our Electric Wheelchair Donation Fund — helping people with
                     physical disabilities regain independence and mobility.
                   </p>
-                  <div className="lp-donate-example">
-                    <div className="lp-de-row">
-                      <span>Course Fee</span>
-                      <span className="lp-de-amt">₹8,000</span>
-                    </div>
-                    <div className="lp-de-row lp-de-highlight">
-                      <span>❤️ 25% Wheelchair Fund</span>
-                      <span className="lp-de-amt">₹2,000</span>
-                    </div>
-                    <div className="lp-de-row">
-                      <span>Your Course Fee</span>
-                      <span className="lp-de-amt">₹6,000</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -925,14 +911,6 @@ function LandingStyles() {
       .lp-mission-tree p { font-size: 13px; color: var(--ink-soft); margin: 0; line-height: 1.55; }
       .lp-mission-tagline { font-size: 13px; font-style: italic; color: var(--ink-soft); background: var(--paper);
         border-left: 3px solid var(--mc-ink); padding: 10px 14px; border-radius: 0 6px 6px 0; line-height: 1.55; }
-      .lp-donate-example { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px;
-        display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
-      .lp-de-row { display: flex; justify-content: space-between; align-items: center;
-        font-size: 13.5px; color: var(--ink-soft); padding: 4px 0; border-bottom: 1px dashed var(--line); }
-      .lp-de-row:last-child { border-bottom: none; }
-      .lp-de-highlight { background: rgba(226,65,56,0.08); border-radius: 6px; padding: 8px 10px;
-        font-weight: 600; color: var(--red-deep); border-bottom: none; }
-      .lp-de-amt { font-family: var(--serif); font-weight: 700; font-size: 15px; color: var(--ink); }
 
       /* Donation section */
       .lp-donate-section { background: var(--navy);
