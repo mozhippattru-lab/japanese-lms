@@ -77,6 +77,7 @@ export default function Landing() {
             <a href="#courses" onClick={() => setMenuOpen(false)}>Courses</a>
             <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
             <a href="#why" onClick={() => setMenuOpen(false)}>Why Us</a>
+            <a href="#annanin" onClick={() => setMenuOpen(false)}>Annanin Parisu</a>
             <a href="#donate" onClick={() => setMenuOpen(false)}>Donate</a>
             <Link href="/login" className="lp-nav-login" onClick={() => setMenuOpen(false)}>Login</Link>
             <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>Free Demo</a>
@@ -315,6 +316,59 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* ─── Annanin Parisu — free education for those who need it most ── */}
+        <section id="annanin" className="lp-section lp-annanin">
+          <div className="lp-container">
+            <div className="lp-annanin-head">
+              <SectionTag ta="அண்ணனின் பரிசு" jp="無償教育">Annanin Parisu</SectionTag>
+              <h2 className="lp-h2">A gift of education for those who need it most</h2>
+              <p className="lp-p lp-annanin-lead">
+                Some students carry far more than their share. Through <em>Annanin Parisu</em>{' '}— the elder
+                brother&apos;s gift — we open our Japanese classroom to them, completely free. Learning should
+                never depend on what life has taken away.
+              </p>
+            </div>
+
+            <div className="lp-annanin-grid">
+              <div className="lp-ap-card" style={{ ['--c' as string]: 'var(--gold)' }}>
+                <div className="lp-ap-icon">🕊️</div>
+                <h3 className="lp-ap-title">Children who lost a parent</h3>
+                <p className="lp-ap-desc">
+                  Students who have lost one or both parents can learn Japanese with us at no cost. Each
+                  application is gently verified before we welcome them in.
+                </p>
+              </div>
+
+              <div className="lp-ap-card" style={{ ['--c' as string]: 'var(--red)' }}>
+                <div className="lp-ap-icon">♿</div>
+                <h3 className="lp-ap-title">Persons with disabilities</h3>
+                <p className="lp-ap-desc">
+                  UDID cardholders who wish to study Japanese are supported fully and taught free — online
+                  or in class, whichever serves them best.
+                </p>
+              </div>
+
+              <div className="lp-ap-card" style={{ ['--c' as string]: 'var(--navy)' }}>
+                <div className="lp-ap-icon">🌈</div>
+                <h3 className="lp-ap-title">Thirunangai community</h3>
+                <p className="lp-ap-desc">
+                  Transgender learners who want to study Japanese are warmly welcome to join and learn
+                  with us, free of charge.
+                </p>
+              </div>
+            </div>
+
+            <div className="lp-annanin-foot">
+              <span className="lp-ap-chip">Verified with care</span>
+              <span className="lp-ap-dot" />
+              <span className="lp-ap-chip">Taught with dignity</span>
+              <span className="lp-ap-dot" />
+              <span className="lp-ap-chip">Always free</span>
+              <a href="#demo" className="lp-ap-apply">Apply through our free demo <ArrowRight size={15} /></a>
+            </div>
+          </div>
+        </section>
+
         {/* ─── Donation section ────────────────── */}
         <section id="donate" className="lp-section lp-donate-section">
           <div className="lp-container">
@@ -443,7 +497,8 @@ export default function Landing() {
           <div>
             <h4>Explore</h4>
             <a href="#about">About us</a><a href="#courses">Courses</a>
-            <a href="#pricing">Pricing</a><a href="#demo">Free demo</a>
+            <a href="#pricing">Pricing</a><a href="#annanin">Annanin Parisu</a>
+            <a href="#demo">Free demo</a>
           </div>
           <div>
             <h4>Portal</h4>
@@ -923,6 +978,35 @@ function LandingStyles() {
       .lp-mission-tagline { font-size: 13px; font-style: italic; color: var(--ink-soft); background: var(--paper);
         border-left: 3px solid var(--mc-ink); padding: 10px 14px; border-radius: 0 6px 6px 0; line-height: 1.55; }
 
+      /* Annanin Parisu — free education program */
+      .lp-annanin { background:
+          radial-gradient(120% 90% at 12% 0%, rgba(194,151,75,0.10), transparent 55%),
+          radial-gradient(100% 80% at 90% 100%, rgba(226,65,56,0.06), transparent 50%),
+          linear-gradient(180deg, #fcfaf4 0%, var(--paper) 100%);
+        border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+      .lp-annanin-head { max-width: 720px; margin: 0 auto 48px; text-align: center; }
+      .lp-annanin-head .lp-tag { justify-content: center; }
+      .lp-annanin-lead { margin: 0 auto; }
+      .lp-annanin-lead em { font-family: var(--serif); font-style: italic; color: var(--red); font-weight: 600; }
+      .lp-annanin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+      .lp-ap-card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px;
+        padding: 30px 28px; overflow: hidden; display: flex; flex-direction: column;
+        transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
+      .lp-ap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c); }
+      .lp-ap-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -22px rgba(40,32,20,0.4); border-color: transparent; }
+      .lp-ap-icon { width: 54px; height: 54px; border-radius: 12px; display: flex; align-items: center;
+        justify-content: center; font-size: 28px; margin-bottom: 18px;
+        background: color-mix(in srgb, var(--c) 12%, #fff); }
+      .lp-ap-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 10px; line-height: 1.3; }
+      .lp-ap-desc { font-size: 14px; line-height: 1.7; color: var(--ink-soft); margin: 0; }
+      .lp-annanin-foot { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px;
+        margin-top: 40px; }
+      .lp-ap-chip { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); }
+      .lp-ap-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+      .lp-ap-apply { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600;
+        color: var(--red); text-decoration: none; margin-left: 8px; transition: gap 150ms; }
+      .lp-ap-apply:hover { gap: 10px; }
+
       /* Donation section */
       .lp-donate-section { background: var(--navy);
         background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.14), transparent 55%),
@@ -998,6 +1082,7 @@ function LandingStyles() {
         .lp-kids-inner { grid-template-columns: 1fr 1fr; gap: 20px; }
         .lp-kids-cta { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; }
         .lp-why-specials { grid-template-columns: 1fr; }
+        .lp-annanin-grid { grid-template-columns: 1fr; }
         .lp-donate-inner { grid-template-columns: 1fr; gap: 36px; }
         .lp-donate-stats-row { flex-wrap: wrap; }
       }
