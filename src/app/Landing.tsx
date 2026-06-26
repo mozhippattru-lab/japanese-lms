@@ -744,8 +744,8 @@ function LandingStyles() {
         font-size: 14px; color: var(--ink-soft); letter-spacing: .02em; margin-bottom: 26px; }
       .lp-kicker-ta { font-family: var(--ta); color: var(--red); font-weight: 600; }
       .lp-kicker-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
-      .lp-hero-title { font-family: var(--serif); font-weight: 700; font-size: clamp(38px, 5.6vw, 66px);
-        line-height: 1.06; letter-spacing: -0.01em; margin: 0 0 24px; color: var(--ink); }
+      .lp-hero-title { font-family: var(--serif); font-weight: 700; font-size: clamp(34px, 5.2vw, 60px);
+        line-height: 1.08; letter-spacing: -0.01em; margin: 0 0 24px; color: var(--ink); white-space: nowrap; }
       .lp-jp-accent { font-family: var(--jp); color: var(--red); font-weight: 700; }
       .lp-hero-sub { max-width: 520px; font-size: 17px; line-height: 1.72; color: var(--ink-soft); margin: 0 0 34px; }
       .lp-hero-sub strong { color: var(--ink); }
@@ -1109,6 +1109,7 @@ function LandingStyles() {
       @media (max-width: 560px) {
         .lp-section { padding: 64px 0; }
         .lp-container { padding: 0 20px; }
+        .lp-hero-title { white-space: normal; }
         .lp-course-grid, .lp-price-grid, .lp-why-list, .lp-footer-grid { grid-template-columns: 1fr; }
         .lp-form-row { grid-template-columns: 1fr; }
         .lp-brand-en { display: none; }
