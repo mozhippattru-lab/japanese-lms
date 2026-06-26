@@ -126,7 +126,7 @@ export default async function AdminDashboard() {
           <header className="dash-header">
             <div>
               <p className="dash-eyebrow">管理ダッシュボード · Admin</p>
-              <h1 className="dash-title">おかえりなさい、<span>{firstName}</span></h1>
+              <h1 className="dash-title">ようこそ、<span>{firstName}</span></h1>
               <p className="dash-subtitle">An overview of மொழிப்பற்று Japanese Language School.</p>
             </div>
             <div className="dash-datechip">

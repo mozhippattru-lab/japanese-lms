@@ -66,7 +66,7 @@ export default async function StudentDashboard() {
           <header className="dash-header">
             <div>
               <p className="dash-eyebrow">学生ダッシュボード · Student</p>
-              <h1 className="dash-title">おかえりなさい、<span>{firstName}</span></h1>
+              <h1 className="dash-title">ようこそ、<span>{firstName}</span></h1>
               <p className="dash-subtitle">Let&apos;s continue your journey to fluent Japanese.</p>
             </div>
             <div className="dash-datechip">
