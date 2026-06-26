@@ -91,6 +91,16 @@ export default function Landing() {
       <main id="top">
         {/* ─── Hero — asymmetric, the clock is the signature ─────── */}
         <section className="lp-hero">
+          <div className="lp-container">
+            <div className="lp-kural">
+              <div className="lp-kural-num">திருக்குறள் · 392</div>
+              <p className="lp-kural-ta">
+                எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
+                கண்ணென்ப வாழும் உயிர்க்கு.
+              </p>
+              <p className="lp-kural-en">&ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;</p>
+            </div>
+          </div>
           <div className="lp-container lp-hero-grid">
             <div className="lp-hero-copy">
               <div className="lp-kicker">
@@ -748,6 +758,15 @@ function LandingStyles() {
         line-height: 1.08; letter-spacing: -0.01em; margin: 0 0 24px; color: var(--ink); }
       .lp-hero-line { display: block; white-space: nowrap; }
       .lp-jp-accent { font-family: var(--jp); color: var(--red); font-weight: 700; }
+
+      /* Thirukkural banner at the very top of the hero */
+      .lp-kural { text-align: center; max-width: 760px; margin: 0 auto; padding: 26px 16px 22px;
+        border-bottom: 1px solid var(--line); }
+      .lp-kural-num { font-family: var(--ta); font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
+        text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
+      .lp-kural-ta { font-family: var(--ta); font-size: clamp(16px, 2.3vw, 21px); line-height: 1.85;
+        font-weight: 600; color: var(--ink); margin: 0; }
+      .lp-kural-en { font-size: 13.5px; font-style: italic; line-height: 1.6; color: var(--ink-soft); margin: 12px 0 0; }
       .lp-hero-sub { max-width: 520px; font-size: 17px; line-height: 1.72; color: var(--ink-soft); margin: 0 0 34px; }
       .lp-hero-sub strong { color: var(--ink); }
       .lp-hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
