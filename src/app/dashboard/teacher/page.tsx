@@ -7,7 +7,7 @@ import { Reveal, Stagger, StaggerItem } from '@/components/motion/Motion'
 import { Users, GraduationCap, ClipboardList, Calendar } from 'lucide-react'
 
 const STATUS_COLORS: Record<string, string> = {
-  active: '#22c55e', inactive: '#a39e93', completed: '#2d7dd2',
+  Active: '#22c55e', Upcoming: '#2d7dd2', Paused: '#c2974b', Completed: '#a39e93',
 }
 
 export default async function TeacherDashboard() {
@@ -28,18 +28,18 @@ export default async function TeacherDashboard() {
     { data: myBatches },
     { data: pendingSubmissions },
   ] = await Promise.all([
-    db.from('batches').select('id, name, level, status, time_slot, schedule').eq('teacher_id', user.id),
-    db.from('submissions').select('id, student_id, assignment_id, status, created_at').eq('status', 'pending').limit(5),
+    db.from('batches').select('id, name, jlpt_level, status, time_slot, days').eq('teacher_id', user.id),
+    db.from('assignment_submissions').select('id, student_id, assignment_id, status, submitted_at').is('graded_at', null).order('submitted_at', { ascending: false }).limit(5),
   ])
 
-  const activeBatches = (myBatches || []).filter(b => b.status === 'active')
+  const activeBatches = (myBatches || []).filter(b => b.status === 'Active')
 
-  // Student count across teacher's batches
+  // Student count across the teacher's active batches (via enrollments)
   let studentCount = 0
   if (activeBatches.length > 0) {
     const batchIds = activeBatches.map(b => b.id)
-    const { count } = await db.from('profiles').select('*', { count: 'exact', head: true }).in('batch_id', batchIds).eq('status', 'active')
-    studentCount = count ?? 0
+    const { data: enr } = await db.from('student_batches').select('student_id').in('batch_id', batchIds).eq('status', 'Active')
+    studentCount = new Set((enr || []).map(e => e.student_id)).size
   }
 
   // Pending grade count — submissions linked to assignments in teacher's batches
@@ -86,7 +86,7 @@ export default async function TeacherDashboard() {
                     <div key={b.id} className="dash-row accent" style={{ ['--c' as string]: sc }}>
                       <div>
                         <div className="dash-row-title">{b.name}</div>
-                        <div className="dash-row-sub">JLPT {b.level}{b.time_slot ? ` · ${b.time_slot}` : ''}{b.schedule ? ` · ${b.schedule}` : ''}</div>
+                        <div className="dash-row-sub">JLPT {b.jlpt_level}{b.time_slot ? ` · ${b.time_slot}` : ''}{b.days ? ` · ${b.days}` : ''}</div>
                       </div>
                       <span className="dash-chip" style={{ color: sc, background: sc + '18', textTransform: 'capitalize' }}>{b.status}</span>
                     </div>
@@ -107,7 +107,7 @@ export default async function TeacherDashboard() {
                   <div key={s.id} className="dash-row">
                     <div>
                       <div className="dash-row-title">Submission #{s.id.slice(0, 6)}</div>
-                      <div className="dash-row-sub">{new Date(s.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
+                      <div className="dash-row-sub">{new Date(s.submitted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
                     </div>
                     <button className="dash-btn dash-btn-navy">Grade</button>
                   </div>
@@ -133,8 +133,8 @@ export default async function TeacherDashboard() {
                       return (
                         <tr key={b.id}>
                           <td style={{ fontWeight: 600 }}>{b.name}</td>
-                          <td>{b.level}</td>
-                          <td>{b.schedule || '—'}</td>
+                          <td>{b.jlpt_level}</td>
+                          <td>{b.days || '—'}</td>
                           <td>{b.time_slot || '—'}</td>
                           <td><span className="dash-chip" style={{ background: sc + '18', color: sc, textTransform: 'capitalize' }}>{b.status}</span></td>
                         </tr>

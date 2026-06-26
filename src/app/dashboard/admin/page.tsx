@@ -46,12 +46,12 @@ export default async function AdminDashboard() {
   // depend on each other, so we avoid a sequential round-trip to Supabase.
   const profilePromise = supabase.from('profiles').select('role, full_name').eq('id', user.id).single()
   const dataPromise = Promise.all([
-    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student').eq('status', 'active'),
-    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'teacher').eq('status', 'active'),
-    db.from('batches').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student').eq('status', 'Active'),
+    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'teacher').eq('status', 'Active'),
+    db.from('batches').select('*', { count: 'exact', head: true }).eq('status', 'Active'),
     db.from('leads').select('*', { count: 'exact', head: true }),
     db.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true),
-    db.from('profiles').select('jlpt_level').eq('role', 'student').eq('status', 'active'),
+    db.from('profiles').select('jlpt_level').eq('role', 'student').eq('status', 'Active'),
     db.from('profiles').select('full_name, jlpt_level, created_at').eq('role', 'student').order('created_at', { ascending: false }).limit(4),
     db.from('invoices').select('amount, status'),
     db.from('profiles').select('created_at').eq('role', 'student').gte('created_at', sixMonthsAgo.toISOString()),

@@ -22,25 +22,26 @@ export default async function StudentDashboard() {
   const [
     { data: attendanceRows },
     { data: pendingSubmissions },
-    { data: testScores },
     { data: assignments },
   ] = await Promise.all([
-    supabase.from('attendance').select('present').eq('student_id', user.id),
-    supabase.from('submissions').select('id, status, assignment_id').eq('student_id', user.id).eq('status', 'pending'),
-    supabase.from('test_scores').select('test_name, score, max_score, test_date').eq('student_id', user.id).order('test_date', { ascending: false }).limit(3),
+    supabase.from('attendance_records').select('status').eq('student_id', user.id),
+    supabase.from('assignment_submissions').select('id').eq('student_id', user.id).is('graded_at', null),
     supabase.from('assignments').select('id, title, due_date').order('due_date', { ascending: true }).limit(5),
   ])
 
+  // Mock test scores are not tracked in the database yet — show as empty.
+  const testScores: { test_name: string; score: number; max_score: number; test_date: string }[] = []
+
   // Attendance %
   const total = attendanceRows?.length ?? 0
-  const present = attendanceRows?.filter(r => r.present).length ?? 0
+  const present = attendanceRows?.filter(r => r.status === 'Present').length ?? 0
   const attendancePct = total > 0 ? `${Math.round((present / total) * 100)}%` : '—'
 
   // Pending assignments
   const pendingCount = pendingSubmissions?.length ?? 0
 
   // Last mock score
-  const lastScore = testScores?.[0]
+  const lastScore = testScores[0]
   const lastScoreStr = lastScore ? `${lastScore.score}/${lastScore.max_score}` : '—'
 
   // Format due date

@@ -20,9 +20,9 @@ export default async function SettingsPage() {
     { count: batches },
   ] = await Promise.all([
     db.from('app_settings').select('*').eq('id', 'default').single(),
-    db.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student').eq('status', 'active'),
-    db.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'teacher').eq('status', 'active'),
-    db.from('batches').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+    db.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'student').eq('status', 'Active'),
+    db.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'teacher').eq('status', 'Active'),
+    db.from('batches').select('id', { count: 'exact', head: true }).eq('status', 'Active'),
   ])
 
   return (
