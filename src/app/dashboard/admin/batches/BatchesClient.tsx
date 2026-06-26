@@ -22,6 +22,7 @@ type Batch = {
   created_at: string
   mode?: string | null
   college_id?: string | null
+  meeting_link?: string | null
 }
 
 type Teacher = { id: string; full_name: string | null; email: string | null; jlpt_level?: string | null; phone?: string | null }
@@ -158,7 +159,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   )
 }
 
-const emptyForm = { name: '', jlpt_level: 'N5', start_time: '09:00 AM', end_time: '11:00 AM', days: '', teacher_id: '', capacity: 20, status: 'Active', start_date: '', mode: 'Office', college_id: '', new_college_name: '' }
+const emptyForm = { name: '', jlpt_level: 'N5', start_time: '09:00 AM', end_time: '11:00 AM', days: '', teacher_id: '', capacity: 20, status: 'Active', start_date: '', mode: 'Office', college_id: '', new_college_name: '', meeting_link: '' }
 const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
 
 export default function BatchesClient({ initialBatches, teachers, colleges }: { initialBatches: Batch[]; teachers: Teacher[]; colleges: College[] }) {
@@ -287,6 +288,7 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
       start_date: form.start_date || null,
       mode: form.mode,
       college_id: collegeId,
+      meeting_link: form.mode === 'Online' ? (form.meeting_link.trim() || null) : null,
     }
     const { data } = await supabase.from('batches').insert(newBatch).select().single()
     if (data) setBatches(prev => [data, ...prev])
@@ -315,6 +317,7 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
       start_date: editBatch.start_date,
       mode: editBatch.mode || 'Office',
       college_id: editBatch.mode === 'College' ? (editBatch.college_id || null) : null,
+      meeting_link: editBatch.mode === 'Online' ? (editBatch.meeting_link?.trim() || null) : null,
     }
     await supabase.from('batches').update(updates).eq('id', editBatch.id)
     setBatches(prev => prev.map(b => b.id === editBatch.id ? { ...b, ...updates } : b))
@@ -433,6 +436,15 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
             )}
           </div>
 
+          {viewBatch.mode === 'Online' && (
+            <div style={{ marginBottom: '16px', fontSize: '13px' }}>
+              <span style={{ color: '#9ca3af', fontWeight: 600 }}>Meeting link: </span>
+              {viewBatch.meeting_link
+                ? <a href={viewBatch.meeting_link} target="_blank" rel="noopener noreferrer" style={{ color: '#2d7dd2', wordBreak: 'break-all' }}>{viewBatch.meeting_link}</a>
+                : <span style={{ color: '#e84040' }}>not added yet</span>}
+            </div>
+          )}
+
           {/* detail grid */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '18px' }}>
             {[
@@ -514,6 +526,11 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
                 )}
               </>
             )}
+            {form.mode === 'Online' && (
+              <Field label="Meeting link (Zoom / Google Meet / Teams)">
+                <input style={inputStyle} type="url" value={form.meeting_link} onChange={e => setForm(f => ({ ...f, meeting_link: e.target.value }))} placeholder="https://zoom.us/j/…" />
+              </Field>
+            )}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 110px', gap: '14px' }}>
               <Field label="Batch Name"><input style={inputStyle} required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. N4 Evening Batch A" /></Field>
               <Field label="Level"><select style={inputStyle} value={form.jlpt_level} onChange={e => setForm(f => ({ ...f, jlpt_level: e.target.value }))}>{LEVELS.map(l => <option key={l}>{l}</option>)}</select></Field>
@@ -552,6 +569,11 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
                   <option value="">— Select college —</option>
                   {colleges.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
+              </Field>
+            )}
+            {editBatch.mode === 'Online' && (
+              <Field label="Meeting link (Zoom / Google Meet / Teams)">
+                <input style={inputStyle} type="url" value={editBatch.meeting_link || ''} onChange={e => setEditBatch(b => b ? { ...b, meeting_link: e.target.value } : b)} placeholder="https://zoom.us/j/…" />
               </Field>
             )}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 110px', gap: '14px' }}>

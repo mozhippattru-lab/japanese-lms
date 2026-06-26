@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import { Clock, Calendar, Users } from 'lucide-react'
 import { DashStyles } from '@/components/DashboardKit'
+import JoinClassButton from '@/components/JoinClassButton'
 
 const LEVEL_COLORS: Record<string, string> = {
   N5: '#22c55e', N4: '#2d7dd2', N3: '#f59e0b', N2: '#e84040', N1: '#8b5cf6',
@@ -39,11 +40,11 @@ export default async function StudentClassesPage() {
 
   const { data: enrollments } = await supabase
     .from('student_batches')
-    .select('id, batch:batches(id, name, jlpt_level, time_slot, days, status, teacher_name, enrolled, capacity)')
+    .select('id, batch:batches(id, name, jlpt_level, time_slot, days, status, teacher_name, enrolled, capacity, mode, meeting_link)')
     .eq('student_id', user.id)
     .eq('status', 'Active')
 
-  type BatchInfo = { id: string; name: string; jlpt_level: string; time_slot: string | null; days: string | string[] | null; status: string; teacher_name: string | null; enrolled: number; capacity: number }
+  type BatchInfo = { id: string; name: string; jlpt_level: string; time_slot: string | null; days: string | string[] | null; status: string; teacher_name: string | null; enrolled: number; capacity: number; mode: string | null; meeting_link: string | null }
   const batches = (enrollments || [])
     .map(e => e.batch as unknown as BatchInfo | null)
     .filter(Boolean)
@@ -124,11 +125,14 @@ export default async function StudentClassesPage() {
                             </span>
                           </div>
                         </div>
-                        <div style={{ flexShrink: 0 }}>
+                        <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#9ca3af' }}>
                             <Calendar size={12} />
                             {b.days ? (Array.isArray(b.days) ? b.days.join(', ') : b.days) : ''}
                           </div>
+                          {isToday && (b.mode === 'Online' || b.meeting_link) && (
+                            <JoinClassButton link={b.meeting_link} timeSlot={b.time_slot} days={b.days} />
+                          )}
                         </div>
                       </div>
                     )

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import { Users, Clock, Calendar } from 'lucide-react'
 import { DashStyles } from '@/components/DashboardKit'
+import JoinClassButton from '@/components/JoinClassButton'
 
 const LEVEL_COLORS: Record<string, string> = {
   N5: '#22c55e', N4: '#2d7dd2', N3: '#f59e0b', N2: '#e84040', N1: '#8b5cf6',
@@ -114,6 +115,15 @@ export default async function TeacherClassesPage() {
                         <div style={{ height: '100%', width: `${fillPct}%`, background: fillPct >= 90 ? '#e84040' : fillPct >= 70 ? '#f59e0b' : levelColor, borderRadius: '2px' }} />
                       </div>
                     </div>
+
+                    {(b.mode === 'Online' || b.meeting_link) && (
+                      <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid #f3f4f6' }}>
+                        <JoinClassButton
+                          link={b.meeting_link} timeSlot={b.time_slot} days={b.days}
+                          batchId={b.id} canEdit joinLabel="Start Class"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )
