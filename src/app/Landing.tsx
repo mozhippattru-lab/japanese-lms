@@ -503,14 +503,20 @@ export default function Landing() {
           </div>
           <div>
             <h4>Contact</h4>
-            <span className="lp-fc"><Phone size={15} /> Call us for admissions</span>
-            <span className="lp-fc"><Mail size={15} /> mozhippattru@gmail.com</span>
+            <a className="lp-fc" href="tel:+919092882957"><Phone size={15} /> +91 90928 82957</a>
+            <a className="lp-fc lp-fc-email" href="mailto:japanse.school@mozhippattru.org"><Mail size={15} /> japanse.school@mozhippattru.org</a>
             <span className="lp-fc"><MapPin size={15} /> Online &amp; in-class · India</span>
           </div>
         </div>
         <div className="lp-footer-bar">
-          <span>© {new Date().getFullYear()} {ENG} — Japanese Language School.</span>
+          <span>© {new Date().getFullYear()} {ENG} — Japanese Language School. All rights reserved.</span>
           <span className="lp-footer-jp">頑張ろう。Let&apos;s learn, together.</span>
+        </div>
+        <div className="lp-footer-credit">
+          Developed &amp; maintained by{' '}
+          <a href="https://nexaex.in" target="_blank" rel="noopener noreferrer">Nexaex Digital Services Pvt. Ltd.</a>
+          {' '}·{' '}
+          <a href="mailto:hello@nexaex.in">hello@nexaex.in</a>
         </div>
       </footer>
     </div>
@@ -928,6 +934,12 @@ function LandingStyles() {
         justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; max-width: 1180px;
         margin: 0 auto; font-size: 12.5px; color: rgba(255,255,255,0.4); }
       .lp-footer-jp { font-family: var(--jp); color: var(--gold-soft); }
+      .lp-fc-email { word-break: break-all; }
+      .lp-footer-credit { border-top: 1px solid rgba(255,255,255,0.07); padding: 16px 28px; text-align: center;
+        font-size: 12px; color: rgba(255,255,255,0.4); max-width: 1180px; margin: 0 auto; }
+      .lp-footer-credit a { display: inline; margin: 0; font-size: 12px; color: rgba(255,255,255,0.62);
+        text-decoration: none; }
+      .lp-footer-credit a:hover { color: var(--gold-soft); }
 
       /* Kids course card */
       .lp-kids-card { margin-top: 36px; background: #fff; border: 1px solid var(--line);
