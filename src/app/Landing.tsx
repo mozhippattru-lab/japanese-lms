@@ -923,7 +923,7 @@ function LandingStyles() {
 
       /* Footer */
       .lp-footer { background: #111425; color: rgba(255,255,255,0.62); padding: 60px 0 0; }
-      .lp-footer-grid { display: grid; grid-template-columns: 1.7fr 1fr 1fr 1.2fr; gap: 36px; padding-bottom: 46px; }
+      .lp-footer-grid { display: grid; grid-template-columns: 1.6fr 0.9fr 0.9fr 1.5fr; gap: 32px; padding-bottom: 46px; }
       .lp-footer .lp-logo { box-shadow: none; }
       .lp-footer-about { font-size: 13.5px; line-height: 1.7; margin: 18px 0 0; color: rgba(255,255,255,0.45); max-width: 320px; }
       .lp-footer h4 { font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 18px; }
@@ -934,7 +934,8 @@ function LandingStyles() {
         justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; max-width: 1180px;
         margin: 0 auto; font-size: 12.5px; color: rgba(255,255,255,0.4); }
       .lp-footer-jp { font-family: var(--jp); color: var(--gold-soft); }
-      .lp-fc-email { word-break: break-all; }
+      .lp-fc-email { font-size: 12.5px; align-items: flex-start; line-height: 1.45; overflow-wrap: anywhere; }
+      .lp-fc-email svg { flex-shrink: 0; margin-top: 3px; }
       .lp-footer-credit { border-top: 1px solid rgba(255,255,255,0.07); padding: 16px 28px; text-align: center;
         font-size: 12px; color: rgba(255,255,255,0.4); max-width: 1180px; margin: 0 auto; }
       .lp-footer-credit a { display: inline; margin: 0; font-size: 12px; color: rgba(255,255,255,0.62);
