@@ -99,8 +99,8 @@ export default function Landing() {
                 日本語学校
               </div>
               <h1 className="lp-hero-title">
-                From your first <span className="lp-jp-accent">あ</span><br />
-                to fluent <span className="lp-jp-accent">日本語</span>.
+                <span className="lp-hero-line">From your first <span className="lp-jp-accent">あ</span></span>
+                <span className="lp-hero-line">to fluent <span className="lp-jp-accent">日本語</span></span>
               </h1>
               <p className="lp-hero-sub">
                 A Japanese language school with a Tamil heart. We teach JLPT N5 to N3 the patient way —
@@ -744,8 +744,9 @@ function LandingStyles() {
         font-size: 14px; color: var(--ink-soft); letter-spacing: .02em; margin-bottom: 26px; }
       .lp-kicker-ta { font-family: var(--ta); color: var(--red); font-weight: 600; }
       .lp-kicker-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
-      .lp-hero-title { font-family: var(--serif); font-weight: 700; font-size: clamp(34px, 5.2vw, 60px);
-        line-height: 1.08; letter-spacing: -0.01em; margin: 0 0 24px; color: var(--ink); white-space: nowrap; }
+      .lp-hero-title { font-family: var(--serif); font-weight: 700; font-size: clamp(30px, 5.2vw, 60px);
+        line-height: 1.08; letter-spacing: -0.01em; margin: 0 0 24px; color: var(--ink); }
+      .lp-hero-line { display: block; white-space: nowrap; }
       .lp-jp-accent { font-family: var(--jp); color: var(--red); font-weight: 700; }
       .lp-hero-sub { max-width: 520px; font-size: 17px; line-height: 1.72; color: var(--ink-soft); margin: 0 0 34px; }
       .lp-hero-sub strong { color: var(--ink); }
