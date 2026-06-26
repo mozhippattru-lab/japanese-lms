@@ -267,7 +267,7 @@ export default function Landing() {
               <div className="lp-mission-card lp-mission-green">
                 <div className="lp-mission-icon">🌳</div>
                 <div className="lp-mission-body">
-                  <div className="lp-mission-badge" style={{ background: '#dcfce7', color: '#15803d' }}>Free Education Initiative</div>
+                  <div className="lp-mission-badge">Free Education Initiative</div>
                   <h3 className="lp-mission-title">Free Japanese Education for Government School Students</h3>
                   <p className="lp-mission-desc">
                     We provide free Japanese language education to students studying in nearby government schools.
@@ -291,7 +291,7 @@ export default function Landing() {
               <div className="lp-mission-card lp-mission-blue">
                 <div className="lp-mission-icon">♿</div>
                 <div className="lp-mission-body">
-                  <div className="lp-mission-badge" style={{ background: '#dbeafe', color: '#1d4ed8' }}>Learn &amp; Donate</div>
+                  <div className="lp-mission-badge">Learn &amp; Donate</div>
                   <h3 className="lp-mission-title">25% of Every Fee Goes to Our Wheelchair Donation Fund</h3>
                   <p className="lp-mission-desc">
                     Education with a purpose. Whenever a student pays a course fee, <strong>25% of the tuition fee</strong> is
@@ -901,35 +901,37 @@ function LandingStyles() {
       .lp-kids-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; }
       .lp-kids-note { font-size: 11px; color: var(--ink-soft); text-align: center; }
 
-      /* Why Us special mission cards */
+      /* Why Us special mission cards — editorial brand style */
       .lp-why-specials { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 52px; }
-      .lp-mission-card { border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
-        transition: transform 200ms, box-shadow 200ms; }
-      .lp-mission-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -16px rgba(40,32,20,0.3); }
-      .lp-mission-green { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1.5px solid #bbf7d0; }
-      .lp-mission-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1.5px solid #bfdbfe; }
-      .lp-mission-icon { font-size: 56px; padding: 28px 28px 0; line-height: 1; }
-      .lp-mission-body { padding: 18px 28px 28px; flex: 1; }
-      .lp-mission-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em;
-        text-transform: uppercase; padding: 4px 12px; border-radius: 99px; margin-bottom: 14px; }
-      .lp-mission-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink);
+      .lp-mission-card { position: relative; background: #fff; border: 1px solid var(--line);
+        border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;
+        transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
+      .lp-mission-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--mc); }
+      .lp-mission-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -22px rgba(40,32,20,0.4); border-color: transparent; }
+      .lp-mission-green { --mc: #2f9e63; --mc-ink: #2f9e63; }
+      .lp-mission-blue { --mc: linear-gradient(90deg, var(--red), var(--gold)); --mc-ink: var(--red); }
+      .lp-mission-icon { font-size: 46px; padding: 30px 30px 0; line-height: 1; }
+      .lp-mission-body { padding: 16px 30px 30px; flex: 1; }
+      .lp-mission-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+        text-transform: uppercase; color: var(--mc-ink); margin-bottom: 14px; }
+      .lp-mission-title { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--ink);
         margin: 0 0 12px; line-height: 1.3; }
       .lp-mission-desc { font-size: 14px; line-height: 1.7; color: var(--ink-soft); margin: 0 0 18px; }
       .lp-mission-desc strong { color: var(--ink); }
-      .lp-mission-tree { display: flex; gap: 12px; background: rgba(255,255,255,0.7); border-radius: 8px;
-        padding: 14px 16px; margin-bottom: 16px; align-items: flex-start; }
-      .lp-mission-tree-icon { font-size: 26px; flex-shrink: 0; }
-      .lp-mission-tree strong { font-size: 13.5px; font-weight: 700; color: #15803d; display: block; margin-bottom: 4px; }
+      .lp-mission-tree { display: flex; gap: 12px; background: var(--paper); border: 1px solid var(--line);
+        border-radius: 6px; padding: 14px 16px; margin-bottom: 16px; align-items: flex-start; }
+      .lp-mission-tree-icon { font-size: 24px; flex-shrink: 0; }
+      .lp-mission-tree strong { font-size: 13.5px; font-weight: 700; color: var(--ink); display: block; margin-bottom: 4px; }
       .lp-mission-tree p { font-size: 13px; color: var(--ink-soft); margin: 0; line-height: 1.55; }
-      .lp-mission-tagline { font-size: 13px; font-style: italic; color: #15803d; background: rgba(255,255,255,0.6);
-        border-left: 3px solid #22c55e; padding: 10px 14px; border-radius: 0 6px 6px 0; line-height: 1.55; }
-      .lp-donate-example { background: rgba(255,255,255,0.7); border-radius: 8px; padding: 14px 16px;
+      .lp-mission-tagline { font-size: 13px; font-style: italic; color: var(--ink-soft); background: var(--paper);
+        border-left: 3px solid var(--mc-ink); padding: 10px 14px; border-radius: 0 6px 6px 0; line-height: 1.55; }
+      .lp-donate-example { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px;
         display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
       .lp-de-row { display: flex; justify-content: space-between; align-items: center;
-        font-size: 13.5px; color: var(--ink-soft); padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.08); }
+        font-size: 13.5px; color: var(--ink-soft); padding: 4px 0; border-bottom: 1px dashed var(--line); }
       .lp-de-row:last-child { border-bottom: none; }
-      .lp-de-highlight { background: rgba(239,68,68,0.08); border-radius: 6px; padding: 8px 10px;
-        font-weight: 600; color: #dc2626; border-bottom: none; }
+      .lp-de-highlight { background: rgba(226,65,56,0.08); border-radius: 6px; padding: 8px 10px;
+        font-weight: 600; color: var(--red-deep); border-bottom: none; }
       .lp-de-amt { font-family: var(--serif); font-weight: 700; font-size: 15px; color: var(--ink); }
 
       /* Donation section */
