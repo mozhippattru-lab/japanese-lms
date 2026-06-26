@@ -504,7 +504,7 @@ export default function Landing() {
           <div>
             <h4>Contact</h4>
             <a className="lp-fc" href="tel:+919092882957"><Phone size={15} /> +91 90928 82957</a>
-            <a className="lp-fc lp-fc-email" href="mailto:japanse.school@mozhippattru.org"><Mail size={15} /> japanse.school@mozhippattru.org</a>
+            <a className="lp-fc lp-fc-email" href="mailto:japanese.school@mozhippattru.org"><Mail size={15} /> japanese.school@mozhippattru.org</a>
             <span className="lp-fc"><MapPin size={15} /> Online &amp; in-class · India</span>
           </div>
         </div>
@@ -516,7 +516,7 @@ export default function Landing() {
           Developed &amp; maintained by{' '}
           <a href="https://nexaex.in" target="_blank" rel="noopener noreferrer">Nexaex Digital Services Pvt. Ltd.</a>
           {' '}·{' '}
-          <a href="mailto:hello@nexaex.in">hello@nexaex.in</a>
+          <a href="https://nexaex.in" target="_blank" rel="noopener noreferrer">nexaex.in</a>
         </div>
       </footer>
     </div>
