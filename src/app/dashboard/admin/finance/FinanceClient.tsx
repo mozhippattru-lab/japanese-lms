@@ -12,7 +12,7 @@ import StatCard, { StatGrid } from '@/components/StatCard'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 import { printReceipt, printBankStatement, type StatementRow } from '@/lib/receipt'
 
-type Tab = 'overview' | 'invoices' | 'fees' | 'colleges' | 'report'
+type Tab = 'overview' | 'invoices' | 'fees' | 'expenses' | 'colleges' | 'report'
 
 type Invoice = {
   id: string; student_id: string; batch_id: string | null; fee_structure_id: string | null
@@ -37,6 +37,10 @@ type Payment = {
   id: string; invoice_id: string | null; student_id: string; amount: number
   payment_method: string | null; payment_date: string | null; reference_number: string | null; notes: string | null
 }
+type Expense = {
+  id: string; title: string; category: string | null; amount: number
+  expense_date: string; payment_method: string | null; notes: string | null; created_at: string
+}
 
 const PAYMENT_METHODS = ['Cash', 'UPI', 'Bank Transfer', 'Card', 'Cheque']
 const PM_ICONS: Record<string, ReactNode> = {
@@ -46,6 +50,11 @@ const PM_ICONS: Record<string, ReactNode> = {
 }
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1']
 const FREQUENCIES = ['Monthly', 'Quarterly', 'One-time']
+const EXPENSE_CATEGORIES = ['Rent', 'Salaries', 'Utilities', 'Marketing', 'Supplies', 'Maintenance', 'Software', 'Travel', 'Other']
+const CAT_COLOR: Record<string, string> = {
+  Rent: '#8b5cf6', Salaries: '#2d7dd2', Utilities: '#f59e0b', Marketing: '#ec4899',
+  Supplies: '#22c55e', Maintenance: '#6b7280', Software: '#06b6d4', Travel: '#e84040', Other: '#9ca3af',
+}
 const STATUS_COLOR: Record<string, string> = { Pending: '#f59e0b', Paid: '#22c55e', Overdue: '#e84040', Cancelled: '#9ca3af' }
 const LEVEL_COLOR: Record<string, string> = { N5: '#22c55e', N4: '#2d7dd2', N3: '#f59e0b', N2: '#e84040', N1: '#8b5cf6' }
 
@@ -87,6 +96,7 @@ function TabBar({ tab, setTab }: { tab: string; setTab: (t: Tab) => void }) {
     { key: 'overview', label: 'Overview', icon: <LayoutDashboard size={14} /> },
     { key: 'invoices', label: 'Invoices', icon: <Receipt size={14} /> },
     { key: 'fees', label: 'Fee Structures', icon: <DollarSign size={14} /> },
+    { key: 'expenses', label: 'Expenses', icon: <Wallet size={14} /> },
     { key: 'colleges', label: 'College Billing', icon: <Building2 size={14} /> },
     { key: 'report', label: 'Report', icon: <Landmark size={14} /> },
   ]
@@ -109,8 +119,9 @@ function TabBar({ tab, setTab }: { tab: string; setTab: (t: Tab) => void }) {
 const emptyCF = { studentId: '', batchId: '', feeId: '', amount: '', dueDate: '', description: '' }
 const emptyFF = { name: '', jlpt_level: '', amount: '', frequency: 'Monthly', description: '' }
 const emptyPF = { amount: '', method: 'Cash', date: todayStr(), reference: '', notes: '' }
+const emptyEF = { title: '', category: 'Rent', amount: '', date: todayStr(), method: 'Bank Transfer', notes: '' }
 
-export default function FinanceClient({ initialInvoices, initialFees, students, batches, colleges, collegePayments, payments }: {
+export default function FinanceClient({ initialInvoices, initialFees, students, batches, colleges, collegePayments, payments, initialExpenses }: {
   initialInvoices: Invoice[]
   initialFees: FeeStructure[]
   students: Student[]
@@ -118,6 +129,7 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
   colleges: College[]
   collegePayments: CollegePayment[]
   payments: Payment[]
+  initialExpenses: Expense[]
 }) {
   const [tab, setTab] = useState<Tab>('overview')
   const monthStart = new Date(); monthStart.setDate(1)
@@ -139,6 +151,10 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
   const [showAddFee, setShowAddFee] = useState(false)
   const [editFee, setEditFee] = useState<FeeStructure | null>(null)
   const [ff, setFf] = useState(emptyFF)
+
+  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses)
+  const [showAddExpense, setShowAddExpense] = useState(false)
+  const [ef, setEf] = useState(emptyEF)
 
   // Lookups
   const studentMap = Object.fromEntries(students.map(s => [s.id, s]))
@@ -335,6 +351,33 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
     const supabase = createClient()
     await supabase.from('fee_structures').update({ is_active: !fee.is_active }).eq('id', fee.id)
     setFees(prev => prev.map(f => f.id === fee.id ? { ...f, is_active: !f.is_active } : f))
+  }
+
+  // ── Expense CRUD ─────────────────────────────────────────────────
+  async function addExpense(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    const supabase = createClient()
+    const { data, error } = await supabase.from('expenses').insert({
+      title: ef.title,
+      category: ef.category,
+      amount: Number(ef.amount),
+      expense_date: ef.date,
+      payment_method: ef.method,
+      notes: ef.notes || null,
+    }).select().single()
+    setLoading(false)
+    if (error) { alert('Could not save expense: ' + error.message); return }
+    if (data) setExpenses(prev => [data, ...prev])
+    setShowAddExpense(false)
+    setEf(emptyEF)
+  }
+
+  async function deleteExpense(id: string) {
+    if (!confirm('Delete this expense?')) return
+    const supabase = createClient()
+    await supabase.from('expenses').delete().eq('id', id)
+    setExpenses(prev => prev.filter(x => x.id !== id))
   }
 
   const pageHeader = (
@@ -850,6 +893,112 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
             </div>
           ))}
         </div>
+      </>
+    )
+  }
+
+  // ══════════════════════════════════════════════════════════════════
+  // EXPENSES TAB
+  // ══════════════════════════════════════════════════════════════════
+  if (tab === 'expenses') {
+    const totalExpenses = expenses.reduce((s, x) => s + Number(x.amount || 0), 0)
+    const monthKey = todayStr().slice(0, 7)
+    const thisMonth = expenses.filter(x => (x.expense_date || '').slice(0, 7) === monthKey).reduce((s, x) => s + Number(x.amount || 0), 0)
+    return (
+      <>
+        {pageHeader}
+        <TabBar tab={tab} setTab={setTab} />
+
+        <StatGrid>
+          <StatCard label="Total Expenses" value={fmt(totalExpenses)} icon={<Wallet size={18} />} color="#e84040" />
+          <StatCard label="This Month" value={fmt(thisMonth)} icon={<TriangleAlert size={18} />} color="#f59e0b" />
+          <StatCard label="Entries" value={String(expenses.length)} icon={<FileText size={18} />} color="#2d7dd2" />
+        </StatGrid>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '20px 0 16px' }}>
+          <button onClick={() => { setShowAddExpense(true); setEf(emptyEF) }} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '9px 16px', background: 'var(--red)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
+            <Plus size={15} /> Add Expense
+          </button>
+        </div>
+
+        {expenses.length === 0 ? (
+          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', padding: '56px', textAlign: 'center', color: '#9ca3af' }}>
+            <Wallet size={36} style={{ margin: '0 auto 16px', display: 'block', color: '#d1d5db' }} strokeWidth={1.5} />
+            <p style={{ fontSize: '15px', fontWeight: '600', color: '#6e6e73' }}>No expenses recorded yet</p>
+            <p style={{ fontSize: '13px', marginTop: '6px' }}>Track rent, salaries, utilities and other outgoings here</p>
+          </div>
+        ) : (
+          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #ececef', overflow: 'hidden' }}>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Method</TableHead>
+                  <TableHead style={{ textAlign: 'right' }}>Amount</TableHead>
+                  <TableHead />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {expenses.map(x => (
+                  <TableRow key={x.id}>
+                    <TableCell style={{ whiteSpace: 'nowrap', color: '#6b7280' }}>{x.expense_date ? fmtDate(x.expense_date) : '—'}</TableCell>
+                    <TableCell>
+                      <span style={{ background: (CAT_COLOR[x.category || 'Other'] || '#9ca3af') + '20', color: CAT_COLOR[x.category || 'Other'] || '#9ca3af', fontSize: '11px', fontWeight: 700, padding: '2px 10px', borderRadius: '20px', whiteSpace: 'nowrap' }}>{x.category || 'Other'}</span>
+                    </TableCell>
+                    <TableCell style={{ fontWeight: 600, color: '#1d1d1f' }}>
+                      {x.title}
+                      {x.notes && <div style={{ fontSize: '11.5px', color: '#9ca3af', fontWeight: 400 }}>{x.notes}</div>}
+                    </TableCell>
+                    <TableCell style={{ color: '#6b7280' }}>{x.payment_method || '—'}</TableCell>
+                    <TableCell style={{ textAlign: 'right', fontWeight: 700, color: '#e84040', whiteSpace: 'nowrap' }}>− {fmt(Number(x.amount))}</TableCell>
+                    <TableCell style={{ textAlign: 'right' }}>
+                      <button onClick={() => deleteExpense(x.id)} style={{ padding: '5px 10px', background: '#fef2f2', border: 'none', borderRadius: '7px', cursor: 'pointer', fontSize: '12px', color: '#e84040' }}>×</button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+
+        {showAddExpense && (
+          <Modal title="Add Expense" onClose={() => setShowAddExpense(false)}>
+            <form onSubmit={addExpense}>
+              <Field label="Description *">
+                <input style={inputStyle} autoFocus required value={ef.title} onChange={e => setEf(f => ({ ...f, title: e.target.value }))} placeholder="e.g. June office rent" />
+              </Field>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <Field label="Category">
+                  <select style={inputStyle} value={ef.category} onChange={e => setEf(f => ({ ...f, category: e.target.value }))}>
+                    {EXPENSE_CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </Field>
+                <Field label="Amount (₹) *">
+                  <input style={inputStyle} type="number" min={1} required value={ef.amount} onChange={e => setEf(f => ({ ...f, amount: e.target.value }))} placeholder="e.g. 15000" />
+                </Field>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <Field label="Date">
+                  <input style={inputStyle} type="date" value={ef.date} onChange={e => setEf(f => ({ ...f, date: e.target.value }))} />
+                </Field>
+                <Field label="Paid via">
+                  <select style={inputStyle} value={ef.method} onChange={e => setEf(f => ({ ...f, method: e.target.value }))}>
+                    {PAYMENT_METHODS.map(m => <option key={m}>{m}</option>)}
+                  </select>
+                </Field>
+              </div>
+              <Field label="Notes (optional)">
+                <input style={inputStyle} value={ef.notes} onChange={e => setEf(f => ({ ...f, notes: e.target.value }))} placeholder="Reference, vendor, etc." />
+              </Field>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                <button type="button" onClick={() => setShowAddExpense(false)} style={{ flex: 1, padding: '12px', background: '#f3f4f6', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '14px', fontWeight: 600, color: '#374151' }}>Cancel</button>
+                <button type="submit" disabled={loading} style={{ flex: 2, padding: '12px', background: 'var(--red)', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '14px', fontWeight: '700', color: '#fff' }}>{loading ? 'Adding…' : 'Add Expense'}</button>
+              </div>
+            </form>
+          </Modal>
+        )}
       </>
     )
   }
