@@ -62,14 +62,16 @@ export default function RegisterPage() {
     setLoading(true)
     setError('')
     const supabase = createClient()
+    // Public registration is always a student. Role is owned by the database
+    // (handle_new_user trigger); never trust a client-supplied role.
     const { data, error: authError } = await supabase.auth.signUp({
       email: form.email, password: form.password,
-      options: { data: { full_name: form.name, role: form.role } },
+      options: { data: { full_name: form.name } },
     })
     if (authError) { setError(authError.message); setLoading(false); return }
     if (data.user) {
-      await supabase.from('profiles').upsert({ id: data.user.id, full_name: form.name, email: form.email, role: form.role })
-      if (form.role === 'student' && collegeId) {
+      await supabase.from('profiles').upsert({ id: data.user.id, full_name: form.name, email: form.email })
+      if (collegeId) {
         try {
           await fetch('/api/college/join', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -77,7 +79,7 @@ export default function RegisterPage() {
           })
         } catch { /* non-fatal */ }
       }
-      router.push(`/dashboard/${form.role}`)
+      router.push('/dashboard/student')
     }
   }
 
@@ -198,20 +200,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {!lockedCollege && (
-              <div style={{ marginBottom: '13px' }}>
-                <label style={labelStyle}>I am a</label>
-                <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} style={{ ...inp, cursor: 'pointer' }}
-                  onFocus={e => { e.target.style.borderColor = 'var(--red)'; e.target.style.boxShadow = '0 0 0 3px rgba(232,64,64,0.10)' }}
-                  onBlur={e => { e.target.style.borderColor = '#e5e7eb'; e.target.style.boxShadow = 'none' }}>
-                  <option value="student">Student</option>
-                  <option value="teacher">Teacher</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-            )}
-
-            {!lockedCollege && form.role === 'student' && collegesLoaded && colleges.length > 0 && (
+            {!lockedCollege && collegesLoaded && colleges.length > 0 && (
               <div style={{ marginBottom: '13px' }}>
                 <label style={labelStyle}>College (optional)</label>
                 <select value={collegeId} onChange={e => setCollegeId(e.target.value)} style={{ ...inp, cursor: 'pointer' }}>

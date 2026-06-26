@@ -185,16 +185,24 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault(); setLoading(true); setError('')
-    const supabase = createClient()
-    const { data, error: authErr } = await supabase.auth.signUp({ email: form.email, password: form.password, options: { data: { full_name: form.full_name, role: 'teacher' } } })
-    if (authErr) { setError(authErr.message); setLoading(false); return }
-    if (data.user) {
-      const newProfile = { id: data.user.id, full_name: form.full_name, email: form.email, phone: form.phone, role: 'teacher', jlpt_level: form.jlpt_level, status: form.status }
-      await supabase.from('profiles').upsert(newProfile)
-      setTeachers(prev => [{ ...newProfile, created_at: new Date().toISOString() }, ...prev])
+    // Create the teacher server-side (service role) so the admin stays logged
+    // in and the role is set on the server, never trusting the browser.
+    try {
+      const res = await fetch('/api/admin/create-teacher', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: form.full_name, email: form.email, phone: form.phone,
+          password: form.password, jlpt_level: form.jlpt_level, status: form.status,
+        }),
+      })
+      const out = await res.json()
+      if (!res.ok) { setError(out.error || 'Could not create teacher'); setLoading(false); return }
+      setTeachers(prev => [out.teacher, ...prev])
       setShowAdd(false)
       setForm({ full_name: '', email: '', phone: '', password: '', jlpt_level: 'N3', status: 'Active' })
       toast('Teacher account created', 'success')
+    } catch {
+      setError('Network error. Please try again.')
     }
     setLoading(false)
   }
