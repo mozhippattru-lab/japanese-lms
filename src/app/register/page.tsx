@@ -132,7 +132,7 @@ export default function RegisterPage() {
             aria-hidden="true"
             style={{ width: '100%', maxWidth: '240px', height: 'auto', opacity: 0.95 }}
           />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '13px', marginTop: '-28px' }}>
             <div style={{
               width: '40px', height: '40px', background: 'var(--red)', borderRadius: '10px', flexShrink: 0,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
