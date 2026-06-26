@@ -28,8 +28,14 @@ jobs:
             echo "── Installing dependencies..."
             npm install --legacy-peer-deps > /dev/null 2>&1
 
-            echo "── Building..."
-            npm run build
+            echo "── Building (into .next-new, leaving the live build untouched)..."
+            rm -rf .next-new
+            NEXT_DIST_DIR=.next-new npm run build
+
+            echo "── Swapping in the new build..."
+            rm -rf .next-old
+            mv .next .next-old 2>/dev/null || true
+            mv .next-new .next
 
             echo "── Restarting app..."
             pm2 restart japanese-lms
