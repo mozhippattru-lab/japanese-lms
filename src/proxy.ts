@@ -25,8 +25,12 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
+  // Pages reachable without logging in (landing + the whole auth flow).
+  const PUBLIC_PREFIXES = ['/login', '/register', '/forgot-password', '/reset-password', '/privacy', '/terms']
+  const isPublic = pathname === '/' || PUBLIC_PREFIXES.some(p => pathname.startsWith(p))
+
   // Redirect unauthenticated users to login
-  if (!user && !pathname.startsWith('/login') && !pathname.startsWith('/register') && pathname !== '/') {
+  if (!user && !isPublic) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
