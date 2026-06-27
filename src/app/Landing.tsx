@@ -479,7 +479,7 @@ export default function Landing() {
           <div className="lp-container lp-demo-grid">
             <div className="lp-demo-copy">
               <SectionTag ta="இலவச செயல்முறை விளக்கம்" jp="無料体験">Free demo</SectionTag>
-              <h2 className="lp-h2">Sit in on a class. On us.</h2>
+              <h2 className="lp-h2">Experience Japanese — your first class, completely free.</h2>
               <p className="lp-p">
                 Experience the teaching first-hand — no fees, no commitment. Tell us a little about yourself and
                 our team will reach out to schedule your free online demo with an N1-certified teacher.
