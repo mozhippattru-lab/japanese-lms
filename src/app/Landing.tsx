@@ -340,7 +340,7 @@ export default function Landing() {
           <div className="lp-container">
             <div className="lp-annanin-head">
               <SectionTag ta="அண்ணனின் பரிசு" jp="兄の贈り物">The Elder Brother&apos;s Gift</SectionTag>
-              <h2 className="lp-h2">A gift of education for those who need it most</h2>
+              <h2 className="lp-h2">A gift of <span style={{ color: 'var(--red)', borderBottom: '3px solid var(--gold)', paddingBottom: '2px' }}>free education</span> for those who need it most</h2>
               <p className="lp-p lp-annanin-lead">
                 Some students carry far more than their share. Through <em>Annanin Parisu</em>{' '}— the elder
                 brother&apos;s gift — we open our Japanese classroom to them, completely free. Learning should
