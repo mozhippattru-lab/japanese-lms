@@ -340,7 +340,7 @@ export default function Landing() {
           <div className="lp-container">
             <div className="lp-annanin-head">
               <SectionTag ta="அண்ணனின் பரிசு" jp="兄の贈り物">The Elder Brother&apos;s Gift</SectionTag>
-              <h2 className="lp-h2">A gift of <span style={{ color: '#fff', textDecoration: 'underline', textDecorationColor: '#f5c518', textUnderlineOffset: '5px' }}>free education</span> for those who need it most</h2>
+              <h2 className="lp-h2">A gift of <span style={{ color: 'var(--red)' }}>free education</span> for those who need it most</h2>
               <p className="lp-p lp-annanin-lead">
                 Some students bear a burden far greater than their fair share. Through <em>Annanin Parisu</em>{' '}— the elder
                 brother&apos;s gift — we open our Japanese classroom to them, completely free. Learning should
@@ -1015,34 +1015,32 @@ function LandingStyles() {
         border-left: 3px solid var(--mc-ink); padding: 10px 14px; border-radius: 0 6px 6px 0; line-height: 1.55; }
 
       /* Annanin Parisu — free education program */
-      .lp-annanin { background: linear-gradient(160deg, #b80f0a 0%, #c9150f 40%, #a50c07 100%);
-        border-top: 3px solid #f5c518; border-bottom: 3px solid #f5c518; }
+      .lp-annanin { background:
+          radial-gradient(120% 90% at 12% 0%, rgba(194,151,75,0.10), transparent 55%),
+          radial-gradient(100% 80% at 90% 100%, rgba(226,65,56,0.06), transparent 50%),
+          linear-gradient(180deg, #fcfaf4 0%, var(--paper) 100%);
+        border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
       .lp-annanin-head { max-width: 720px; margin: 0 auto 48px; text-align: center; }
       .lp-annanin-head .lp-tag { justify-content: center; }
-      .lp-annanin-head .lp-tag-en { color: #f5c518; font-weight: 800; }
-      .lp-annanin-head .lp-tag-ta { color: #fff; font-weight: 700; }
-      .lp-annanin-head .lp-tag-jp { color: rgba(255,255,255,0.85); }
-      .lp-annanin-head .lp-tag-dot { background: #f5c518; }
-      .lp-annanin-head .lp-h2 { color: #f5c518; }
-      .lp-annanin-lead { margin: 0 auto; color: rgba(255,255,255,0.85) !important; }
-      .lp-annanin-lead em { font-family: var(--serif); font-style: italic; color: #f5c518; font-weight: 600; }
+      .lp-annanin-lead { margin: 0 auto; }
+      .lp-annanin-lead em { font-family: var(--serif); font-style: italic; color: var(--red); font-weight: 600; }
       .lp-annanin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-      .lp-ap-card { position: relative; background: rgba(0,0,0,0.20); border: 1px solid rgba(245,197,24,0.35); border-radius: 8px;
+      .lp-ap-card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px;
         padding: 30px 28px; overflow: hidden; display: flex; flex-direction: column;
-        transition: transform 200ms, box-shadow 200ms, border-color 200ms; backdrop-filter: blur(6px); }
-      .lp-ap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #f5c518; }
-      .lp-ap-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -10px rgba(0,0,0,0.4); border-color: #f5c518; }
+        transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
+      .lp-ap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c); }
+      .lp-ap-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -22px rgba(40,32,20,0.4); border-color: transparent; }
       .lp-ap-icon { width: 54px; height: 54px; border-radius: 12px; display: flex; align-items: center;
         justify-content: center; font-size: 28px; margin-bottom: 18px;
-        background: rgba(245,197,24,0.18); }
-      .lp-ap-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: #f5c518; margin: 0 0 10px; line-height: 1.3; }
-      .lp-ap-desc { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.80); margin: 0; }
+        background: color-mix(in srgb, var(--c) 12%, #fff); }
+      .lp-ap-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 10px; line-height: 1.3; }
+      .lp-ap-desc { font-size: 14px; line-height: 1.7; color: var(--ink-soft); margin: 0; }
       .lp-annanin-foot { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px;
         margin-top: 40px; }
-      .lp-ap-chip { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: rgba(255,255,255,0.65); }
-      .lp-ap-dot { width: 5px; height: 5px; border-radius: 50%; background: #f5c518; }
+      .lp-ap-chip { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); }
+      .lp-ap-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
       .lp-ap-apply { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600;
-        color: #f5c518; text-decoration: none; margin-left: 8px; transition: gap 150ms; }
+        color: var(--red); text-decoration: none; margin-left: 8px; transition: gap 150ms; }
       .lp-ap-apply:hover { gap: 10px; }
 
       /* Donation section */
