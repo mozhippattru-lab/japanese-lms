@@ -1015,35 +1015,32 @@ function LandingStyles() {
         border-left: 3px solid var(--mc-ink); padding: 10px 14px; border-radius: 0 6px 6px 0; line-height: 1.55; }
 
       /* Annanin Parisu — free education program */
-      .lp-annanin { background:
-          radial-gradient(ellipse 80% 60% at 10% 0%, rgba(200,20,20,0.18), transparent 55%),
-          radial-gradient(ellipse 60% 50% at 90% 100%, rgba(200,20,20,0.12), transparent 50%),
-          linear-gradient(160deg, #0d0d0d 0%, #1a0a0a 50%, #0d0d0d 100%);
-        border-top: 2px solid #c81414; border-bottom: 2px solid #c81414; }
+      .lp-annanin { background: linear-gradient(160deg, #b80f0a 0%, #c9150f 40%, #a50c07 100%);
+        border-top: 3px solid #f5c518; border-bottom: 3px solid #f5c518; }
       .lp-annanin-head { max-width: 720px; margin: 0 auto 48px; text-align: center; }
       .lp-annanin-head .lp-tag { justify-content: center; }
-      .lp-annanin-head .lp-tag-en { color: #e55; }
-      .lp-annanin-head .lp-tag-ta, .lp-annanin-head .lp-tag-jp { color: rgba(255,255,255,0.6); }
-      .lp-annanin-head .lp-h2 { color: #fff; }
-      .lp-annanin-lead { margin: 0 auto; color: rgba(255,255,255,0.72) !important; }
-      .lp-annanin-lead em { font-family: var(--serif); font-style: italic; color: #ff6b6b; font-weight: 600; }
+      .lp-annanin-head .lp-tag-en { color: #f5c518; }
+      .lp-annanin-head .lp-tag-ta, .lp-annanin-head .lp-tag-jp { color: rgba(255,255,255,0.75); }
+      .lp-annanin-head .lp-h2 { color: #f5c518; }
+      .lp-annanin-lead { margin: 0 auto; color: rgba(255,255,255,0.85) !important; }
+      .lp-annanin-lead em { font-family: var(--serif); font-style: italic; color: #f5c518; font-weight: 600; }
       .lp-annanin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-      .lp-ap-card { position: relative; background: rgba(255,255,255,0.05); border: 1px solid rgba(200,20,20,0.35); border-radius: 8px;
+      .lp-ap-card { position: relative; background: rgba(0,0,0,0.20); border: 1px solid rgba(245,197,24,0.35); border-radius: 8px;
         padding: 30px 28px; overflow: hidden; display: flex; flex-direction: column;
-        transition: transform 200ms, box-shadow 200ms, border-color 200ms; backdrop-filter: blur(8px); }
-      .lp-ap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #c81414; }
-      .lp-ap-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -10px rgba(200,20,20,0.4); border-color: #c81414; }
+        transition: transform 200ms, box-shadow 200ms, border-color 200ms; backdrop-filter: blur(6px); }
+      .lp-ap-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #f5c518; }
+      .lp-ap-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -10px rgba(0,0,0,0.4); border-color: #f5c518; }
       .lp-ap-icon { width: 54px; height: 54px; border-radius: 12px; display: flex; align-items: center;
         justify-content: center; font-size: 28px; margin-bottom: 18px;
-        background: rgba(200,20,20,0.18); }
-      .lp-ap-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: #fff; margin: 0 0 10px; line-height: 1.3; }
-      .lp-ap-desc { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.65); margin: 0; }
+        background: rgba(245,197,24,0.18); }
+      .lp-ap-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: #f5c518; margin: 0 0 10px; line-height: 1.3; }
+      .lp-ap-desc { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.80); margin: 0; }
       .lp-annanin-foot { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px;
         margin-top: 40px; }
-      .lp-ap-chip { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-      .lp-ap-dot { width: 5px; height: 5px; border-radius: 50%; background: #c81414; }
+      .lp-ap-chip { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: rgba(255,255,255,0.65); }
+      .lp-ap-dot { width: 5px; height: 5px; border-radius: 50%; background: #f5c518; }
       .lp-ap-apply { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600;
-        color: #ff6b6b; text-decoration: none; margin-left: 8px; transition: gap 150ms; }
+        color: #f5c518; text-decoration: none; margin-left: 8px; transition: gap 150ms; }
       .lp-ap-apply:hover { gap: 10px; }
 
       /* Donation section */
