@@ -677,12 +677,12 @@ function LandingStyles() {
   return (
     <style>{`
       .lp {
-        --navy: #142544; --navy-2: #1f3157;
-        --red: #2f4f8f; --red-deep: #233e73;
+        --navy: #161a33; --navy-2: #1f2547;
+        --red: #e24138; --red-deep: #c5302a;
         --gold: #c2974b; --gold-soft: #d8b878;
-        --paper: #f4f3ee; --paper-2: #e9e6dd;
-        --ink: #232838; --ink-soft: #565d70;
-        --line: rgba(20,30,50,0.12);
+        --paper: #f6f1e7; --paper-2: #efe7d8;
+        --ink: #2a2724; --ink-soft: #5b564f;
+        --line: rgba(40,32,20,0.12);
         --serif: 'Shippori Mincho', 'Noto Serif Tamil', serif;
         --ta: 'Noto Serif Tamil', serif;
         --jp: 'Shippori Mincho', 'Noto Sans JP', serif;
@@ -699,8 +699,8 @@ function LandingStyles() {
         text-decoration: none; border: none; transition: all 180ms ease; white-space: nowrap; font-family: inherit; }
       .lp-btn-lg { padding: 14px 26px; font-size: 15px; }
       .lp-full { width: 100%; }
-      .lp-btn-primary { background: var(--red); color: #fff; box-shadow: 0 8px 22px rgba(47,79,143,0.28); }
-      .lp-btn-primary:hover { background: var(--red-deep); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(47,79,143,0.38); }
+      .lp-btn-primary { background: var(--red); color: #fff; box-shadow: 0 8px 22px rgba(226,65,56,0.28); }
+      .lp-btn-primary:hover { background: var(--red-deep); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(226,65,56,0.38); }
       .lp-btn-primary:disabled { opacity: .55; transform: none; cursor: not-allowed; }
       .lp-btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
       .lp-btn-ghost:hover { border-color: var(--ink); background: rgba(0,0,0,0.02); }
@@ -708,13 +708,13 @@ function LandingStyles() {
       .lp-btn-outline:hover { border-color: var(--c, var(--ink)); color: var(--c, var(--ink)); }
 
       /* Nav */
-      .lp-nav { position: sticky; top: 0; z-index: 50; background: rgba(244,243,238,0.82);
+      .lp-nav { position: sticky; top: 0; z-index: 50; background: rgba(246,241,231,0.82);
         backdrop-filter: saturate(160%) blur(12px); border-bottom: 1px solid var(--line); }
       .lp-nav-inner { display: flex; align-items: center; justify-content: space-between; height: 74px; }
       .lp-brand { display: flex; align-items: center; gap: 18px; text-decoration: none; }
       .lp-logo { width: 44px; height: 44px; border-radius: 8px; background: var(--red); color: #fff;
         font-family: var(--jp); font-weight: 700; font-size: 24px; display: flex; align-items: center;
-        justify-content: center; box-shadow: 0 6px 16px rgba(47,79,143,0.3); flex-shrink: 0; }
+        justify-content: center; box-shadow: 0 6px 16px rgba(226,65,56,0.3); flex-shrink: 0; }
       .lp-brand-text { display: flex; flex-direction: column; gap: 3px; }
       .lp-brand-ta { font-family: var(--ta); font-weight: 600; font-size: 19px; color: var(--ink); line-height: 1.45; }
       .lp-brand-en { font-size: 10.5px; color: var(--ink-soft); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; line-height: 1.2; }
@@ -732,7 +732,7 @@ function LandingStyles() {
       /* Hero */
       .lp-hero { position: relative; padding: 18px 0 64px;
         background:
-          radial-gradient(120% 90% at 88% 0%, rgba(47,79,143,0.06), transparent 55%),
+          radial-gradient(120% 90% at 88% 0%, rgba(226,65,56,0.06), transparent 55%),
           linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%); }
       .lp-hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center;
         padding-top: 56px; }
@@ -919,7 +919,7 @@ function LandingStyles() {
       .lp-input { width: 100%; padding: 11px 13px; border: 1px solid #e0dccf; border-radius: 5px;
         font-family: inherit; font-size: 14px; color: var(--ink); background: #fdfcf9; outline: none;
         transition: border-color 160ms, box-shadow 160ms; }
-      .lp-input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(47,79,143,0.1); background: #fff; }
+      .lp-input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(226,65,56,0.1); background: #fff; }
       textarea.lp-input { resize: vertical; }
       .lp-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
       .lp-form-row .lp-label { margin-top: 15px; }
@@ -1005,7 +1005,7 @@ function LandingStyles() {
       /* Annanin Parisu — free education program */
       .lp-annanin { background:
           radial-gradient(120% 90% at 12% 0%, rgba(194,151,75,0.10), transparent 55%),
-          radial-gradient(100% 80% at 90% 100%, rgba(47,79,143,0.06), transparent 50%),
+          radial-gradient(100% 80% at 90% 100%, rgba(226,65,56,0.06), transparent 50%),
           linear-gradient(180deg, #fcfaf4 0%, var(--paper) 100%);
         border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
       .lp-annanin-head { max-width: 720px; margin: 0 auto 48px; text-align: center; }
@@ -1033,7 +1033,7 @@ function LandingStyles() {
 
       /* Donation section */
       .lp-donate-section { background: var(--navy);
-        background-image: radial-gradient(110% 80% at 85% 15%, rgba(47,79,143,0.14), transparent 55%),
+        background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.14), transparent 55%),
           radial-gradient(80% 60% at 5% 90%, rgba(194,151,75,0.08), transparent 50%); }
       /* Donation impact card (right panel) */
       .lp-donate-impact-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
@@ -1042,14 +1042,14 @@ function LandingStyles() {
         border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px; }
       .lp-dic-icon { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, var(--red), #f97316);
         display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;
-        box-shadow: 0 8px 20px rgba(47,79,143,0.35); }
+        box-shadow: 0 8px 20px rgba(226,65,56,0.35); }
       .lp-dic-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 4px; }
       .lp-dic-sub { font-size: 12.5px; color: rgba(255,255,255,0.5); line-height: 1.5; }
       .lp-dic-milestones { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
       .lp-dic-row { display: flex; align-items: center; gap: 12px; }
       .lp-dic-dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center;
         justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
-      .lp-dic-done .lp-dic-dot { background: rgba(47,79,143,0.2); color: var(--red); border: 1.5px solid rgba(47,79,143,0.4); }
+      .lp-dic-done .lp-dic-dot { background: rgba(226,65,56,0.2); color: var(--red); border: 1.5px solid rgba(226,65,56,0.4); }
       .lp-dic-pending .lp-dic-dot { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); border: 1.5px solid rgba(255,255,255,0.15); }
       .lp-dic-item-label { font-size: 13.5px; color: rgba(255,255,255,0.72); flex: 1; line-height: 1.45; }
       .lp-dic-done .lp-dic-item-label { color: rgba(255,255,255,0.88); }
@@ -1060,7 +1060,7 @@ function LandingStyles() {
       .lp-dic-cost-label { font-size: 12.5px; color: rgba(255,255,255,0.6); }
       .lp-dic-cost-val { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--gold-soft); }
       .lp-dic-quote { font-size: 13px; font-style: italic; color: rgba(255,255,255,0.45); line-height: 1.65;
-        border-left: 2px solid rgba(47,79,143,0.5); padding-left: 14px; }
+        border-left: 2px solid rgba(226,65,56,0.5); padding-left: 14px; }
       .lp-donate-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
       .lp-donate-note { font-size: 12px; color: rgba(255,255,255,0.4); }
       .lp-donate-inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: start; }
@@ -1072,19 +1072,19 @@ function LandingStyles() {
       .lp-dstat-div { width: 1px; background: rgba(255,255,255,0.12); align-self: stretch; }
       .lp-donate-bar-wrap { margin-bottom: 32px; }
       .lp-donate-bar-track { height: 10px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
-      .lp-donate-bar-fill { height: 100%; background: linear-gradient(90deg, #2f4f8f, #c2974b); border-radius: 99px;
+      .lp-donate-bar-fill { height: 100%; background: linear-gradient(90deg, #e24138, #f472b6); border-radius: 99px;
         transition: width 1s ease; animation: barGrow 1.5s ease forwards; }
       @keyframes barGrow { from { width: 0 !important; } }
       .lp-donate-bar-labels { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.45); }
       .lp-btn-donate { background: var(--red); color: #fff;
-        box-shadow: 0 6px 18px rgba(47,79,143,0.28); font-size: 15px; padding: 14px 28px; }
-      .lp-btn-donate:hover { background: var(--red-deep); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(47,79,143,0.38); }
+        box-shadow: 0 6px 18px rgba(226,65,56,0.28); font-size: 15px; padding: 14px 28px; }
+      .lp-btn-donate:hover { background: var(--red-deep); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(226,65,56,0.38); }
       .lp-donate-recent { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
         border-radius: 12px; padding: 26px; }
       .lp-donate-recent-title { font-family: var(--serif); font-size: 17px; font-weight: 700; color: #fff; margin: 0 0 20px; }
       .lp-donate-card { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
       .lp-donate-card:last-child { border-bottom: none; padding-bottom: 0; }
-      .lp-donate-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #2f4f8f, #c2974b);
+      .lp-donate-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #e24138);
         color: #fff; font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
       .lp-donate-name { font-size: 13.5px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 4px; }
       .lp-donate-tag { font-size: 11.5px; font-weight: 700; color: #f9a8d4; margin-left: 8px; }
