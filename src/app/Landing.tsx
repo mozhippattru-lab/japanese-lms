@@ -149,7 +149,7 @@ export default function Landing() {
             </div>
 
             <aside className="lp-future">
-              <h3 className="lp-future-title">いま、そして これから — where we&apos;re heading</h3>
+              <h3 className="lp-future-title">Where we&apos;re heading</h3>
               <ol className="lp-future-list">
                 <li><b>N2 &amp; N1 advanced batches</b> — the full JLPT ladder, all the way to fluency.</li>
                 <li><b>Japan study &amp; placement guidance</b> — visa, university and job-readiness support.</li>
