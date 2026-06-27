@@ -264,29 +264,13 @@ export default function Landing() {
         {/* ─── Why us — Thirukkural + mission cards ─────── */}
         <section id="why" className="lp-section lp-section-paper">
           <div className="lp-container">
-            <div className="lp-kural-split">
-              <div className="lp-kural-headtext">
-                <SectionTag ta="ஏன் நாங்கள்" jp="選ばれる理由">Why Mozhippattru</SectionTag>
-                <h2 className="lp-h2">Small school. Serious results.</h2>
-                <p className="lp-p">
-                  We kept the things that actually move a learner forward, and left out the rest.
-                  Here&apos;s what you can count on with us.
-                </p>
-              </div>
-              <div className="lp-kural-verse">
-                <div className="lp-kural-num">திருக்குறள் -392 • ティルックラル -392 • Thirukkural-392</div>
-                <p className="lp-kural-ta">
-                  எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
-                  கண்ணென்ப வாழும் உயிர்க்கு.
-                </p>
-                <p className="lp-kural-jp">
-                  数字と文字と呼ばれるこの二つは、<br />
-                  生きる者にとって目であると賢者は言う。
-                </p>
-                <p className="lp-kural-en">
-                  &ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;
-                </p>
-              </div>
+            <div className="lp-section-head">
+              <SectionTag ta="ஏன் நாங்கள்" jp="選ばれる理由">Why Mozhippattru</SectionTag>
+              <h2 className="lp-h2">Small school. Serious results.</h2>
+              <p className="lp-lead">
+                We kept the things that actually move a learner forward, and left out the rest.
+                Here&apos;s what you can count on with us.
+              </p>
             </div>
 
             {/* Special mission cards */}
