@@ -314,7 +314,7 @@ export default function Landing() {
                     <span className="lp-mission-tree-icon">💡</span>
                     <div>
                       <strong>Did you know?</strong>
-                      <p>An electric wheelchair (≈ ₹37,500) can restore independent movement for years —
+                      <p>An electric wheelchair (≈ ₹90,000) can restore independent movement for years —
                         turning everyday things like getting to class or work from impossible into ordinary.</p>
                     </div>
                   </div>
@@ -454,7 +454,7 @@ export default function Landing() {
 
                 <div className="lp-dic-cost">
                   <div className="lp-dic-cost-label">Cost of one electric wheelchair</div>
-                  <div className="lp-dic-cost-val">≈ ₹37,500</div>
+                  <div className="lp-dic-cost-val">≈ ₹90,000</div>
                 </div>
 
                 <div className="lp-dic-quote">
@@ -989,7 +989,7 @@ function LandingStyles() {
       .lp-mission-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--mc); }
       .lp-mission-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -22px rgba(40,32,20,0.4); border-color: transparent; }
       .lp-mission-green { --mc: #2f9e63; --mc-ink: #1a5c38; background: linear-gradient(145deg, #e8f5ee 0%, #d0ead9 100%); border-color: #a8d5b8; }
-      .lp-mission-blue { --mc: linear-gradient(90deg, var(--red), var(--gold)); --mc-ink: var(--red); }
+      .lp-mission-blue { --mc: #1976d2; --mc-ink: #0d47a1; background: linear-gradient(145deg, #e3f0fb 0%, #cce0f5 100%); border-color: #90c4e8; }
       .lp-mission-icon { font-size: 46px; padding: 30px 30px 0; line-height: 1; }
       .lp-mission-body { padding: 16px 30px 30px; flex: 1; }
       .lp-mission-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .12em;
