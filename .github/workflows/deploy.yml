@@ -5,6 +5,12 @@ on:
     branches:
       - main
 
+# Never let two deploys race on the same server directory. Newer push wins;
+# the in-flight one is cancelled so we don't end up with a half-swapped build.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
 jobs:
   deploy:
     name: Deploy to mozhippattru.org
