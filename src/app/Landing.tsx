@@ -128,18 +128,6 @@ export default function Landing() {
               <KanaClock />
             </div>
           </div>
-
-          <div className="lp-container">
-            <div className="lp-kural lp-kural-foot">
-              <div className="lp-kural-num">திருக்குறள் · 392</div>
-              <p className="lp-kural-ta">
-                எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
-                கண்ணென்ப வாழும் உயிர்க்கு.
-              </p>
-              <p className="lp-kural-jp">「数と文字 ― この二つこそ、生きとし生けるものの両眼である。」</p>
-              <p className="lp-kural-en">&ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;</p>
-            </div>
-          </div>
         </section>
 
         {/* ─── About + Future ─────────────────── */}
@@ -253,24 +241,23 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ─── Why us — editorial numbered ─────── */}
+        {/* ─── Why us — Thirukkural + mission cards ─────── */}
         <section id="why" className="lp-section lp-section-paper">
           <div className="lp-container">
-            <div className="lp-why">
-              <div className="lp-why-head">
-                <SectionTag ta="ஏன் நாங்கள்" jp="選ばれる理由">Why Mozhippattru</SectionTag>
-                <h2 className="lp-h2">Small school. Serious results.</h2>
-                <p className="lp-p">
-                  We kept the things that actually move a learner forward, and left out the rest. Here&apos;s what
-                  you can count on with us.
-                </p>
-              </div>
-              <ol className="lp-why-list">
-                <WhyItem n="一" t="N1-certified teachers" d="Learn from the highest JLPT-qualified faculty who know precisely what each level demands of you." />
-                <WhyItem n="二" t="Online & in-class" d="Join live online from anywhere, or learn in person — whichever fits your week. Same teachers, same care." />
-                <WhyItem n="三" t="Exam-aligned, life-ready" d="Every lesson maps to the JLPT syllabus, but we drill for real speaking and listening — not just the paper." />
-                <WhyItem n="四" t="A learning platform that follows you" d="Track classes, attendance, assignments and progress on your own student portal, from day one." />
-              </ol>
+            <div className="lp-kural lp-kural-feature">
+              <div className="lp-kural-num">திருக்குறள் · 392</div>
+              <p className="lp-kural-ta">
+                எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
+                கண்ணென்ப வாழும் உயிர்க்கு.
+              </p>
+              <p className="lp-kural-jp">
+                数の学びと文字の学び ― この二つこそ、<br />
+                この世に生きとし生けるものの両の眼であると賢者は説く。
+              </p>
+              <p className="lp-kural-en">
+                &ldquo;The twain that lore of numbers and of letters give<br />
+                Are eyes, the wise declare, to all on earth that live.&rdquo;
+              </p>
             </div>
 
             {/* Special mission cards */}
@@ -546,18 +533,6 @@ function SectionTag({ children, ta, jp, light }: { children: React.ReactNode; ta
   )
 }
 
-function WhyItem({ n, t, d }: { n: string; t: string; d: string }) {
-  return (
-    <li className="lp-why-item">
-      <span className="lp-why-num">{n}</span>
-      <div>
-        <h3 className="lp-why-title">{t}</h3>
-        <p className="lp-why-desc">{d}</p>
-      </div>
-    </li>
-  )
-}
-
 function KidsCourse() {
   return (
     <div className="lp-kids-card">
@@ -764,8 +739,8 @@ function LandingStyles() {
       /* Thirukkural banner at the very top of the hero */
       .lp-kural { text-align: center; max-width: 760px; margin: 0 auto; padding: 26px 16px 22px;
         border-bottom: 1px solid var(--line); }
-      .lp-kural-foot { border-bottom: none; border-top: 1px solid var(--line);
-        margin-top: 46px; padding: 30px 16px 4px; }
+      .lp-kural-feature { border-bottom: none; max-width: 820px; padding: 8px 16px 0;
+        margin: 0 auto 56px; }
       .lp-kural-num { font-family: var(--ta); font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
         text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
       .lp-kural-ta { font-family: var(--ta); font-size: clamp(16px, 2.3vw, 21px); line-height: 1.85;
