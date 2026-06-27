@@ -96,7 +96,7 @@ export default function Landing() {
               <div className="lp-kicker">
                 <span className="lp-kicker-ta">{TAMIL}</span>
                 <span className="lp-kicker-dot" />
-                言語への情熱
+                言語への情熱 · Linguistic passion
               </div>
               <h1 className="lp-hero-title">
                 <span className="lp-hero-line">From your first <span className="lp-jp-accent">あ</span></span>
@@ -118,7 +118,7 @@ export default function Landing() {
               <div className="lp-cred">
                 <span>N1-certified faculty</span>
                 <i />
-                <span>150-hour foundation</span>
+                <span>150+ Hours of Learning / Level</span>
                 <i />
                 <span>Online &amp; in-class</span>
               </div>
