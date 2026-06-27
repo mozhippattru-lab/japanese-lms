@@ -135,7 +135,20 @@ export default function Landing() {
           <div className="lp-container lp-about">
             <div className="lp-about-main">
               <SectionTag ta="எங்களைப் பற்றி" jp="私たちについて">About us</SectionTag>
-              <h2 className="lp-h2">We teach the language, but we begin with the learner.</h2>
+              <div className="lp-kural-verse" style={{ marginBottom: '24px' }}>
+                <div className="lp-kural-num">திருக்குறள் -392 • ティルックラル -392 • THIRUKKURAL-392</div>
+                <p className="lp-kural-ta">
+                  எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
+                  கண்ணென்ப வாழும் உயிர்க்கு.
+                </p>
+                <p className="lp-kural-jp">
+                  数字と文字と呼ばれるこの二つは、<br />
+                  生きる者にとって目であると賢者は言う。
+                </p>
+                <p className="lp-kural-en">
+                  &ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;
+                </p>
+              </div>
               <p className="lp-p">
                 {ENG} means <em>Linguistic Passion</em> (言語への情熱) — and that is exactly how we teach. Our courses are
                 shaped by language experts and led by <strong>N1-certified teachers</strong> who have walked the
