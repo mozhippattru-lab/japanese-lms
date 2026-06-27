@@ -862,7 +862,7 @@ function LandingStyles() {
 
       /* Courses */
       .lp-course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
-      .lp-course { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px;
+      .lp-course { position: relative; background: linear-gradient(160deg, #fdf8f0 0%, #faf3e8 100%); border: 1px solid var(--line); border-radius: 8px;
         padding: 30px; overflow: hidden; display: flex; flex-direction: column;
         transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
       .lp-course::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c); }
@@ -968,7 +968,7 @@ function LandingStyles() {
       .lp-footer-credit a:hover { color: var(--gold-soft); }
 
       /* Kids course card */
-      .lp-kids-card { margin-top: 36px; background: #fff; border: 1px solid var(--line);
+      .lp-kids-card { margin-top: 36px; background: linear-gradient(160deg, #fdf8f0 0%, #faf3e8 100%); border: 1px solid var(--line);
         border-radius: 8px; overflow: hidden; position: relative;
         box-shadow: 0 4px 24px -8px rgba(40,32,20,0.12); }
       .lp-kids-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
