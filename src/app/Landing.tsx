@@ -96,7 +96,7 @@ export default function Landing() {
               <div className="lp-kicker">
                 <span className="lp-kicker-ta">{TAMIL}</span>
                 <span className="lp-kicker-dot" />
-                日本語学校
+                言語への情熱
               </div>
               <h1 className="lp-hero-title">
                 <span className="lp-hero-line">From your first <span className="lp-jp-accent">あ</span></span>
