@@ -245,7 +245,16 @@ export default function Landing() {
         <section id="why" className="lp-section lp-section-paper">
           <div className="lp-container">
             <div className="lp-kural-split">
+              <div className="lp-kural-headtext">
+                <SectionTag ta="ஏன் நாங்கள்" jp="選ばれる理由">Why Mozhippattru</SectionTag>
+                <h2 className="lp-h2">Small school. Serious results.</h2>
+                <p className="lp-p">
+                  We kept the things that actually move a learner forward, and left out the rest.
+                  Here&apos;s what you can count on with us.
+                </p>
+              </div>
               <div className="lp-kural-verse">
+                <div className="lp-kural-num">திருக்குறள் · 392 · ティルックラル</div>
                 <p className="lp-kural-ta">
                   எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
                   கண்ணென்ப வாழும் உயிர்க்கு.
@@ -258,10 +267,6 @@ export default function Landing() {
                   &ldquo;The twain that lore of numbers and of letters give<br />
                   Are eyes, the wise declare, to all on earth that live.&rdquo;
                 </p>
-              </div>
-              <div className="lp-kural-heading">
-                <SectionTag ta="திருக்குறள்" jp="ティルックラル">Thirukkural</SectionTag>
-                <h2 className="lp-h2">Verse 392</h2>
               </div>
             </div>
 
@@ -744,11 +749,11 @@ function LandingStyles() {
       /* Thirukkural banner at the very top of the hero */
       .lp-kural { text-align: center; max-width: 760px; margin: 0 auto; padding: 26px 16px 22px;
         border-bottom: 1px solid var(--line); }
-      .lp-kural-split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px;
+      .lp-kural-split { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px;
         align-items: center; margin: 0 0 56px; }
+      .lp-kural-headtext .lp-p { margin-bottom: 0; }
       .lp-kural-verse { text-align: left; }
-      .lp-kural-verse .lp-kural-ta { margin: 0; }
-      .lp-kural-heading .lp-h2 { margin: 0; }
+      .lp-kural-verse .lp-kural-num { margin-bottom: 14px; }
       .lp-kural-num { font-family: var(--ta); font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
         text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
       .lp-kural-ta { font-family: var(--ta); font-size: clamp(16px, 2.3vw, 21px); line-height: 1.85;
@@ -1094,9 +1099,7 @@ function LandingStyles() {
         .lp-hero-sub { margin-left: auto; margin-right: auto; }
         .lp-hero-cta, .lp-cred, .lp-kicker { justify-content: center; }
         .lp-about, .lp-why { grid-template-columns: 1fr; gap: 36px; }
-        .lp-kural-split { grid-template-columns: 1fr; gap: 24px; }
-        .lp-kural-heading { order: -1; }
-        .lp-kural-verse { text-align: center; }
+        .lp-kural-split { grid-template-columns: 1fr; gap: 28px; }
         .lp-course-grid { grid-template-columns: repeat(2, 1fr); }
         .lp-price-grid { grid-template-columns: repeat(2, 1fr); }
         .lp-price-feature { transform: none; }
