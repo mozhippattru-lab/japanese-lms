@@ -91,16 +91,6 @@ export default function Landing() {
       <main id="top">
         {/* ─── Hero — asymmetric, the clock is the signature ─────── */}
         <section className="lp-hero">
-          <div className="lp-container">
-            <div className="lp-kural">
-              <div className="lp-kural-num">திருக்குறள் · 392</div>
-              <p className="lp-kural-ta">
-                எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
-                கண்ணென்ப வாழும் உயிர்க்கு.
-              </p>
-              <p className="lp-kural-en">&ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;</p>
-            </div>
-          </div>
           <div className="lp-container lp-hero-grid">
             <div className="lp-hero-copy">
               <div className="lp-kicker">
@@ -136,6 +126,18 @@ export default function Landing() {
 
             <div className="lp-hero-clock">
               <KanaClock />
+            </div>
+          </div>
+
+          <div className="lp-container">
+            <div className="lp-kural lp-kural-foot">
+              <div className="lp-kural-num">திருக்குறள் · 392</div>
+              <p className="lp-kural-ta">
+                எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
+                கண்ணென்ப வாழும் உயிர்க்கு.
+              </p>
+              <p className="lp-kural-jp">「数と文字 ― この二つこそ、生きとし生けるものの両眼である。」</p>
+              <p className="lp-kural-en">&ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;</p>
             </div>
           </div>
         </section>
@@ -358,11 +360,11 @@ export default function Landing() {
               </div>
 
               <div className="lp-ap-card" style={{ ['--c' as string]: 'var(--navy)' }}>
-                <div className="lp-ap-icon">🌈</div>
-                <h3 className="lp-ap-title">Thirunangai community</h3>
+                <div className="lp-ap-icon">🤝</div>
+                <h3 className="lp-ap-title">Thirunar community</h3>
                 <p className="lp-ap-desc">
-                  Transgender learners who want to study Japanese are warmly welcome to join and learn
-                  with us, free of charge.
+                  Thirunar learners who wish to study Japanese are warmly welcome to join and learn
+                  with us, with dignity and free of charge.
                 </p>
               </div>
             </div>
@@ -562,7 +564,7 @@ function KidsCourse() {
       <div className="lp-kids-badge">⭐ Special Course · குழந்தைகளுக்கான பாடநெறி</div>
       <div className="lp-kids-inner">
         <div className="lp-kids-left">
-          <div className="lp-kids-emoji">🎌</div>
+          <div className="lp-kids-emoji">👦👧</div>
           <div>
             <div className="lp-kids-jp">子ども向け · 초급</div>
             <h3 className="lp-kids-title">Japanese Basics for Kids</h3>
@@ -762,10 +764,14 @@ function LandingStyles() {
       /* Thirukkural banner at the very top of the hero */
       .lp-kural { text-align: center; max-width: 760px; margin: 0 auto; padding: 26px 16px 22px;
         border-bottom: 1px solid var(--line); }
+      .lp-kural-foot { border-bottom: none; border-top: 1px solid var(--line);
+        margin-top: 46px; padding: 30px 16px 4px; }
       .lp-kural-num { font-family: var(--ta); font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
         text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
       .lp-kural-ta { font-family: var(--ta); font-size: clamp(16px, 2.3vw, 21px); line-height: 1.85;
         font-weight: 600; color: var(--ink); margin: 0; }
+      .lp-kural-jp { font-family: var(--jp, 'Shippori Mincho', serif); font-size: clamp(13px, 1.7vw, 15.5px);
+        line-height: 1.8; color: var(--ink); margin: 14px 0 0; }
       .lp-kural-en { font-size: 13.5px; font-style: italic; line-height: 1.6; color: var(--ink-soft); margin: 12px 0 0; }
       .lp-hero-sub { max-width: 520px; font-size: 17px; line-height: 1.72; color: var(--ink-soft); margin: 0 0 34px; }
       .lp-hero-sub strong { color: var(--ink); }
@@ -972,7 +978,7 @@ function LandingStyles() {
         letter-spacing: .04em; padding: 7px 22px; display: inline-block; font-family: var(--jp); }
       .lp-kids-inner { display: grid; grid-template-columns: 1fr 1.6fr auto; gap: 32px; padding: 28px 32px; align-items: center; }
       .lp-kids-left { display: flex; align-items: flex-start; gap: 18px; }
-      .lp-kids-emoji { font-size: 52px; line-height: 1; flex-shrink: 0; }
+      .lp-kids-emoji { font-size: 40px; line-height: 1; flex-shrink: 0; letter-spacing: -4px; }
       .lp-kids-jp { font-family: var(--jp); font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
       .lp-kids-title { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin: 0 0 6px; }
       .lp-kids-meta { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 10px; }
