@@ -244,20 +244,25 @@ export default function Landing() {
         {/* ─── Why us — Thirukkural + mission cards ─────── */}
         <section id="why" className="lp-section lp-section-paper">
           <div className="lp-container">
-            <div className="lp-kural lp-kural-feature">
-              <div className="lp-kural-num">திருக்குறள் · 392</div>
-              <p className="lp-kural-ta">
-                எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
-                கண்ணென்ப வாழும் உயிர்க்கு.
-              </p>
-              <p className="lp-kural-jp">
-                数の学びと文字の学び ― この二つこそ、<br />
-                この世に生きとし生けるものの両の眼であると賢者は説く。
-              </p>
-              <p className="lp-kural-en">
-                &ldquo;The twain that lore of numbers and of letters give<br />
-                Are eyes, the wise declare, to all on earth that live.&rdquo;
-              </p>
+            <div className="lp-kural-split">
+              <div className="lp-kural-verse">
+                <p className="lp-kural-ta">
+                  எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
+                  கண்ணென்ப வாழும் உயிர்க்கு.
+                </p>
+                <p className="lp-kural-jp">
+                  数の学びと文字の学び ― この二つこそ、<br />
+                  この世に生きとし生けるものの両の眼であると賢者は説く。
+                </p>
+                <p className="lp-kural-en">
+                  &ldquo;The twain that lore of numbers and of letters give<br />
+                  Are eyes, the wise declare, to all on earth that live.&rdquo;
+                </p>
+              </div>
+              <div className="lp-kural-heading">
+                <SectionTag ta="திருக்குறள்" jp="ティルックラル">Thirukkural</SectionTag>
+                <h2 className="lp-h2">Verse 392</h2>
+              </div>
             </div>
 
             {/* Special mission cards */}
@@ -739,8 +744,11 @@ function LandingStyles() {
       /* Thirukkural banner at the very top of the hero */
       .lp-kural { text-align: center; max-width: 760px; margin: 0 auto; padding: 26px 16px 22px;
         border-bottom: 1px solid var(--line); }
-      .lp-kural-feature { border-bottom: none; max-width: 820px; padding: 8px 16px 0;
-        margin: 0 auto 56px; }
+      .lp-kural-split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px;
+        align-items: center; margin: 0 0 56px; }
+      .lp-kural-verse { text-align: left; }
+      .lp-kural-verse .lp-kural-ta { margin: 0; }
+      .lp-kural-heading .lp-h2 { margin: 0; }
       .lp-kural-num { font-family: var(--ta); font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
         text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
       .lp-kural-ta { font-family: var(--ta); font-size: clamp(16px, 2.3vw, 21px); line-height: 1.85;
@@ -1086,6 +1094,9 @@ function LandingStyles() {
         .lp-hero-sub { margin-left: auto; margin-right: auto; }
         .lp-hero-cta, .lp-cred, .lp-kicker { justify-content: center; }
         .lp-about, .lp-why { grid-template-columns: 1fr; gap: 36px; }
+        .lp-kural-split { grid-template-columns: 1fr; gap: 24px; }
+        .lp-kural-heading { order: -1; }
+        .lp-kural-verse { text-align: center; }
         .lp-course-grid { grid-template-columns: repeat(2, 1fr); }
         .lp-price-grid { grid-template-columns: repeat(2, 1fr); }
         .lp-price-feature { transform: none; }
