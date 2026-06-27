@@ -255,12 +255,16 @@ export default function Landing() {
               </div>
               <div className="lp-kural-verse">
                 <div className="lp-kural-num">திருக்குறள் · 392 · ティルックラル</div>
-                <p className="lp-kural-main">
-                  &ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;
+                <p className="lp-kural-ta">
+                  எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
+                  கண்ணென்ப வாழும் உயிர்க்கு.
                 </p>
                 <p className="lp-kural-jp">
                   数の学びと文字の学び ― この二つこそ、<br />
                   この世に生きとし生けるものの両の眼であると賢者は説く。
+                </p>
+                <p className="lp-kural-en">
+                  &ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;
                 </p>
               </div>
             </div>
@@ -749,8 +753,6 @@ function LandingStyles() {
       .lp-kural-headtext .lp-p { margin-bottom: 0; }
       .lp-kural-verse { text-align: left; }
       .lp-kural-verse .lp-kural-num { margin-bottom: 14px; }
-      .lp-kural-main { font-family: var(--serif); font-size: clamp(19px, 2.5vw, 26px);
-        line-height: 1.5; font-weight: 600; color: var(--ink); margin: 0; }
       .lp-kural-num { font-family: var(--ta); font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
         text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
       .lp-kural-ta { font-family: var(--ta); font-size: clamp(16px, 2.3vw, 21px); line-height: 1.85;
