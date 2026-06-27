@@ -14,11 +14,23 @@ export default function ResetPasswordPage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [error, setError] = useState('')
 
-  // Establish the recovery session from the email link (PKCE ?code= or a
-  // recovery token already in the URL hash).
+  // Establish the recovery session from the email link. We email a
+  // token_hash + type=recovery link (see /api/auth/send-reset) and verify it
+  // here — no PKCE code_verifier or hash-fragment parsing needed.
   useEffect(() => {
     const supabase = createClient()
-    const code = new URLSearchParams(window.location.search).get('code')
+    const params = new URLSearchParams(window.location.search)
+    const tokenHash = params.get('token_hash')
+    const type = params.get('type')
+
+    if (tokenHash && type === 'recovery') {
+      supabase.auth.verifyOtp({ type: 'recovery', token_hash: tokenHash })
+        .then(({ error }) => setReady(error ? 'invalid' : 'ok'))
+      return
+    }
+
+    // Fallbacks: PKCE ?code= or a session already present in the URL hash.
+    const code = params.get('code')
     if (code) {
       supabase.auth.exchangeCodeForSession(code)
         .then(({ error }) => setReady(error ? 'invalid' : 'ok'))

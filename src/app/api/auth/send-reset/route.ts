@@ -19,7 +19,11 @@ export async function POST(request: Request) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
 
-  const resetUrl = data.properties.action_link
+  // Build our own reset link using the token hash. The page verifies it with
+  // verifyOtp — this avoids the PKCE code_verifier requirement and the
+  // hash-fragment parsing race in the browser client entirely.
+  const tokenHash = data.properties.hashed_token
+  const resetUrl = `https://mozhippattru.org/reset-password?token_hash=${tokenHash}&type=recovery`
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
