@@ -2,7 +2,7 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-const FROM = 'Mozhippattru Japanese School <japanese.school@mozhippattru.org>'
+const FROM = 'Mozhippattru Japanese School <noreply@mail.mozhippattru.org>'
 
 export async function sendPaymentConfirmation({
   to,
