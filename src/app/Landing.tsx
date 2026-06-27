@@ -340,7 +340,7 @@ export default function Landing() {
           <div className="lp-container">
             <div className="lp-annanin-head">
               <SectionTag ta="அண்ணனின் பரிசு" jp="兄の贈り物">The Elder Brother&apos;s Gift</SectionTag>
-              <h2 className="lp-h2">A gift of <span style={{ color: 'var(--red)' }}>free education</span> for those who need it most</h2>
+              <h2 className="lp-h2">A gift of <span style={{ color: '#fff', textDecoration: 'underline', textDecorationColor: '#f5c518', textUnderlineOffset: '5px' }}>free education</span> for those who need it most</h2>
               <p className="lp-p lp-annanin-lead">
                 Some students bear a burden far greater than their fair share. Through <em>Annanin Parisu</em>{' '}— the elder
                 brother&apos;s gift — we open our Japanese classroom to them, completely free. Learning should
@@ -1019,8 +1019,10 @@ function LandingStyles() {
         border-top: 3px solid #f5c518; border-bottom: 3px solid #f5c518; }
       .lp-annanin-head { max-width: 720px; margin: 0 auto 48px; text-align: center; }
       .lp-annanin-head .lp-tag { justify-content: center; }
-      .lp-annanin-head .lp-tag-en { color: #f5c518; }
-      .lp-annanin-head .lp-tag-ta, .lp-annanin-head .lp-tag-jp { color: rgba(255,255,255,0.75); }
+      .lp-annanin-head .lp-tag-en { color: #f5c518; font-weight: 800; }
+      .lp-annanin-head .lp-tag-ta { color: #fff; font-weight: 700; }
+      .lp-annanin-head .lp-tag-jp { color: rgba(255,255,255,0.85); }
+      .lp-annanin-head .lp-tag-dot { background: #f5c518; }
       .lp-annanin-head .lp-h2 { color: #f5c518; }
       .lp-annanin-lead { margin: 0 auto; color: rgba(255,255,255,0.85) !important; }
       .lp-annanin-lead em { font-family: var(--serif); font-style: italic; color: #f5c518; font-weight: 600; }
