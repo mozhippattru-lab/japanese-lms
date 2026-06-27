@@ -258,6 +258,14 @@ export default function Landing() {
                 <a href="#demo" className="lp-btn lp-btn-primary lp-full">Enroll for the package</a>
               </div>
             </div>
+
+            <div style={{ marginTop: '24px', padding: '14px 20px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '18px' }}>📌</span>
+              <p style={{ margin: 0, fontSize: '13.5px', color: '#5f4b00' }}>
+                <strong>Note:</strong> In-class course prices are completely different from the above mentioned online prices.{' '}
+                <a href="#demo" style={{ color: 'var(--red)', fontWeight: 600, textDecoration: 'none' }}>Enquire for more details →</a>
+              </p>
+            </div>
           </div>
         </section>
 
