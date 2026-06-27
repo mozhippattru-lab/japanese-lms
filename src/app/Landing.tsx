@@ -48,7 +48,7 @@ const KIDS_COURSE = {
 }
 
 // Donation stats (update these as actual donations come in)
-const DONATION_STATS = { raised: 124000, wheelchairs: 8, target: 300000 }
+const DONATION_STATS = { raised: 45000, wheelchairs: 1, target: 300000 }
 
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 
@@ -315,7 +315,7 @@ export default function Landing() {
                     </div>
                   </div>
                   <div className="lp-mission-tagline">
-                    {`“So far, students’ learning has gifted ${DONATION_STATS.wheelchairs} electric wheelchairs — that’s ${DONATION_STATS.wheelchairs} people back on the move.”`}
+                    {`“So far, students’ learning has gifted ${DONATION_STATS.wheelchairs} electric ${DONATION_STATS.wheelchairs === 1 ? 'wheelchair' : 'wheelchairs'} — that’s ${DONATION_STATS.wheelchairs} ${DONATION_STATS.wheelchairs === 1 ? 'person' : 'people'} back on the move.”`}
                   </div>
                 </div>
               </div>
@@ -436,8 +436,8 @@ export default function Landing() {
 
                 <div className="lp-dic-milestones">
                   {[
-                    { label: 'Electric wheelchairs gifted', val: `${DONATION_STATS.wheelchairs} people`, done: true },
-                    { label: 'Families regained mobility', val: `${DONATION_STATS.wheelchairs} families`, done: true },
+                    { label: 'Electric wheelchairs gifted', val: `${DONATION_STATS.wheelchairs} ${DONATION_STATS.wheelchairs === 1 ? 'person' : 'people'}`, done: true },
+                    { label: 'Families regained mobility', val: `${DONATION_STATS.wheelchairs} ${DONATION_STATS.wheelchairs === 1 ? 'family' : 'families'}`, done: true },
                     { label: 'Current batch fundraising', val: `${Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100)}% funded`, done: false },
                   ].map((m, i) => (
                     <div key={i} className={`lp-dic-row ${m.done ? 'lp-dic-done' : 'lp-dic-pending'}`}>
