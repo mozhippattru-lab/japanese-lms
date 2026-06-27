@@ -199,6 +199,8 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
   const totalCollected = studentCollected + collegeCollected
   const totalPending = invoices.filter(i => i.status === 'Pending').reduce((s, i) => s + Number(i.amount), 0)
   const totalOverdue = invoices.filter(i => i.status === 'Overdue').reduce((s, i) => s + Number(i.amount), 0)
+  const totalExpenses = expenses.reduce((s, x) => s + Number(x.amount || 0), 0)
+  const netProfit = totalCollected - totalExpenses
   const collegeMap = Object.fromEntries(colleges.map(c => [c.id, c]))
 
   // Filtered invoices
@@ -401,6 +403,8 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
         <StatGrid>
           {[
             { label: 'Total Collected', value: fmt(totalCollected), icon: <CheckCircle2 size={18} />, color: '#22c55e' },
+            { label: 'Expenses', value: fmt(totalExpenses), icon: <Wallet size={18} />, color: '#e84040' },
+            { label: 'Net', value: (netProfit < 0 ? '− ' : '') + fmt(Math.abs(netProfit)), icon: <Banknote size={18} />, color: netProfit >= 0 ? '#22c55e' : '#e84040' },
             { label: 'Pending', value: fmt(totalPending), icon: <Clock size={18} />, color: '#f59e0b' },
             { label: 'Overdue', value: fmt(totalOverdue), icon: <AlertTriangle size={18} />, color: '#e84040' },
             { label: 'Total Invoices', value: String(invoices.length), icon: <Receipt size={18} />, color: '#2d7dd2' },
@@ -901,7 +905,6 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
   // EXPENSES TAB
   // ══════════════════════════════════════════════════════════════════
   if (tab === 'expenses') {
-    const totalExpenses = expenses.reduce((s, x) => s + Number(x.amount || 0), 0)
     const monthKey = todayStr().slice(0, 7)
     const thisMonth = expenses.filter(x => (x.expense_date || '').slice(0, 7) === monthKey).reduce((s, x) => s + Number(x.amount || 0), 0)
     return (
