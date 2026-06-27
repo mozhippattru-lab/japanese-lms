@@ -27,13 +27,13 @@ const COURSES: Course[] = [
   },
   {
     level: 'N4', jp: '初中級', color: '#2d6fb8', title: 'Elementary', ta: 'அடிப்படை',
-    price: 10000, hours: '180 hours',
+    price: 10000, hours: '150 hours',
     blurb: 'Words become conversations. You start handling everyday situations and reading written Japanese with ease.',
     points: ['~300 kanji · ~1,500 words', 'Everyday conversation & polite forms', 'Reading familiar topics', 'Listening to natural speech'],
   },
   {
     level: 'N3', jp: '中級', color: '#c98a2b', title: 'Intermediate Bridge', ta: 'இடைநிலை',
-    price: 15000, hours: '200 hours',
+    price: 15000, hours: '300 hours',
     blurb: 'The bridge to advanced Japanese — study, work and life in Japan move within reach.',
     points: ['~650 kanji · ~3,750 words', 'Near-natural speed comprehension', 'Newspapers & notices', 'Expressing opinions & ideas'],
   },
@@ -43,7 +43,7 @@ const PACKAGE_PRICE = 30000
 const PACKAGE_ORIGINAL = 8000 + 10000 + 15000 // 33,000
 
 const KIDS_COURSE = {
-  price: 3000, hours: '40 Hours', color: '#7c3aed',
+  price: 4000, hours: '40 Hours', color: '#7c3aed',
   points: ['Basic speaking & listening', 'Hiragana reading & writing', 'Fun vocabulary & greetings', 'Interactive activities & games'],
 }
 
@@ -220,6 +220,7 @@ export default function Landing() {
               <SectionTag ta="கட்டணம்" jp="料金">Pricing</SectionTag>
               <h2 className="lp-h2">Honest, one-time fees.</h2>
               <p className="lp-lead">No hidden charges. Take all three levels together and save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}.</p>
+              <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '8px' }}>📍 All classes are conducted <strong>online</strong>. Prices mentioned are <strong>excluding book fees</strong>.</p>
             </div>
 
             <div className="lp-price-grid">
@@ -242,7 +243,7 @@ export default function Landing() {
                   {inr(PACKAGE_PRICE)}
                   <s>{inr(PACKAGE_ORIGINAL)}</s>
                 </div>
-                <div className="lp-price-meta lp-meta-gold">N5 + N4 + N3 · 530+ hours · save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}</div>
+                <div className="lp-price-meta lp-meta-gold">N5 + N4 + N3 · 600 hours · save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}</div>
                 <ul className="lp-price-list lp-list-dark">
                   <li><Check size={14} /> All three levels — N5, N4 &amp; N3</li>
                   <li><Check size={14} /> Continuous N1-certified mentorship</li>
@@ -563,9 +564,9 @@ function KidsCourse() {
         <div className="lp-kids-left">
           <div className="lp-kids-emoji">👦👧</div>
           <div>
-            <div className="lp-kids-jp">子ども向け · 초급</div>
+            <div className="lp-kids-jp">子ども向け</div>
             <h3 className="lp-kids-title">Japanese Basics for Kids</h3>
-            <div className="lp-kids-meta">40 Hours · Ages 6–15 · Beginner Friendly</div>
+            <div className="lp-kids-meta">40 Hours · Ages 10–15 · Beginner Friendly</div>
             <div className="lp-kids-price-tag">{inr(KIDS_COURSE.price)}</div>
           </div>
         </div>
@@ -579,7 +580,7 @@ function KidsCourse() {
         </div>
         <div className="lp-kids-cta">
           <a href="#demo" className="lp-btn lp-btn-primary">Enquire now <ArrowRight size={16} /></a>
-          <div className="lp-kids-note">Limited seats · Online &amp; in-class</div>
+          <div className="lp-kids-note">Online only · Prices excl. book fees</div>
         </div>
       </div>
     </div>
