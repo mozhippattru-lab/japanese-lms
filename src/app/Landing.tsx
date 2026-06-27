@@ -226,8 +226,8 @@ export default function Landing() {
             <div className="lp-price-grid">
               {COURSES.map(c => (
                 <div key={c.level} className="lp-price" style={{ ['--c' as string]: c.color }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div className="lp-price-level">JLPT {c.level}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                    <div className="lp-price-level" style={{ marginBottom: 0 }}>JLPT {c.level}</div>
                     <span style={{ fontSize: '10px', fontWeight: 700, background: '#e8f5e9', color: '#2e7d32', padding: '2px 8px', borderRadius: '20px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Online</span>
                   </div>
                   <div className="lp-price-amt">{inr(c.price)}</div>
@@ -241,8 +241,8 @@ export default function Landing() {
 
               <div className="lp-price lp-price-feature">
                 <div className="lp-price-ribbon">Best value · சிறந்த தேர்வு</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div className="lp-price-level lp-on-dark">Complete Package</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                  <div className="lp-price-level lp-on-dark" style={{ marginBottom: 0 }}>Complete Package</div>
                   <span style={{ fontSize: '10px', fontWeight: 700, background: 'rgba(255,255,255,0.15)', color: '#fff', padding: '2px 8px', borderRadius: '20px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Online</span>
                 </div>
                 <div className="lp-price-amt lp-on-dark">
