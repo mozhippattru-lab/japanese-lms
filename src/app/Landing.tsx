@@ -525,7 +525,7 @@ export default function Landing() {
             <h4>Contact</h4>
             <a className="lp-fc" href="tel:+919092882957"><Phone size={15} /> +91 90928 82957</a>
             <a className="lp-fc lp-fc-email" href="mailto:japanese.school@mozhippattru.org"><Mail size={15} /> japanese.school@mozhippattru.org</a>
-            <span className="lp-fc"><MapPin size={15} /> Online &amp; in-class · India</span>
+            <span className="lp-fc"><MapPin size={15} /> Online &amp; in-class · Pan India</span>
           </div>
         </div>
         <div className="lp-footer-bar">
