@@ -35,7 +35,11 @@ jobs:
             npm install --legacy-peer-deps > /dev/null 2>&1
 
             echo "── Building (into .next-new, leaving the live build untouched)..."
-            rm -rf .next-new
+            # Clear stale generated route types from the live .next: tsconfig
+            # includes .next/types/**, but the build writes fresh types to
+            # .next-new/types — so without this the type-check reads the OLD
+            # build's types and fails whenever a route/page is deleted.
+            rm -rf .next-new .next/types .next/dev/types
             NEXT_DIST_DIR=.next-new npm run build
 
             echo "── Swapping in the new build..."
