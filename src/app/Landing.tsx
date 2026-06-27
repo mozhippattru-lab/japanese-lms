@@ -105,7 +105,7 @@ export default function Landing() {
               <p className="lp-hero-sub">
                 A Japanese language school with a Tamil heart. We teach JLPT N5 to N3 the patient way —
                 explained in your mother tongue, mastered in Japanese — guided by{' '}
-                <strong>N1-certified teachers</strong>, online &amp; in-person.
+                <strong>N1-certified teachers</strong>, online &amp; in-class.
               </p>
               <div className="lp-hero-cta">
                 <a href="#demo" className="lp-btn lp-btn-primary lp-btn-lg">
@@ -120,7 +120,7 @@ export default function Landing() {
                 <i />
                 <span>150+ Hours of Learning / Level</span>
                 <i />
-                <span>Online &amp; in-person</span>
+                <span>Online &amp; in-class</span>
               </div>
             </div>
 
@@ -363,7 +363,7 @@ export default function Landing() {
                 <h3 className="lp-ap-title">Persons with disabilities</h3>
                 <p className="lp-ap-desc">
                   UDID cardholders who wish to study Japanese are supported fully and taught free — online
-                  or in person, whichever serves them best.
+                  or in class, whichever serves them best.
                 </p>
               </div>
 
@@ -508,7 +508,7 @@ export default function Landing() {
             </div>
             <p className="lp-footer-about">
               Japanese Language School · 日本語学校. JLPT N5–N3 coaching by N1-certified teachers,
-              online &amp; in-person.
+              online &amp; in-class.
             </p>
           </div>
           <div>
@@ -525,7 +525,7 @@ export default function Landing() {
             <h4>Contact</h4>
             <a className="lp-fc" href="tel:+919092882957"><Phone size={15} /> +91 90928 82957</a>
             <a className="lp-fc lp-fc-email" href="mailto:japanese.school@mozhippattru.org"><Mail size={15} /> japanese.school@mozhippattru.org</a>
-            <span className="lp-fc"><MapPin size={15} /> Online &amp; in-person · Pan India</span>
+            <span className="lp-fc"><MapPin size={15} /> Online &amp; in-class · Pan India</span>
           </div>
         </div>
         <div className="lp-footer-bar">
@@ -613,7 +613,7 @@ function DemoForm() {
         <div className="lp-done-icon"><CheckCircle2 size={38} /></div>
         <h3>ありがとう, {form.full_name.split(' ')[0] || 'there'}!</h3>
         <p>Your free demo request is in. We&apos;ll call you on <strong>{form.phone}</strong> soon to set up your online demo class.</p>
-        <p className="lp-done-jp">またね — see you in person.</p>
+        <p className="lp-done-jp">またね — see you in class.</p>
       </div>
     )
   }
