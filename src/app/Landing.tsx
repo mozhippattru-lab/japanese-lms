@@ -369,9 +369,9 @@ export default function Landing() {
 
               <div className="lp-ap-card" style={{ ['--c' as string]: 'var(--navy)' }}>
                 <div className="lp-ap-icon">🤝</div>
-                <h3 className="lp-ap-title">Thirunar community</h3>
+                <h3 className="lp-ap-title">Transgender community</h3>
                 <p className="lp-ap-desc">
-                  Thirunar learners who wish to study Japanese are warmly welcome to join and learn
+                  Transgender learners who wish to study Japanese are warmly welcome to join and learn
                   with us, with dignity and free of charge.
                 </p>
               </div>
