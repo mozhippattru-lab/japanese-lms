@@ -976,7 +976,7 @@ function LandingStyles() {
       .lp-kids-badge { background: var(--navy); color: var(--gold-soft); font-size: 11.5px; font-weight: 700;
         letter-spacing: .04em; padding: 7px 22px; display: inline-block; font-family: var(--jp); }
       .lp-kids-inner { display: grid; grid-template-columns: 1fr 1.6fr auto; gap: 32px; padding: 28px 32px; align-items: center; }
-      .lp-kids-left { display: flex; align-items: flex-start; gap: 18px; }
+      .lp-kids-left { display: flex; align-items: center; gap: 18px; }
       .lp-kids-emoji { font-size: 40px; line-height: 1; flex-shrink: 0; letter-spacing: -4px; }
       .lp-kids-jp { font-family: var(--jp); font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
       .lp-kids-title { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin: 0 0 6px; }
