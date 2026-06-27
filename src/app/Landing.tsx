@@ -137,7 +137,7 @@ export default function Landing() {
               <SectionTag ta="எங்களைப் பற்றி" jp="私たちについて">About us</SectionTag>
               <h2 className="lp-h2">We teach the language, but we begin with the learner.</h2>
               <p className="lp-p">
-                {ENG} means <em>devotion to language</em> — and that is exactly how we teach. Our courses are
+                {ENG} means <em>Linguistic Passion</em> (言語への情熱) — and that is exactly how we teach. Our courses are
                 shaped by language experts and led by <strong>N1-certified teachers</strong> who have walked the
                 JLPT path themselves. Every class weaves speaking, listening, reading and writing together, so you
                 grow into someone who <em>communicates</em> — not someone who merely passes a test.
