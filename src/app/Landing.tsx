@@ -988,7 +988,7 @@ function LandingStyles() {
         transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
       .lp-mission-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--mc); }
       .lp-mission-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -22px rgba(40,32,20,0.4); border-color: transparent; }
-      .lp-mission-green { --mc: #2f9e63; --mc-ink: #2f9e63; }
+      .lp-mission-green { --mc: #2f9e63; --mc-ink: #1a5c38; background: linear-gradient(145deg, #e8f5ee 0%, #d0ead9 100%); border-color: #a8d5b8; }
       .lp-mission-blue { --mc: linear-gradient(90deg, var(--red), var(--gold)); --mc-ink: var(--red); }
       .lp-mission-icon { font-size: 46px; padding: 30px 30px 0; line-height: 1; }
       .lp-mission-body { padding: 16px 30px 30px; flex: 1; }
