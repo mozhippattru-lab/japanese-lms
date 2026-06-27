@@ -254,14 +254,14 @@ export default function Landing() {
                 </p>
               </div>
               <div className="lp-kural-verse">
-                <div className="lp-kural-num">திருக்குறள் · 392 · ティルックラル</div>
+                <div className="lp-kural-num">திருக்குறள் -392 • ティルックラル -392 • Thirukkural-392</div>
                 <p className="lp-kural-ta">
                   எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
                   கண்ணென்ப வாழும் உயிர்க்கு.
                 </p>
                 <p className="lp-kural-jp">
-                  数の学びと文字の学び ― この二つこそ、<br />
-                  この世に生きとし生けるものの両の眼であると賢者は説く。
+                  数字と文字と呼ばれるこの二つは、<br />
+                  生きる者にとって目であると賢者は言う。
                 </p>
                 <p className="lp-kural-en">
                   &ldquo;Numeracy and literacy are the two eyes that guide human life.&rdquo;
