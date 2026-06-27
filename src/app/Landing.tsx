@@ -545,7 +545,7 @@ function SectionTag({ children, ta, jp, light }: { children: React.ReactNode; ta
 function KidsCourse() {
   return (
     <div className="lp-kids-card">
-      <div className="lp-kids-badge">⭐ Special Course · குழந்தைகளுக்கான பாடநெறி</div>
+      <div className="lp-kids-badge">⭐ Special Course · குழந்தைகளுக்கான பாடநெறி · 子供向けコース</div>
       <div className="lp-kids-inner">
         <div className="lp-kids-left">
           <div className="lp-kids-emoji">👦👧</div>
