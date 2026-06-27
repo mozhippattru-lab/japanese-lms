@@ -368,7 +368,7 @@ export default function Landing() {
               </div>
 
               <div className="lp-ap-card" style={{ ['--c' as string]: 'var(--navy)' }}>
-                <div className="lp-ap-icon">🤝</div>
+                <div className="lp-ap-icon">⚧️</div>
                 <h3 className="lp-ap-title">Transgender community</h3>
                 <p className="lp-ap-desc">
                   Transgender learners who wish to study Japanese are warmly welcome to join and learn
