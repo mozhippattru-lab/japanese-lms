@@ -343,7 +343,7 @@ export default function Landing() {
               <h2 className="lp-h2">A gift of <span style={{ color: 'var(--red)' }}>free education</span> for those who need it most</h2>
               <p className="lp-p lp-annanin-lead">
                 Some students bear a burden far greater than their fair share. Through <em>Annanin Parisu</em>{' '}— the elder
-                brother&apos;s gift — we open our Japanese classroom to them, completely free. Learning should
+                brother&apos;s gift — we open our Japanese classroom to them, completely free tuition fees. Learning should
                 never depend on what life has taken away.
               </p>
             </div>
