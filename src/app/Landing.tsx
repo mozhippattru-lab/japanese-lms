@@ -1207,7 +1207,7 @@ function LandingStyles() {
       .lp-donate-info { flex: 1; min-width: 0; }
 
       /* Seeman Quote Banner */
-      .lp-seeman-banner { background: #1e2235; border-bottom: 2px solid #b8901a; padding: 10px 0; }
+      .lp-seeman-banner { background: #2c3150; border-bottom: 2px solid #b8901a; padding: 10px 0; }
       .lp-seeman-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; text-align: center; }
       .lp-seeman-line1 { font-family: var(--ta); font-size: 13px; font-weight: 700; color: #f5c518; letter-spacing: 0.04em; margin-bottom: 4px; }
       .lp-seeman-line2 { font-family: var(--ta); font-size: 12px; color: rgba(255,255,255,0.82); line-height: 1.6; }
