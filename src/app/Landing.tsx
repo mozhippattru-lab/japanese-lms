@@ -48,7 +48,7 @@ const KIDS_COURSE = {
 }
 
 // Donation stats (update these as actual donations come in)
-const DONATION_STATS = { raised: 45000, wheelchairs: 1, target: 300000 }
+const DONATION_STATS = { raised: 0, wheelchairs: 0, target: 300000 }
 
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 
@@ -431,7 +431,7 @@ export default function Landing() {
                 </div>
 
                 <div className="lp-donate-actions">
-                  <a href="#demo" className="lp-btn lp-btn-donate">🤍 Donate Now</a>
+                  <a href="mailto:japanese.school@mozhippattru.org?subject=Wheelchair%20Donation%20Enquiry" className="lp-btn lp-btn-donate">🤍 Donate Now</a>
                   <span className="lp-donate-note">Voluntary · No minimum amount</span>
                 </div>
               </div>
