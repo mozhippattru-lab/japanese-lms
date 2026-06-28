@@ -767,7 +767,7 @@ function LandingStyles() {
       .lp-kural-verse .lp-kural-num { margin-bottom: 14px; }
       .lp-kural-num { font-family: var(--ta); font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
         text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
-      .lp-kural-ta { font-family: var(--ta); font-size: clamp(16px, 2.3vw, 21px); line-height: 1.85;
+      .lp-kural-ta { font-family: var(--ta); font-size: clamp(15px, 1.8vw, 19px); line-height: 1.85; white-space: nowrap;
         font-weight: 600; color: var(--ink); margin: 0; }
       .lp-kural-jp { font-family: var(--jp, 'Shippori Mincho', serif); font-size: clamp(13px, 1.7vw, 15.5px);
         line-height: 1.8; color: var(--ink); margin: 14px 0 0; }
@@ -850,7 +850,7 @@ function LandingStyles() {
       .lp-lead { font-size: 17px; line-height: 1.7; color: var(--ink-soft); }
 
       /* About */
-      .lp-about { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: start; }
+      .lp-about { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
       .lp-future { background: var(--navy); border-radius: 8px; padding: 34px; color: #fff; position: relative; overflow: hidden; }
       .lp-future::before { content: '⛩'; position: absolute; right: -10px; bottom: -18px; font-size: 120px; color: rgba(255,255,255,0.04); }
       .lp-future-title { font-family: var(--jp); font-size: 17px; font-weight: 600; margin: 0 0 22px; color: #fff; }
