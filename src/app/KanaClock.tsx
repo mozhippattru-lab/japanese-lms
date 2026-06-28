@@ -157,8 +157,7 @@ export default function KanaClock() {
           aria-pressed={sound}
           aria-label={sound ? 'Turn tick sound off' : 'Turn tick sound on'}
         >
-          {sound ? <Volume2 size={15} /> : <VolumeX size={15} />}
-          {sound ? 'Sound on' : 'Play sound'}
+          {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
         </button>
       </div>
     </div>
