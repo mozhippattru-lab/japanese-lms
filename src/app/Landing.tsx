@@ -606,11 +606,16 @@ function DonateModal({ onClose }: { onClose: () => void }) {
       onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '480px', boxShadow: '0 32px 80px rgba(0,0,0,0.3)', overflow: 'hidden' }}>
         {/* Header */}
-        <div style={{ background: 'var(--navy)', padding: '24px 28px 20px', position: 'relative' }}>
-          <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '18px', background: 'rgba(255,255,255,0.12)', border: 'none', color: '#fff', width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
-          <div style={{ fontSize: '22px', marginBottom: '6px' }}>🤍</div>
-          <h3 style={{ color: '#fff', fontFamily: 'var(--serif)', fontSize: '20px', margin: '0 0 4px' }}>Donate to Mozhippattru</h3>
-          <p style={{ color: 'var(--gold-soft)', fontSize: '12.5px', margin: 0 }}>Your gift funds an electric wheelchair for someone in need</p>
+        <div style={{ background: 'var(--navy)', padding: '20px 24px', position: 'relative', display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ width: '44px', height: '44px', background: 'var(--red)', borderRadius: '10px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--display)', fontWeight: 700, fontSize: '22px', color: '#fff', boxShadow: '0 4px 14px rgba(232,64,64,0.4)' }}>本</div>
+          <div>
+            <div style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: '17px', color: '#fff', letterSpacing: '-0.01em', lineHeight: 1.2 }}>மொழிப்பற்று</div>
+            <div style={{ fontSize: '9.5px', color: 'var(--gold-soft)', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '3px' }}>Mozhippattru · Japanese Language School</div>
+          </div>
+          <button onClick={onClose} style={{ position: 'absolute', top: '14px', right: '16px', background: 'rgba(255,255,255,0.12)', border: 'none', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+        </div>
+        <div style={{ background: 'var(--navy)', padding: '0 24px 18px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <p style={{ color: 'var(--gold-soft)', fontSize: '12.5px', margin: 0 }}>🤍 Your gift funds an electric wheelchair for someone in need</p>
         </div>
 
         <div style={{ padding: '28px' }}>
