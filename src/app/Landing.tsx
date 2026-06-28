@@ -221,7 +221,7 @@ export default function Landing() {
               <SectionTag ta="கட்டணம்" jp="料金">Pricing</SectionTag>
               <h2 className="lp-h2">Honest, one-time fees.</h2>
               <p className="lp-lead">No hidden charges. Take all three levels together and save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}.</p>
-              <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '8px' }}>📍 All classes are conducted <strong>online</strong>. Prices mentioned are <strong>excluding book fees</strong>.</p>
+              <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '8px' }}>📍 <strong>Note:</strong> All classes are conducted <strong>online</strong>. Prices mentioned are <strong>excluding book fees</strong>.</p>
             </div>
 
             <div className="lp-price-grid">
