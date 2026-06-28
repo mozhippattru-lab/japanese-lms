@@ -164,7 +164,11 @@ export default function LoginPage() {
 
       <style>{`
         .login-img-panel { display: flex !important; }
-        @media (max-width: 580px) { .login-img-panel { display: none !important; } }
+        @media (max-width: 580px) {
+          .login-img-panel { display: none !important; }
+          .auth-card { border-radius: 16px; }
+          .auth-card > div:last-child { padding: 32px 24px !important; }
+        }
         .auth-card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 12px 30px rgba(0,0,0,0.35); }
 
         .sakura-petal {

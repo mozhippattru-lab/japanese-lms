@@ -851,7 +851,7 @@ function LandingStyles() {
       .lp-kural-verse .lp-kural-num { margin-bottom: 14px; }
       .lp-kural-num { font-family: var(--ta); font-size: 12.5px; font-weight: 700; letter-spacing: .08em;
         text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
-      .lp-kural-ta { font-family: var(--ta); font-size: clamp(15px, 1.8vw, 19px); line-height: 1.85; white-space: nowrap;
+      .lp-kural-ta { font-family: var(--ta); font-size: clamp(15px, 1.8vw, 19px); line-height: 1.85; white-space: nowrap; overflow-x: auto;
         font-weight: 600; color: var(--ink); margin: 0; }
       .lp-kural-jp { font-family: var(--jp, 'Shippori Mincho', serif); font-size: clamp(13px, 1.7vw, 15.5px);
         line-height: 1.8; color: var(--ink); margin: 14px 0 0; }
@@ -1235,6 +1235,8 @@ function LandingStyles() {
         .lp-kids-points { grid-template-columns: 1fr; }
         .lp-donate-stats-row { flex-direction: column; }
         .lp-dstat-div { width: 100%; height: 1px; }
+        .lp-kural-ta { white-space: normal !important; font-size: 15px !important; }
+        .lp-kural-verse { overflow-x: hidden !important; }
       }
       @media (prefers-reduced-motion: reduce) {
         .kc-card { animation-duration: 0.01ms; }
