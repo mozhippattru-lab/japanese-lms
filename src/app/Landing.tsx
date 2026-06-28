@@ -343,8 +343,7 @@ export default function Landing() {
               <SectionTag ta="அண்ணனின் பரிசு" jp="兄の贈り物">The Elder Brother&apos;s Gift</SectionTag>
               <h2 className="lp-h2">A gift of <span style={{ color: 'var(--red)' }}>free education</span> for those who need it most</h2>
               <p className="lp-p lp-annanin-lead">
-                Some students bear a burden far greater than their fair share. Through <em>அண்ணனின் பரிசு</em>{' '}— the elder
-                brother&apos;s gift — we open our Japanese classroom to them, completely free tuition fees. Learning should
+                Some students bear a burden far greater than their fair share. Through <em>அண்ணனின் பரிசு</em>{' '}— <span style={{ color: 'var(--red)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>The Elder Brother&apos;s Gift</span> — we open our Japanese classroom to them, completely free tuition fees. Learning should
                 never depend on what life has taken away.
               </p>
             </div>
