@@ -90,6 +90,17 @@ export default function Landing() {
       </header>
 
       <main id="top">
+        {/* ─── Seeman Quote Banner ──────────────────────────────── */}
+        <div className="lp-seeman-banner">
+          <div className="lp-seeman-inner">
+            <div className="lp-seeman-line1">எம்மொழியும் கற்போம், தாய்மொழியை மறவோம்</div>
+            <div className="lp-seeman-line2">
+              உலகின் எம்மொழியும் கற்போம், நங்கள் வாழ; எம் மொழி தமிழ் கற்போம், நம் இனம் வாழ.
+              <span className="lp-seeman-attr"> — அண்ணன் செந்தமிழன் சீமான்</span>
+            </div>
+          </div>
+        </div>
+
         {/* ─── Hero — asymmetric, the clock is the signature ─────── */}
         <section className="lp-hero">
           <div className="lp-container lp-hero-grid">
@@ -1194,6 +1205,13 @@ function LandingStyles() {
       .lp-donate-tag { font-size: 11.5px; font-weight: 700; color: #f9a8d4; margin-left: 8px; }
       .lp-donate-msg { font-size: 12.5px; color: rgba(255,255,255,0.45); font-style: italic; line-height: 1.5; }
       .lp-donate-info { flex: 1; min-width: 0; }
+
+      /* Seeman Quote Banner */
+      .lp-seeman-banner { background: linear-gradient(90deg, #1a0a0a 0%, #2a0808 50%, #1a0a0a 100%); border-bottom: 2px solid #c81414; padding: 10px 0; }
+      .lp-seeman-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; text-align: center; }
+      .lp-seeman-line1 { font-family: var(--ta); font-size: 13px; font-weight: 700; color: #f5c518; letter-spacing: 0.04em; margin-bottom: 4px; }
+      .lp-seeman-line2 { font-family: var(--ta); font-size: 12px; color: rgba(255,255,255,0.82); line-height: 1.6; }
+      .lp-seeman-attr { color: #f5c518; font-weight: 700; font-size: 11.5px; }
 
       /* Responsive */
       @media (max-width: 1000px) {
