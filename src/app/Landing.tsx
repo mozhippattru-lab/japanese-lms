@@ -657,6 +657,9 @@ function DonateModal({ onClose }: { onClose: () => void }) {
                 ))}
               </div>
               <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '14px' }}>After transfer, WhatsApp your screenshot to <strong>+91 90928 82957</strong></p>
+              <p style={{ fontSize: '12.5px', color: '#2f9e63', fontWeight: 600, marginTop: '8px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '10px 14px' }}>
+                ✅ Once we confirm your donation, we will send a receipt to your <strong>email</strong> and <strong>WhatsApp</strong>.
+              </p>
               <button onClick={onClose} style={{ marginTop: '16px', padding: '10px 28px', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Close</button>
             </div>
           )}
