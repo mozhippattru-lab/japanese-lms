@@ -135,7 +135,7 @@ export default function Landing() {
           <div className="lp-container lp-about">
             <div className="lp-about-main">
               <SectionTag ta="எங்களைப் பற்றி" jp="私たちについて">About us</SectionTag>
-              <div className="lp-kural-verse" style={{ marginTop: '28px', marginBottom: '24px' }}>
+              <div className="lp-kural-verse" style={{ marginTop: '28px', marginBottom: '24px', border: '2px solid #2f9e63', borderRadius: '12px', padding: '24px 28px', background: '#f6fdf9' }}>
                 <div className="lp-kural-num">திருக்குறள் -392 • ティルックラル -392 • THIRUKKURAL-392</div>
                 <p className="lp-kural-ta">
                   எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
