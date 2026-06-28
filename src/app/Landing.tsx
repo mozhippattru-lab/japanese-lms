@@ -525,12 +525,13 @@ export default function Landing() {
             <h4>Contact</h4>
             <a className="lp-fc" href="tel:+919092882957"><Phone size={15} /> +91 90928 82957</a>
             <a className="lp-fc lp-fc-email" href="mailto:japanese.school@mozhippattru.org"><Mail size={15} /> japanese.school@mozhippattru.org</a>
-            <span className="lp-fc"><MapPin size={15} /> Online &amp; in-class · Pan India</span>
+            <span className="lp-fc"><MapPin size={15} /> Pallipalayam, Namakkal, Tamil Nadu, India</span>
+            <span className="lp-fc" style={{ color: 'var(--ink-soft)', fontSize: '12px' }}>Online &amp; in-class · Pan India</span>
           </div>
         </div>
         <div className="lp-footer-bar">
           <span>© {new Date().getFullYear()} {ENG} — Japanese Language School. All rights reserved.</span>
-          <span className="lp-footer-jp">頑張ろう。Let&apos;s learn, together.</span>
+          <span className="lp-footer-jp">一緒に学びましょう。Let&apos;s learn, together. · Pallipalayam, Namakkal, Tamil Nadu</span>
         </div>
         <div className="lp-footer-credit">
           Developed &amp; maintained by{' '}
