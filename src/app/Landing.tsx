@@ -55,6 +55,7 @@ const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Landing() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [donateOpen, setDonateOpen] = useState(false)
 
   return (
     <div className="lp">
@@ -431,7 +432,7 @@ export default function Landing() {
                 </div>
 
                 <div className="lp-donate-actions">
-                  <a href="mailto:japanese.school@mozhippattru.org?subject=Wheelchair%20Donation%20Enquiry" className="lp-btn lp-btn-donate">🤍 Donate Now</a>
+                  <button onClick={() => setDonateOpen(true)} className="lp-btn lp-btn-donate">🤍 Donate Now</button>
                   <span className="lp-donate-note">Voluntary · No minimum amount</span>
                 </div>
               </div>
@@ -539,6 +540,8 @@ export default function Landing() {
           <a href="https://nexaex.in" target="_blank" rel="noopener noreferrer">nexaex.in</a>
         </div>
       </footer>
+
+      {donateOpen && <DonateModal onClose={() => setDonateOpen(false)} />}
     </div>
   )
 }
@@ -579,6 +582,84 @@ function KidsCourse() {
         <div className="lp-kids-cta">
           <a href="#demo" className="lp-btn lp-btn-primary">Enquire now <ArrowRight size={16} /></a>
           <div className="lp-kids-note">Online only · Prices excl. book fees</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Donate Modal ──────────────────────────────────────────────────────────────
+function DonateModal({ onClose }: { onClose: () => void }) {
+  const [form, setForm] = useState({ name: '', mobile: '', email: '', place: '', amount: '' })
+  const [done, setDone] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }))
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setTimeout(() => { setLoading(false); setDone(true) }, 600)
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '480px', boxShadow: '0 32px 80px rgba(0,0,0,0.3)', overflow: 'hidden' }}>
+        {/* Header */}
+        <div style={{ background: 'var(--navy)', padding: '24px 28px 20px', position: 'relative' }}>
+          <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '18px', background: 'rgba(255,255,255,0.12)', border: 'none', color: '#fff', width: '30px', height: '30px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+          <div style={{ fontSize: '22px', marginBottom: '6px' }}>🤍</div>
+          <h3 style={{ color: '#fff', fontFamily: 'var(--serif)', fontSize: '20px', margin: '0 0 4px' }}>Donate to Mozhippattru</h3>
+          <p style={{ color: 'var(--gold-soft)', fontSize: '12.5px', margin: 0 }}>Your gift funds an electric wheelchair for someone in need</p>
+        </div>
+
+        <div style={{ padding: '28px' }}>
+          {!done ? (
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {[
+                { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Your full name' },
+                { label: 'Mobile Number', key: 'mobile', type: 'tel', placeholder: '+91 XXXXX XXXXX' },
+                { label: 'Email Address', key: 'email', type: 'email', placeholder: 'you@example.com' },
+                { label: 'City / Place', key: 'place', type: 'text', placeholder: 'Chennai, Tamil Nadu' },
+                { label: 'Amount You Wish to Donate (₹)', key: 'amount', type: 'number', placeholder: 'e.g. 500' },
+              ].map(f => (
+                <div key={f.key}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>{f.label}</label>
+                  <input required type={f.type} placeholder={f.placeholder} value={(form as Record<string,string>)[f.key]}
+                    onChange={e => set(f.key, e.target.value)}
+                    style={{ width: '100%', padding: '10px 14px', border: '1.5px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }} />
+                </div>
+              ))}
+              <button type="submit" disabled={loading}
+                style={{ marginTop: '6px', width: '100%', padding: '13px', background: loading ? '#9ca3af' : 'var(--red)', color: '#fff', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
+                {loading ? 'Submitting…' : 'Submit & See Account Details'}
+              </button>
+            </form>
+          ) : (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '40px', marginBottom: '12px' }}>🙏</div>
+              <h4 style={{ fontFamily: 'var(--serif)', fontSize: '20px', color: 'var(--navy)', margin: '0 0 6px' }}>Thank you, {form.name.split(' ')[0]}!</h4>
+              <p style={{ fontSize: '13.5px', color: '#6b7280', margin: '0 0 24px' }}>Please transfer ₹{form.amount} to the account below. Our team will confirm within 24 hours.</p>
+              <div style={{ background: '#f8f9fa', border: '1.5px solid #e5e7eb', borderRadius: '12px', padding: '20px', textAlign: 'left' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '14px' }}>Bank Account Details</div>
+                {[
+                  ['Account Name', 'Mozhippattru Japanese Language School'],
+                  ['Bank', 'State Bank of India'],
+                  ['Account Number', '00000XXXXXXXXXX'],
+                  ['IFSC Code', 'SBIN0XXXXXXX'],
+                  ['Branch', 'Kumbakonam, Tamil Nadu'],
+                  ['UPI ID', 'mozhippattru@sbi'],
+                ].map(([label, val]) => (
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13.5px' }}>
+                    <span style={{ color: '#6b7280' }}>{label}</span>
+                    <span style={{ fontWeight: 600, color: 'var(--navy)' }}>{val}</span>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '14px' }}>After transfer, WhatsApp your screenshot to <strong>+91 90928 82957</strong></p>
+              <button onClick={onClose} style={{ marginTop: '16px', padding: '10px 28px', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Close</button>
+            </div>
+          )}
         </div>
       </div>
     </div>
