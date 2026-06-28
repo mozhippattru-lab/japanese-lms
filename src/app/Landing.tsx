@@ -534,7 +534,7 @@ export default function Landing() {
         </div>
         <div className="lp-footer-bar">
           <span>© {new Date().getFullYear()} {ENG} — Japanese Language School. All rights reserved.</span>
-          <span className="lp-footer-jp">一緒に学びましょう。Let&apos;s learn, together. · Pallipalayam, Namakkal, Tamil Nadu</span>
+          <span className="lp-footer-jp">一緒に学びましょう。Let&apos;s learn, together.</span>
         </div>
         <div className="lp-footer-credit">
           Developed &amp; maintained by{' '}
