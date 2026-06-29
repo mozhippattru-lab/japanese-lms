@@ -25,6 +25,19 @@ export async function PATCH(req: NextRequest) {
     working_end: body.working_end ?? '07:00 PM',
     currency: body.currency ?? '₹',
     academic_year: body.academic_year ?? null,
+    // Access control
+    student_login_blocked: body.student_login_blocked ?? false,
+    teacher_login_blocked: body.teacher_login_blocked ?? false,
+    new_registrations_open: body.new_registrations_open ?? true,
+    maintenance_mode: body.maintenance_mode ?? false,
+    blocked_message: body.blocked_message ?? null,
+    // Notifications
+    whatsapp_notifications: body.whatsapp_notifications ?? true,
+    email_notifications: body.email_notifications ?? true,
+    fee_reminders_enabled: body.fee_reminders_enabled ?? false,
+    fee_reminder_days: body.fee_reminder_days ?? 3,
+    // Finance
+    late_fee_pct: body.late_fee_pct ?? 0,
     updated_at: new Date().toISOString(),
   })
 

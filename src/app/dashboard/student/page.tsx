@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import Sidebar from '@/components/Sidebar'
 import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
 import { Reveal, Stagger, StaggerItem } from '@/components/motion/Motion'
@@ -12,6 +13,11 @@ export default async function StudentDashboard() {
 
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
   if (profile?.role !== 'student') redirect(`/dashboard/${profile?.role || 'student'}`)
+
+  // Access control check
+  const db = createAdminClient()
+  const { data: settings } = await db.from('app_settings').select('student_login_blocked, maintenance_mode').eq('id', 'default').single()
+  if (settings?.student_login_blocked || settings?.maintenance_mode) redirect('/blocked')
 
   const name = profile?.full_name || user.email || 'Student'
   const firstName = name.split(' ')[0]

@@ -18,6 +18,10 @@ export default async function TeacherDashboard() {
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
   if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
 
+  // Access control check
+  const { data: settings } = await createAdminClient().from('app_settings').select('teacher_login_blocked, maintenance_mode').eq('id', 'default').single()
+  if (settings?.teacher_login_blocked || settings?.maintenance_mode) redirect('/blocked')
+
   const name = profile?.full_name || user.email || 'Teacher'
   const firstName = name.split(' ')[0]
   const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
