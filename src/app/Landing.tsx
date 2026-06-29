@@ -220,6 +220,17 @@ export default function Landing() {
               ))}
             </div>
 
+            {/* Language of instruction note */}
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', background: '#f8f9ff', border: '1px solid #d0d5e8', borderRadius: '10px', padding: '14px 18px', marginTop: '18px' }}>
+              <span style={{ fontSize: '16px', lineHeight: 1, marginTop: '2px' }}>🗣️</span>
+              <div style={{ fontSize: '13.5px', color: '#374151', lineHeight: 1.6 }}>
+                <strong style={{ color: '#1e2235' }}>Language of instruction:</strong>
+                <span style={{ marginLeft: '10px' }}>✅ Tamil, English, Japanese</span>
+                <span style={{ margin: '0 10px', color: '#9ca3af' }}>·</span>
+                <span style={{ color: '#6b7280' }}>❌ Tanglish, Japanglish</span>
+              </div>
+            </div>
+
             {/* Kids course — featured row */}
             <KidsCourse />
           </div>
