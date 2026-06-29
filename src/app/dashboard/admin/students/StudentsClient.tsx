@@ -21,6 +21,10 @@ type Student = {
   batch?: string | null
   status?: string | null
   avatar_url?: string | null
+  roll_number?: string | null
+  aadhar_number?: string | null
+  address?: string | null
+  photo_url?: string | null
 }
 
 type Invoice = {
@@ -168,6 +172,7 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
   const [form, setForm] = useState({
     full_name: '', email: '', phone: '', password: '',
     jlpt_level: 'N5', batch: 'Morning', status: 'Active',
+    aadhar_number: '', address: '', photo_url: '',
   })
 
   const filtered = useMemo(() => students.filter(s => {
@@ -201,7 +206,7 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
     if (!res.ok) { setError(json.error || 'Failed to add student'); setLoading(false); return }
     setStudents(prev => [json.student, ...prev])
     setShowAdd(false)
-    setForm({ full_name: '', email: '', phone: '', password: '', jlpt_level: 'N5', batch: 'Morning', status: 'Active' })
+    setForm({ full_name: '', email: '', phone: '', password: '', jlpt_level: 'N5', batch: 'Morning', status: 'Active', aadhar_number: '', address: '', photo_url: '' })
     toast('Student added successfully', 'success')
     setLoading(false)
   }
@@ -312,7 +317,7 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              {['Student', 'Email', 'Phone', 'Level', 'Batch', 'Status', 'Joined', 'Actions'].map(h => (
+              {['Roll No.', 'Student', 'Email', 'Phone', 'Level', 'Batch', 'Status', 'Joined', 'Actions'].map(h => (
                 <TableHead key={h}>{h}</TableHead>
               ))}
             </TableRow>
@@ -320,12 +325,17 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={8} style={{ padding: '56px 20px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: '14px' }}>
+                <TableCell colSpan={9} style={{ padding: '56px 20px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: '14px' }}>
                   {search || filterLevel || filterStatus ? 'No students match your filters.' : 'No students yet. Click "Add Student" to get started.'}
                 </TableCell>
               </TableRow>
             ) : filtered.map(s => (
               <TableRow key={s.id}>
+                <TableCell>
+                  <span style={{ fontFamily: 'monospace', fontSize: '12px', fontWeight: 700, color: 'var(--red)', background: '#fef2f2', padding: '3px 8px', borderRadius: '6px' }}>
+                    {s.roll_number || '—'}
+                  </span>
+                </TableCell>
                 <TableCell>
                   <div onClick={() => openView(s)} title="View profile" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                     <Avatar url={s.avatar_url} name={s.full_name || s.email} size={34} bg={levelColor[s.jlpt_level || 'N5'] || 'var(--red)'} />
@@ -396,7 +406,25 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
                 <select style={selectStyle} value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>{STATUS.map(s => <option key={s}>{s}</option>)}</select>
               </Field>
             </div>
-            <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
+            <div style={{ borderTop: '1px solid #f3f4f6', marginTop: '4px', paddingTop: '16px' }}>
+              <div style={{ fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>KYC & Enrollment Details</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <Field label="Aadhaar Number">
+                  <input className="input-field" value={form.aadhar_number} onChange={e => setForm(f => ({ ...f, aadhar_number: e.target.value }))} placeholder="XXXX XXXX XXXX" maxLength={14} />
+                </Field>
+                <Field label="Photo URL">
+                  <input className="input-field" value={form.photo_url} onChange={e => setForm(f => ({ ...f, photo_url: e.target.value }))} placeholder="https://… (passport photo)" />
+                </Field>
+              </div>
+              <Field label="Address">
+                <textarea className="input-field" rows={2} value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} placeholder="Door no., Street, City, State, PIN" style={{ resize: 'vertical', fontFamily: 'inherit', fontSize: '14px' }} />
+              </Field>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '9px 13px', fontSize: '12px', color: '#92400e' }}>
+                <span>🎫</span>
+                <span>Roll number will be auto-assigned as <strong>MGL0301</strong>, <strong>MGL0302</strong>… on save.</span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
               <Btn style={{ flex: 1 }} onClick={() => { setShowAdd(false); setError('') }}>Cancel</Btn>
               <Btn variant="primary" type="submit" disabled={loading} style={{ flex: 1 }}>
                 {loading ? <><span className="spinner" />Adding…</> : <><Plus size={15} />Add Student</>}
@@ -417,6 +445,14 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
             <p style={{ color: '#9ca3af', fontSize: '13px', margin: 0 }}>{viewStudent.email}</p>
           </div>
 
+          {viewStudent.roll_number && (
+            <div style={{ textAlign: 'center', marginBottom: '14px' }}>
+              <span style={{ fontFamily: 'monospace', fontSize: '15px', fontWeight: 800, color: 'var(--red)', background: '#fef2f2', padding: '5px 16px', borderRadius: '8px', letterSpacing: '0.08em' }}>
+                {viewStudent.roll_number}
+              </span>
+            </div>
+          )}
+
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '20px' }}>
             {[
               { label: 'Phone', value: viewStudent.phone || '—' },
@@ -424,6 +460,7 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
               { label: 'Batch', value: viewStudent.batch || '—' },
               { label: 'Status', value: viewStudent.status || '—' },
               { label: 'Joined', value: new Date(viewStudent.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) },
+              { label: 'Aadhaar', value: viewStudent.aadhar_number ? '••••  ••••  ' + viewStudent.aadhar_number.slice(-4) : '—' },
             ].map(({ label, value }) => (
               <div key={label} style={{ background: '#f9fafb', borderRadius: '9px', padding: '10px 13px' }}>
                 <div style={{ fontSize: '10px', fontWeight: '700', color: '#9ca3af', marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
@@ -431,6 +468,13 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
               </div>
             ))}
           </div>
+
+          {viewStudent.address && (
+            <div style={{ background: '#f9fafb', borderRadius: '9px', padding: '10px 13px', marginBottom: '12px' }}>
+              <div style={{ fontSize: '10px', fontWeight: 700, color: '#9ca3af', marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Address</div>
+              <div style={{ fontSize: '13px', color: 'var(--navy)', lineHeight: 1.5 }}>{viewStudent.address}</div>
+            </div>
+          )}
 
           {/* Fee Status */}
           <div style={{ borderTop: '1px solid #f3f4f6', paddingTop: '16px', marginBottom: '16px' }}>
