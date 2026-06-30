@@ -181,6 +181,7 @@ export default function Landing() {
                 <li><b>Conversation &amp; culture clubs</b> — weekly speaking circles and culture workshops.</li>
                 <li><b>Campus &amp; corporate programs</b> — Japanese delivered on-site, on campus.</li>
                 <li><b>A richer learning platform</b> — mock tests, progress tracking and a mobile app.</li>
+                <li><b>Learn with native Japanese teachers</b> — from JLPT N3 level, starting July 2027.</li>
               </ol>
             </aside>
           </div>
