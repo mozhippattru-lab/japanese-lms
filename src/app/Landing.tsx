@@ -147,7 +147,7 @@ export default function Landing() {
           <div className="lp-container lp-about">
             <div className="lp-about-main">
               <SectionTag ta="எங்களைப் பற்றி" jp="私たちについて">About us</SectionTag>
-              <div className="lp-kural-verse lp-kural-purple" style={{ marginTop: '14px', marginBottom: '24px', border: '2px solid #c4b5fd', borderRadius: '12px', padding: '24px 28px', background: '#f5f3ff' }}>
+              <div className="lp-kural-verse lp-kural-purple" style={{ marginTop: '14px', marginBottom: '24px', border: '2px solid #f9a8d4', borderRadius: '12px', padding: '24px 28px', background: '#fff1f7' }}>
                 <div className="lp-kural-num">திருக்குறள் -392 &nbsp;&nbsp;•&nbsp;&nbsp; ティルックラル -392 &nbsp;&nbsp;•&nbsp;&nbsp; THIRUKKURAL-392</div>
                 <p className="lp-kural-ta">
                   எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
@@ -908,10 +908,10 @@ function LandingStyles() {
       .lp-kural-jp { font-family: var(--jp, 'Shippori Mincho', serif); font-size: clamp(13px, 1.7vw, 15.5px);
         line-height: 1.8; color: var(--ink); margin: 14px 0 0; }
       .lp-kural-en { font-size: 13.5px; font-style: italic; line-height: 1.6; color: var(--ink-soft); margin: 12px 0 0; }
-      .lp-kural-purple .lp-kural-num { color: #6d28d9; }
-      .lp-kural-purple .lp-kural-ta { color: #2a2440; }
-      .lp-kural-purple .lp-kural-jp { color: #4c4470; }
-      .lp-kural-purple .lp-kural-en { color: #6b6388; }
+      .lp-kural-purple .lp-kural-num { color: #db2777; }
+      .lp-kural-purple .lp-kural-ta { color: #3a2430; }
+      .lp-kural-purple .lp-kural-jp { color: #6b4456; }
+      .lp-kural-purple .lp-kural-en { color: #8a6377; }
       .lp-hero-sub { max-width: 520px; font-size: 17px; line-height: 1.72; color: var(--ink-soft); margin: 0 0 34px; }
       .lp-hero-sub strong { color: var(--ink); }
       .lp-hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
