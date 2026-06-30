@@ -554,8 +554,8 @@ export default function Landing() {
               </span>
             </div>
             <p className="lp-footer-about">
-              Japanese Language School · 日本語学校. JLPT N5–N3 coaching by N1-certified teachers,
-              online &amp; in-class.
+              Japanese Language School · 日本語学校.<br />
+              JLPT N5–N3 coaching by N1-certified teachers, online &amp; in-class.
             </p>
           </div>
           <div>
