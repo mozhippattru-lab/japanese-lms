@@ -147,7 +147,7 @@ export default function Landing() {
           <div className="lp-container lp-about">
             <div className="lp-about-main">
               <SectionTag ta="எங்களைப் பற்றி" jp="私たちについて">About us</SectionTag>
-              <div className="lp-kural-verse lp-kural-purple" style={{ marginTop: '14px', marginBottom: '24px', border: '2px solid #6d28d9', borderRadius: '12px', padding: '24px 28px', background: 'linear-gradient(160deg, #6d28d9 0%, #5b21b6 100%)' }}>
+              <div className="lp-kural-verse lp-kural-purple" style={{ marginTop: '14px', marginBottom: '24px', border: '2px solid #c4b5fd', borderRadius: '12px', padding: '24px 28px', background: '#f5f3ff' }}>
                 <div className="lp-kural-num">திருக்குறள் -392 &nbsp;&nbsp;•&nbsp;&nbsp; ティルックラル -392 &nbsp;&nbsp;•&nbsp;&nbsp; THIRUKKURAL-392</div>
                 <p className="lp-kural-ta">
                   எண்ணென்ப ஏனை எழுத்தென்ப இவ்விரண்டும்<br />
@@ -847,7 +847,7 @@ function LandingStyles() {
         text-decoration: none; border: none; transition: all 180ms ease; white-space: nowrap; font-family: inherit; }
       .lp-btn-lg { padding: 14px 26px; font-size: 15px; }
       .lp-full { width: 100%; }
-      .lp-btn-primary { background: var(--red); color: #fff; box-shadow: 0 8px 22px rgba(226,65,56,0.28); }
+      .lp-btn-primary, .lp-links > a.lp-btn-primary { background: var(--red); color: #fff; box-shadow: 0 8px 22px rgba(226,65,56,0.28); }
       .lp-btn-primary:hover { background: var(--red-deep); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(226,65,56,0.38); }
       .lp-btn-primary:disabled { opacity: .55; transform: none; cursor: not-allowed; }
       .lp-btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
@@ -908,10 +908,10 @@ function LandingStyles() {
       .lp-kural-jp { font-family: var(--jp, 'Shippori Mincho', serif); font-size: clamp(13px, 1.7vw, 15.5px);
         line-height: 1.8; color: var(--ink); margin: 14px 0 0; }
       .lp-kural-en { font-size: 13.5px; font-style: italic; line-height: 1.6; color: var(--ink-soft); margin: 12px 0 0; }
-      .lp-kural-purple .lp-kural-num { color: #f5c518; }
-      .lp-kural-purple .lp-kural-ta { color: #fff; }
-      .lp-kural-purple .lp-kural-jp { color: rgba(255,255,255,0.92); }
-      .lp-kural-purple .lp-kural-en { color: rgba(255,255,255,0.78); }
+      .lp-kural-purple .lp-kural-num { color: #6d28d9; }
+      .lp-kural-purple .lp-kural-ta { color: #2a2440; }
+      .lp-kural-purple .lp-kural-jp { color: #4c4470; }
+      .lp-kural-purple .lp-kural-en { color: #6b6388; }
       .lp-hero-sub { max-width: 520px; font-size: 17px; line-height: 1.72; color: var(--ink-soft); margin: 0 0 34px; }
       .lp-hero-sub strong { color: var(--ink); }
       .lp-hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
