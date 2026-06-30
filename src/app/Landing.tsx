@@ -265,9 +265,9 @@ export default function Landing() {
               <SectionTag ta="கட்டணம்" jp="料金">Pricing</SectionTag>
               <h2 className="lp-h2">Honest, one-time fees.</h2>
               <p className="lp-lead">No hidden charges. Take all three levels together and save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}.</p>
-              <div style={{ marginTop: '12px', padding: '12px 16px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div className="lp-gst-note" style={{ marginTop: '12px', padding: '12px 18px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '10px', display: 'inline-flex', alignItems: 'center', gap: '10px', width: 'fit-content', maxWidth: 'none' }}>
                 <span style={{ fontSize: '16px' }}>📌</span>
-                <p style={{ margin: 0, fontSize: '13px', color: '#5f4b00' }}><strong>Note:</strong> All classes are conducted <strong>online</strong>. <strong style={{ color: 'var(--red)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>All prices are inclusive of GST, excluding book fees.</strong></p>
+                <p style={{ margin: 0, fontSize: '13px', color: '#5f4b00', whiteSpace: 'nowrap' }}><strong>Note:</strong> All classes are conducted <strong>online</strong>. <strong style={{ color: 'var(--red)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>All prices are inclusive of GST, excluding book fees.</strong></p>
               </div>
             </div>
 
@@ -1299,6 +1299,8 @@ function LandingStyles() {
         .lp-donate-stats-row { flex-direction: column; }
         .lp-dstat-div { width: 100%; height: 1px; }
         .lp-kural-ta { white-space: normal !important; font-size: 15px !important; }
+        .lp-gst-note { display: flex !important; width: auto !important; align-items: flex-start !important; }
+        .lp-gst-note p { white-space: normal !important; }
         .lp-kural-verse { overflow-x: hidden !important; }
       }
       @media (prefers-reduced-motion: reduce) {
