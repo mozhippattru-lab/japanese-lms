@@ -21,26 +21,26 @@ type Course = {
 const COURSES: Course[] = [
   {
     level: 'N5', jp: '初級', color: '#2f9e63', title: 'Beginner Foundation', ta: 'தொடக்கம்',
-    price: 8000, hours: '150 hours',
+    price: 9500, hours: '150 hours',
     blurb: 'Your first step. We build the script, the sound and the everyday phrases until reading kana feels natural.',
     points: ['Hiragana & Katakana mastery', '~100 kanji · ~800 words', 'Self-introduction & daily talk', 'Reading simple sentences'],
   },
   {
     level: 'N4', jp: '初中級', color: '#2d6fb8', title: 'Elementary', ta: 'அடிப்படை',
-    price: 10000, hours: '150 hours',
+    price: 11500, hours: '150 hours',
     blurb: 'Words become conversations. You start handling everyday situations and reading written Japanese with ease.',
     points: ['~300 kanji · ~1,500 words', 'Everyday conversation & polite forms', 'Reading familiar topics', 'Listening to natural speech'],
   },
   {
     level: 'N3', jp: '中級', color: '#c98a2b', title: 'Intermediate Bridge', ta: 'இடைநிலை',
-    price: 15000, hours: '300 hours',
+    price: 17000, hours: '300 hours',
     blurb: 'The bridge to advanced Japanese — study, work and life in Japan move within reach.',
     points: ['~650 kanji · ~3,750 words', 'Near-natural speed comprehension', 'Newspapers & notices', 'Expressing opinions & ideas'],
   },
 ]
 
-const PACKAGE_PRICE = 30000
-const PACKAGE_ORIGINAL = 8000 + 10000 + 15000 // 33,000
+const PACKAGE_PRICE = 35000
+const PACKAGE_ORIGINAL = 9500 + 11500 + 17000 // 38,000
 
 const KIDS_COURSE = {
   price: 4000, hours: '40 Hours', color: '#7c3aed',
@@ -222,7 +222,7 @@ export default function Landing() {
 
             {/* Language of instruction note */}
             <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', background: '#f8f9ff', border: '1px solid #d0d5e8', borderRadius: '10px', padding: '14px 18px', marginTop: '18px' }}>
-              <span style={{ fontSize: '16px', lineHeight: 1, marginTop: '2px' }}>🗣️</span>
+              <span style={{ fontSize: '16px', lineHeight: 1, marginTop: '2px' }}>🧑‍🏫</span>
               <div style={{ fontSize: '13.5px', color: '#374151', lineHeight: 1.6 }}>
                 <strong style={{ color: '#1e2235' }}>Language of instruction:</strong>
                 <span style={{ marginLeft: '10px' }}>✅ Tamil, English, Japanese</span>
@@ -245,7 +245,7 @@ export default function Landing() {
               <p className="lp-lead">No hidden charges. Take all three levels together and save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}.</p>
               <div style={{ marginTop: '12px', padding: '12px 16px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span style={{ fontSize: '16px' }}>📌</span>
-                <p style={{ margin: 0, fontSize: '13px', color: '#5f4b00' }}><strong>Note:</strong> All classes are conducted <strong>online</strong>. Prices mentioned are <strong>excluding book fees</strong>.</p>
+                <p style={{ margin: 0, fontSize: '13px', color: '#5f4b00' }}><strong>Note:</strong> All classes are conducted <strong>online</strong>. All prices are <strong>inclusive of GST</strong>, excluding book fees.</p>
               </div>
             </div>
 
@@ -606,7 +606,7 @@ function KidsCourse() {
         </div>
         <div className="lp-kids-cta">
           <a href="#demo" className="lp-btn lp-btn-primary">Enquire now <ArrowRight size={16} /></a>
-          <div className="lp-kids-note">Online only · Prices excl. book fees</div>
+          <div className="lp-kids-note">Online only · Incl. GST · Excl. book fees</div>
         </div>
       </div>
     </div>
