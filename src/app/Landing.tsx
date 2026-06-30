@@ -220,14 +220,35 @@ export default function Landing() {
               ))}
             </div>
 
-            {/* Language of instruction note */}
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', background: '#f8f9ff', border: '1px solid #d0d5e8', borderRadius: '10px', padding: '14px 18px', marginTop: '18px' }}>
-              <span style={{ fontSize: '16px', lineHeight: 1, marginTop: '2px' }}>🧑‍🏫</span>
-              <div style={{ fontSize: '13.5px', color: '#374151', lineHeight: 1.6 }}>
-                <strong style={{ color: '#1e2235' }}>Language of instruction:</strong>
-                <span style={{ marginLeft: '10px' }}>✅ Tamil, English, Japanese</span>
-                <span style={{ margin: '0 10px', color: '#9ca3af' }}>·</span>
-                <span style={{ color: '#6b7280' }}>❌ Tanglish, Japanglish</span>
+            {/* Medium of instruction */}
+            <div style={{ background: '#f8f9ff', border: '1px solid #d0d5e8', borderRadius: '12px', padding: '18px 22px', marginTop: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                <span style={{ fontSize: '18px', lineHeight: 1 }}>🧑‍🏫</span>
+                <strong style={{ color: '#1e2235', fontSize: '15px' }}>Medium of Instruction</strong>
+              </div>
+
+              <div style={{ display: 'grid', gap: '8px', marginBottom: '14px' }}>
+                {[
+                  { level: 'JLPT N5', color: '#2f9e63', langs: 'Tamil / English, Japanese' },
+                  { level: 'JLPT N4', color: '#2d6fb8', langs: 'Japanese' },
+                  { level: 'JLPT N3', color: '#c98a2b', langs: 'Japanese', note: 'Native Japanese Teacher' },
+                ].map(r => (
+                  <div key={r.level} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13.5px', color: '#374151' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: r.color, background: r.color + '18', padding: '3px 9px', borderRadius: '20px', minWidth: '64px', textAlign: 'center' }}>{r.level}</span>
+                    <span style={{ color: '#16a34a' }}>✅</span>
+                    <span>{r.langs}{r.note && <em style={{ color: '#6b7280', fontStyle: 'normal' }}> ({r.note})</em>}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 18px', paddingTop: '12px', borderTop: '1px solid #e2e6f2', fontSize: '13px', color: '#6b7280' }}>
+                <span>❌ Tanglish</span>
+                <span>❌ Japanglish</span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '9px', padding: '9px 13px', fontSize: '12.5px', color: '#5f4b00' }}>
+                <span>📌</span>
+                <span>Language adulteration won&apos;t be entertained in our school.</span>
               </div>
             </div>
 
