@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Shippori+Mincho:wght@500;600;700;800&family=Noto+Serif+Tamil:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
+/* Brand text-selection highlight (replaces the OS default purple/blue) */
+::selection { background: rgba(194, 151, 75, 0.28); color: inherit; }
+::-moz-selection { background: rgba(194, 151, 75, 0.28); color: inherit; }
+
 :root {
   --navy: #1a1f3c;
   --navy-light: #252b4a;
