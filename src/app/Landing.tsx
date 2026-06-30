@@ -266,7 +266,7 @@ export default function Landing() {
               <p className="lp-lead">No hidden charges. Take all three levels together and save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}.</p>
               <div style={{ marginTop: '12px', padding: '12px 16px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span style={{ fontSize: '16px' }}>📌</span>
-                <p style={{ margin: 0, fontSize: '13px', color: '#5f4b00' }}><strong>Note:</strong> All classes are conducted <strong>online</strong>. All prices are <strong>inclusive of GST</strong>, excluding book fees.</p>
+                <p style={{ margin: 0, fontSize: '13px', color: '#5f4b00' }}><strong>Note:</strong> All classes are conducted <strong>online</strong>. <strong style={{ color: 'var(--red)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>All prices are inclusive of GST, excluding book fees.</strong></p>
               </div>
             </div>
 
