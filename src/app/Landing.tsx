@@ -95,7 +95,7 @@ export default function Landing() {
           <div className="lp-seeman-inner">
             <div className="lp-seeman-line1">எம்மொழியும் கற்போம், தாய்மொழியை மறவோம்</div>
             <div className="lp-seeman-line2">
-              உலகின் எம்மொழியும் கற்போம், நங்கள் வாழ; எம் மொழி தமிழ் கற்போம், நம் இனம் வாழ.
+              உலகின் எம்மொழியும் கற்போம், நாங்கள் வாழ; எம் மொழி தமிழ் கற்போம், நம் இனம் வாழ.
               <span className="lp-seeman-attr"> — அண்ணன் செந்தமிழன் சீமான்</span>
             </div>
           </div>
