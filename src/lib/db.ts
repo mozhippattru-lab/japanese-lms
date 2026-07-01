@@ -15,6 +15,17 @@ export const sql =
     max: 10,
     idle_timeout: 20,
     ssl: process.env.DATABASE_SSL === 'true' ? 'require' : false,
+    // Return date/time columns as raw strings (not Date objects) to match the
+    // supabase-js behaviour the app code was written against (e.g. `.slice(0,7)`,
+    // `new Date(created_at)`). Serialize still accepts Date or string on insert.
+    types: {
+      date: {
+        to: 1184,
+        from: [1082, 1083, 1114, 1184], // date, time, timestamp, timestamptz
+        serialize: (x: Date | string) => (x instanceof Date ? x.toISOString() : x),
+        parse: (x: string) => x,
+      },
+    },
   })
 
 if (process.env.NODE_ENV !== 'production') global.__sql = sql

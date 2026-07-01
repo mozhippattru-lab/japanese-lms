@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
 import { Reveal, Stagger, StaggerItem } from '@/components/motion/Motion'
@@ -31,50 +30,40 @@ function relativeDate(iso: string) {
 }
 
 export default async function AdminDashboard() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const user = await requireRole('admin')
 
-  // All admin data via service role (bypasses RLS)
-  const db = createAdminClient()
   const sixMonthsAgo = new Date()
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5)
   sixMonthsAgo.setDate(1)
   sixMonthsAgo.setHours(0, 0, 0, 0)
 
-  // Kick off the role check and all dashboard data in parallel — they don't
-  // depend on each other, so we avoid a sequential round-trip to Supabase.
-  const profilePromise = supabase.from('profiles').select('role, full_name').eq('id', user.id).single()
-  const dataPromise = Promise.all([
-    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student').eq('status', 'Active'),
-    db.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'teacher').eq('status', 'Active'),
-    db.from('batches').select('*', { count: 'exact', head: true }).eq('status', 'Active'),
-    db.from('leads').select('*', { count: 'exact', head: true }),
-    db.from('courses').select('*', { count: 'exact', head: true }).eq('is_active', true),
-    db.from('profiles').select('jlpt_level').eq('role', 'student').eq('status', 'Active'),
-    db.from('profiles').select('full_name, jlpt_level, created_at').eq('role', 'student').order('created_at', { ascending: false }).limit(4),
-    db.from('invoices').select('amount, status'),
-    db.from('profiles').select('created_at').eq('role', 'student').gte('created_at', sixMonthsAgo.toISOString()),
+  const [
+    profileRows,
+    studentCountRows, teacherCountRows, batchCountRows, leadsCountRows, courseCountRows,
+    allStudents, recentStudents, invoices, monthlyStudents,
+  ] = await Promise.all([
+    sql`select role, full_name from profiles where id = ${user.id} limit 1`,
+    sql`select count(*)::int as count from profiles where role = 'student' and status = 'Active'`,
+    sql`select count(*)::int as count from profiles where role = 'teacher' and status = 'Active'`,
+    sql`select count(*)::int as count from batches where status = 'Active'`,
+    sql`select count(*)::int as count from leads`,
+    sql`select count(*)::int as count from courses where is_active = true`,
+    sql`select jlpt_level from profiles where role = 'student' and status = 'Active'`,
+    sql`select full_name, jlpt_level, created_at from profiles where role = 'student' order by created_at desc limit 4`,
+    sql`select amount, status from invoices`,
+    sql`select created_at from profiles where role = 'student' and created_at >= ${sixMonthsAgo}`,
   ])
 
-  const { data: profile } = await profilePromise
-  if (profile?.role !== 'admin') redirect(`/dashboard/${profile?.role || 'student'}`)
-
+  const profile = profileRows[0]
   const name = profile?.full_name || user.email || 'Admin'
   const firstName = name.split(' ')[0]
   const monthYear = new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
 
-  const [
-    { count: studentCount },
-    { count: teacherCount },
-    { count: batchCount },
-    { count: leadsCount },
-    { count: courseCount },
-    { data: allStudents },
-    { data: recentStudents },
-    { data: invoices },
-    { data: monthlyStudents },
-  ] = await dataPromise
+  const studentCount = studentCountRows[0]?.count ?? 0
+  const teacherCount = teacherCountRows[0]?.count ?? 0
+  const batchCount = batchCountRows[0]?.count ?? 0
+  const leadsCount = leadsCountRows[0]?.count ?? 0
+  const courseCount = courseCountRows[0]?.count ?? 0
 
   // Students by level
   const levelCounts = LEVEL_META.map(lm => ({
