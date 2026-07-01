@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createCollege, updateCollege as updateCollegeAction, deleteCollege as deleteCollegeAction, logCollegePayment } from './actions'
 import {
   Building2, Plus, Users, Wallet, FileText, MapPin, Phone, Mail, User,
   Link as LinkIcon, Check, Copy, Pencil, Trash2, X, Receipt, CalendarDays,
@@ -100,7 +100,6 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
   async function addCollege(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const supabase = createClient()
     const payload = {
       name: form.name, category: form.category, city: form.city || null,
       contact_person: form.contact_person || null, contact_phone: form.contact_phone || null,
@@ -108,8 +107,8 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
       payment_amount: form.payment_amount ? Number(form.payment_amount) : 0,
       join_code: genCode(), status: form.status, notes: form.notes || null,
     }
-    const { data, error } = await supabase.from('colleges').insert(payload).select().single()
-    if (error) { toast(error.message, 'error'); setLoading(false); return }
+    const { college: data, error } = await createCollege(payload)
+    if (error || !data) { toast(error || 'Create failed', 'error'); setLoading(false); return }
     setColleges(prev => [{ ...data, student_count: 0, batch_count: 0, paid_total: 0 }, ...prev])
     setShowAdd(false); setForm(emptyForm); setLoading(false)
     toast('College added', 'success')
@@ -119,14 +118,13 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
     e.preventDefault()
     if (!editCollege) return
     setLoading(true)
-    const supabase = createClient()
     const updates = {
       name: editCollege.name, category: editCollege.category, city: editCollege.city,
       contact_person: editCollege.contact_person, contact_phone: editCollege.contact_phone,
       contact_email: editCollege.contact_email, payment_type: editCollege.payment_type,
       payment_amount: Number(editCollege.payment_amount || 0), status: editCollege.status, notes: editCollege.notes,
     }
-    await supabase.from('colleges').update(updates).eq('id', editCollege.id)
+    await updateCollegeAction(editCollege.id, updates)
     setColleges(prev => prev.map(c => c.id === editCollege.id ? { ...c, ...updates } : c))
     setEditCollege(null); setLoading(false)
     toast('College updated', 'success')
@@ -134,8 +132,7 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
 
   async function deleteCollege(c: College) {
     if (!confirm(`Delete "${c.name}"? Student links and college batches will be unlinked.`)) return
-    const supabase = createClient()
-    await supabase.from('colleges').delete().eq('id', c.id)
+    await deleteCollegeAction(c.id)
     setColleges(prev => prev.filter(x => x.id !== c.id))
     toast('College deleted', 'info')
   }
@@ -144,15 +141,14 @@ export default function CollegesClient({ initialColleges, batches, initialPaymen
     e.preventDefault()
     if (!payCollege) return
     setLoading(true)
-    const supabase = createClient()
     const payload = {
       college_id: payCollege.id, batch_id: pf.batch_id || null, amount: Number(pf.amount),
       period_month: pf.period_month || null, payment_date: pf.payment_date,
       payment_method: pf.payment_method, reference_number: pf.reference_number || null,
       status: 'Paid', notes: pf.notes || null,
     }
-    const { data, error } = await supabase.from('college_payments').insert(payload).select().single()
-    if (error) { toast(error.message, 'error'); setLoading(false); return }
+    const { payment: data, error } = await logCollegePayment(payload)
+    if (error || !data) { toast(error || 'Payment failed', 'error'); setLoading(false); return }
     setPayments(prev => [data, ...prev])
     setColleges(prev => prev.map(c => c.id === payCollege.id ? { ...c, paid_total: c.paid_total + Number(pf.amount) } : c))
     setPayCollege(null); setPf(emptyPay); setLoading(false)
