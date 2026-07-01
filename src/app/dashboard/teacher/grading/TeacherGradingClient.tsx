@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { gradeSubmission } from './actions'
 import { ClipboardCheck, CheckCircle2, Clock, FileText, User } from 'lucide-react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
@@ -24,8 +24,8 @@ function fmtDate(d: string | null) {
 }
 
 export default function TeacherGradingClient({
-  teacherId, initialSubmissions,
-}: { teacherId: string; initialSubmissions: Submission[] }) {
+  initialSubmissions,
+}: { teacherId?: string; initialSubmissions: Submission[] }) {
   const { toasts, toast, remove } = useToast()
   const [subs, setSubs] = useState<Submission[]>(initialSubmissions)
   const [tab, setTab] = useState<'pending' | 'graded'>('pending')
@@ -50,13 +50,8 @@ export default function TeacherGradingClient({
     if (points === '' || isNaN(pts)) { toast('Enter a score', 'error'); return }
     if (pts < 0 || pts > active.max_points) { toast(`Score must be 0–${active.max_points}`, 'error'); return }
     setSaving(true)
-    const supabase = createClient()
-    const graded_at = new Date().toISOString()
-    const { error } = await supabase
-      .from('assignment_submissions')
-      .update({ points: pts, feedback: feedback.trim() || null, status: 'Graded', graded_at, graded_by: teacherId })
-      .eq('id', active.id)
-    if (error) { toast(error.message, 'error'); setSaving(false); return }
+    const { error, graded_at } = await gradeSubmission(active.id, pts, feedback.trim() || null)
+    if (error || !graded_at) { toast(error || 'Grading failed', 'error'); setSaving(false); return }
     setSubs(prev => prev.map(s => s.id === active.id ? { ...s, points: pts, feedback: feedback.trim(), status: 'Graded', graded_at } : s))
     toast('Graded', 'success')
     setSaving(false)

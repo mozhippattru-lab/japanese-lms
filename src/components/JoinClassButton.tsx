@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Video, Clock, PencilLine, Check, X } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { updateBatchMeetingLink } from '@/components/class-actions'
 import { getClassState, parseSlot, isJoinable, type ClassState } from '@/lib/schedule'
 
 type Props = {
@@ -40,11 +40,10 @@ export default function JoinClassButton({ link, timeSlot, days, batchId, canEdit
 
   async function save() {
     setSaving(true)
-    const supabase = createClient()
     const clean = value.trim()
-    const { error } = await supabase.from('batches').update({ meeting_link: clean || null }).eq('id', batchId!)
+    const { error } = await updateBatchMeetingLink(batchId!, clean || null)
     setSaving(false)
-    if (error) { alert('Could not save the link: ' + error.message); return }
+    if (error) { alert('Could not save the link: ' + error); return }
     setSavedLink(clean)
     setEditing(false)
   }
