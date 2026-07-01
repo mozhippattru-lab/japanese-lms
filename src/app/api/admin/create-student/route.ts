@@ -29,13 +29,28 @@ export async function POST(req: Request) {
   })
   if (createErr || !created.user) return NextResponse.json({ error: createErr?.message || 'Failed to create user' }, { status: 400 })
 
-  // Auto-generate roll number via DB sequence (e.g. MGL0301)
+  // Auto-generate roll number (e.g. MGL0301). Prefer the DB function; if it
+  // isn't available (e.g. schema cache not reloaded), fall back to computing
+  // the next number from the highest existing MGL roll number.
+  let roll_number = ''
   const { data: rollData, error: rollErr } = await admin.rpc('generate_roll_number')
-  if (rollErr) {
-    await admin.auth.admin.deleteUser(created.user.id)
-    return NextResponse.json({ error: 'Failed to generate roll number' }, { status: 500 })
+  if (!rollErr && typeof rollData === 'string' && rollData) {
+    roll_number = rollData
+  } else {
+    const { data: last } = await admin
+      .from('profiles')
+      .select('roll_number')
+      .like('roll_number', 'MGL%')
+      .order('roll_number', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    let next = 301
+    if (last?.roll_number) {
+      const n = parseInt(String(last.roll_number).replace(/\D/g, ''), 10)
+      if (!Number.isNaN(n)) next = n + 1
+    }
+    roll_number = `MGL${String(next).padStart(4, '0')}`
   }
-  const roll_number = rollData as string
 
   // Upsert profile
   const profile = {
