@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { Clock, Calendar, Users } from 'lucide-react'
 import { DashStyles } from '@/components/DashboardKit'
@@ -32,22 +32,17 @@ function getNextClassDays(days: string | string[] | null, count = 5): string[] {
 }
 
 export default async function StudentClassesPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'student') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('student')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
-  const { data: enrollments } = await supabase
-    .from('student_batches')
-    .select('id, batch:batches(id, name, jlpt_level, time_slot, days, status, teacher_name, enrolled, capacity, mode, meeting_link)')
-    .eq('student_id', user.id)
-    .eq('status', 'Active')
+  const rows = await sql`
+    select b.id, b.name, b.jlpt_level, b.time_slot, b.days, b.status, b.teacher_name, b.enrolled, b.capacity, b.mode, b.meeting_link
+    from student_batches sb join batches b on b.id = sb.batch_id
+    where sb.student_id = ${user.id} and sb.status = 'Active'
+  `
 
   type BatchInfo = { id: string; name: string; jlpt_level: string; time_slot: string | null; days: string | string[] | null; status: string; teacher_name: string | null; enrolled: number; capacity: number; mode: string | null; meeting_link: string | null }
-  const batches = (enrollments || [])
-    .map(e => e.batch as unknown as BatchInfo | null)
-    .filter(Boolean)
+  const batches = rows as unknown as BatchInfo[]
 
   // Build a flat schedule for the next 7 days
   const today = new Date()

@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { BookOpen, Clock, Users, Video, FileText, Headphones, ClipboardCheck, Target } from 'lucide-react'
 import { DashStyles } from '@/components/DashboardKit'
@@ -13,30 +13,34 @@ const LESSON_ICONS: Record<string, React.ReactNode> = {
 }
 
 export default async function StudentCoursesPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'student') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('student')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
-  // Get enrolled batches
-  const { data: enrollments } = await supabase
-    .from('student_batches')
-    .select('id, batch_id, enrolled_at, batch:batches(id, name, jlpt_level, time_slot, days, status, teacher_name, enrolled, capacity)')
-    .eq('student_id', user.id)
-    .eq('status', 'Active')
+  // Get enrolled batches (batch details nested as JSON to match the old shape)
+  const enrollments = await sql`
+    select sb.id, sb.enrolled_at,
+      json_build_object('id', b.id, 'name', b.name, 'jlpt_level', b.jlpt_level, 'time_slot', b.time_slot,
+        'days', b.days, 'status', b.status, 'teacher_name', b.teacher_name, 'enrolled', b.enrolled, 'capacity', b.capacity) as batch
+    from student_batches sb join batches b on b.id = sb.batch_id
+    where sb.student_id = ${user.id} and sb.status = 'Active'
+  `
 
-  // Get courses for student's level
+  // Get courses for student's level, with nested modules + lessons
   const level = profile?.jlpt_level
-  const { data: courses } = level
-    ? await supabase
-        .from('courses')
-        .select(`id, title, jlpt_level, description, duration_weeks, enrolled_count,
-          course_modules(id, title, order_index, lessons(id, title, lesson_type, duration_minutes))`)
-        .eq('jlpt_level', level)
-        .eq('status', 'Active')
-        .order('title')
-    : { data: [] }
+  const courses = level
+    ? await sql`
+        select c.id, c.title, c.jlpt_level, c.description, c.duration_weeks, c.enrolled_count,
+          coalesce((
+            select json_agg(json_build_object('id', m.id, 'title', m.title, 'order_index', m.order_index,
+              'lessons', coalesce((
+                select json_agg(json_build_object('id', l.id, 'title', l.title, 'lesson_type', l.lesson_type, 'duration_minutes', l.duration_minutes))
+                from lessons l where l.module_id = m.id
+              ), '[]'::json)) order by m.order_index)
+            from course_modules m where m.course_id = c.id
+          ), '[]'::json) as course_modules
+        from courses c where c.jlpt_level = ${level} and c.status = 'Active' order by c.title
+      `
+    : []
 
   const card: React.CSSProperties = { background: '#fff', borderRadius: '12px', border: '1px solid #ececef' }
   const eyebrow: React.CSSProperties = { fontSize: '10px', fontWeight: '700', color: '#9ca3af', letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: '3px' }

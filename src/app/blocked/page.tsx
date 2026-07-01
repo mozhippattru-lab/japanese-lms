@@ -1,18 +1,17 @@
-import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { sql } from '@/lib/db'
+import { getSessionUser } from '@/lib/auth'
 
 export default async function BlockedPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getSessionUser()
   if (!user) redirect('/login')
+  if (user.role === 'admin') redirect('/dashboard/admin')
 
-  const { data: profile } = await supabase.from('profiles').select('role, full_name').eq('id', user.id).single()
-  if (profile?.role === 'admin') redirect('/dashboard/admin')
-
-  const db = createAdminClient()
-  const { data: settings } = await db.from('app_settings').select('blocked_message, maintenance_mode, student_login_blocked, teacher_login_blocked').eq('id', 'default').single()
+  const [settings] = await sql`
+    select blocked_message, maintenance_mode, student_login_blocked, teacher_login_blocked
+    from app_settings where id = 'default' limit 1
+  `
 
   const message = settings?.blocked_message || 'Access is temporarily paused. Please contact your teacher for more information.'
 

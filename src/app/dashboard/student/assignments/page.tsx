@@ -1,18 +1,15 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import StudentWorkClient from './StudentWorkClient'
 import { loadStudentWork } from './load'
 import { DashStyles } from '@/components/DashboardKit'
 
 export default async function StudentAssignmentsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'student') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('student')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
-  const items = await loadStudentWork(supabase, user.id, 'Assignment')
+  const items = await loadStudentWork(user.id, 'Assignment')
 
   return (
     <div className="dash-shell">

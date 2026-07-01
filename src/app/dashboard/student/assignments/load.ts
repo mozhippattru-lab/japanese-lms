@@ -1,4 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
+import { sql } from '@/lib/db'
 
 export type StudentWorkItem = {
   id: string; title: string; description: string | null; instructions: string | null
@@ -11,40 +11,33 @@ export type StudentWorkItem = {
 }
 
 export async function loadStudentWork(
-  supabase: SupabaseClient, studentId: string, kind: 'Assignment' | 'Test',
+  studentId: string, kind: 'Assignment' | 'Test',
 ): Promise<StudentWorkItem[]> {
   // batches the student is enrolled in
-  const { data: enrollments } = await supabase
-    .from('student_batches')
-    .select('batch_id')
-    .eq('student_id', studentId)
-  const batchIds = (enrollments || []).map(e => e.batch_id)
+  const enrollments = await sql`select batch_id from student_batches where student_id = ${studentId}`
+  const batchIds = enrollments.map(e => e.batch_id)
   if (batchIds.length === 0) return []
 
-  const { data: assignments } = await supabase
-    .from('assignments')
-    .select('id, title, description, instructions, batch_id, jlpt_level, type, max_points, due_date, status')
-    .in('batch_id', batchIds)
-    .eq('type', kind)
-    .eq('status', 'Published')
-    .order('due_date', { ascending: true })
-  if (!assignments || assignments.length === 0) return []
+  const assignments = await sql`
+    select id, title, description, instructions, batch_id, jlpt_level, type, max_points, due_date, status
+    from assignments
+    where batch_id = any(${batchIds}) and type = ${kind} and status = 'Published'
+    order by due_date asc
+  `
+  if (assignments.length === 0) return []
 
   // batch names
-  const { data: batches } = await supabase
-    .from('batches')
-    .select('id, name')
-    .in('id', batchIds)
-  const batchMap = new Map((batches || []).map(b => [b.id, b.name]))
+  const batches = await sql`select id, name from batches where id = any(${batchIds})`
+  const batchMap = new Map(batches.map(b => [b.id, b.name]))
 
   // this student's submissions
   const assignmentIds = assignments.map(a => a.id)
-  const { data: subs } = await supabase
-    .from('assignment_submissions')
-    .select('id, assignment_id, content, status, points, feedback, submitted_at')
-    .eq('student_id', studentId)
-    .in('assignment_id', assignmentIds)
-  const subMap = new Map((subs || []).map(s => [s.assignment_id, s]))
+  const subs = await sql`
+    select id, assignment_id, content, status, points, feedback, submitted_at
+    from assignment_submissions
+    where student_id = ${studentId} and assignment_id = any(${assignmentIds})
+  `
+  const subMap = new Map(subs.map(s => [s.assignment_id, s]))
 
   return assignments.map(a => {
     const s = subMap.get(a.id)

@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { CheckCircle2, XCircle, Clock, CalendarCheck } from 'lucide-react'
 import { DashStyles } from '@/components/DashboardKit'
@@ -17,36 +18,31 @@ const STATUS_COLOR: Record<string, string> = {
 }
 
 export default async function StudentAttendancePage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'student') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('student')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
   // Get attendance records for this student
-  const { data: records } = await supabase
-    .from('attendance_records')
-    .select('id, status, session_id, batch_id')
-    .eq('student_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(100)
+  const records = await sql`
+    select id, status, session_id, batch_id from attendance_records
+    where student_id = ${user.id} order by created_at desc limit 100
+  `
 
   let sessions: Array<{ id: string; session_date: string; topic: string | null }> = []
   let batchList: Array<{ id: string; name: string; jlpt_level: string }> = []
 
-  if (records && records.length > 0) {
+  if (records.length > 0) {
     const sessionIds = [...new Set(records.map(r => r.session_id))]
     const batchIds = [...new Set(records.map(r => r.batch_id))]
 
-    const [{ data: sessData }, { data: batchData }] = await Promise.all([
-      supabase.from('attendance_sessions').select('id, session_date, topic').in('id', sessionIds),
-      supabase.from('batches').select('id, name, jlpt_level').in('id', batchIds),
+    const [sessData, batchData] = await Promise.all([
+      sql`select id, session_date, topic from attendance_sessions where id = any(${sessionIds})`,
+      sql`select id, name, jlpt_level from batches where id = any(${batchIds})`,
     ])
-    sessions = sessData || []
-    batchList = batchData || []
+    sessions = sessData as unknown as typeof sessions
+    batchList = batchData as unknown as typeof batchList
   }
 
-  const rows = (records || []).map(r => ({
+  const rows: any[] = records.map(r => ({
     ...r,
     session: sessions.find(s => s.id === r.session_id),
     batch: batchList.find(b => b.id === r.batch_id),

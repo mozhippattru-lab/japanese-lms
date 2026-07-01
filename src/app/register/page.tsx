@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { Eye, EyeOff, AlertCircle, Building2 } from 'lucide-react'
 
 const PETALS = [
@@ -42,10 +41,10 @@ export default function RegisterPage() {
   const [lockedCollege, setLockedCollege] = useState<CollegeOpt | null>(null)
 
   useEffect(() => {
-    const supabase = createClient()
-    supabase.from('colleges').select('id, name, join_code').eq('status', 'Active').order('name')
-      .then(({ data }) => {
-        const list = (data || []) as CollegeOpt[]
+    fetch('/api/colleges')
+      .then(r => r.json())
+      .then(({ colleges }) => {
+        const list = (colleges || []) as CollegeOpt[]
         setColleges(list)
         const code = new URLSearchParams(window.location.search).get('college')
         if (code) {
@@ -54,6 +53,7 @@ export default function RegisterPage() {
         }
         setCollegesLoaded(true)
       })
+      .catch(() => setCollegesLoaded(true))
   }, [])
 
   async function handleRegister(e: React.FormEvent) {
