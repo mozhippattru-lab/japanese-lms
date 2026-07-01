@@ -1,6 +1,8 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Construct lazily — `new Resend(undefined)` throws, which would break the
+// production build's page-data collection when RESEND_API_KEY isn't present.
+const resend = () => new Resend(process.env.RESEND_API_KEY || 're_placeholder')
 
 const FROM = 'Mozhippattru Japanese School <noreply@mail.mozhippattru.org>'
 
@@ -17,7 +19,7 @@ export async function sendPaymentConfirmation({
   invoiceId: string
   date: string
 }) {
-  return resend.emails.send({
+  return resend().emails.send({
     from: FROM,
     to,
     subject: 'Payment Received — Mozhippattru Japanese School',
@@ -40,7 +42,7 @@ export async function sendPaymentConfirmation({
 }
 
 export async function sendPasswordReset({ to, url }: { to: string; url: string }) {
-  return resend.emails.send({
+  return resend().emails.send({
     from: FROM,
     to,
     subject: 'Reset your password — Mozhippattru Japanese School',
@@ -71,7 +73,7 @@ export async function sendWelcome({
   to: string
   studentName: string
 }) {
-  return resend.emails.send({
+  return resend().emails.send({
     from: FROM,
     to,
     subject: 'Welcome to Mozhippattru Japanese School — ようこそ！',
