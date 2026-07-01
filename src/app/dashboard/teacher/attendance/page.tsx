@@ -1,28 +1,25 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import TeacherAttendanceClient from './TeacherAttendanceClient'
 import { DashStyles } from '@/components/DashboardKit'
 
 export default async function TeacherAttendancePage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('teacher')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
-  const { data: batches } = await supabase
-    .from('batches')
-    .select('id, name, jlpt_level, time_slot, days, enrolled, capacity, status')
-    .eq('teacher_id', user.id)
-    .order('created_at', { ascending: false })
+  const batches = await sql`
+    select id, name, jlpt_level, time_slot, days, enrolled, capacity, status
+    from batches where teacher_id = ${user.id} order by created_at desc
+  `
 
   return (
     <div className="dash-shell">
       <Sidebar role="teacher" userName={profile?.full_name || user.email || 'Teacher'} />
       <main className="dash-main">
         <DashStyles />
-        <TeacherAttendanceClient batches={batches || []} />
+        <TeacherAttendanceClient batches={batches as any[]} />
       </main>
     </div>
   )

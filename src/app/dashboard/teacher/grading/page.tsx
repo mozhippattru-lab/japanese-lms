@@ -1,44 +1,33 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import TeacherGradingClient from './TeacherGradingClient'
 import { DashStyles } from '@/components/DashboardKit'
 
 export default async function TeacherGradingPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('teacher')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
-  const { data: assignments } = await supabase
-    .from('assignments')
-    .select('id, title, type, max_points, batch_id, jlpt_level')
-    .eq('teacher_id', user.id)
+  const assignments = await sql`select id, title, type, max_points, batch_id, jlpt_level from assignments where teacher_id = ${user.id}`
+  const assignmentIds = assignments.map(a => a.id)
 
-  const assignmentIds = (assignments || []).map(a => a.id)
-
-  let submissions: Record<string, unknown>[] = []
+  let submissions: Record<string, any>[] = []
   if (assignmentIds.length > 0) {
-    const { data: subs } = await supabase
-      .from('assignment_submissions')
-      .select('id, assignment_id, student_id, content, status, points, feedback, submitted_at, graded_at')
-      .in('assignment_id', assignmentIds)
-      .order('submitted_at', { ascending: true })
-    submissions = subs || []
+    submissions = await sql`
+      select id, assignment_id, student_id, content, status, points, feedback, submitted_at, graded_at
+      from assignment_submissions where assignment_id = any(${assignmentIds}) order by submitted_at asc
+    ` as unknown as Record<string, any>[]
   }
 
   const studentIds = [...new Set(submissions.map(s => s.student_id as string))]
   const studentMap = new Map<string, string>()
   if (studentIds.length > 0) {
-    const { data: students } = await supabase
-      .from('profiles')
-      .select('id, full_name, email')
-      .in('id', studentIds)
-    ;(students || []).forEach(s => studentMap.set(s.id, s.full_name || s.email || 'Student'))
+    const students = await sql`select id, full_name, email from profiles where id = any(${studentIds})`
+    students.forEach(s => studentMap.set(s.id, s.full_name || s.email || 'Student'))
   }
 
-  const aMap = new Map((assignments || []).map(a => [a.id, a]))
+  const aMap = new Map(assignments.map(a => [a.id, a]))
   const enriched = submissions.map(s => {
     const a = aMap.get(s.assignment_id as string)
     return {
@@ -64,7 +53,7 @@ export default async function TeacherGradingPage() {
       <Sidebar role="teacher" userName={profile?.full_name || user.email || 'Teacher'} />
       <main className="dash-main">
         <DashStyles />
-        <TeacherGradingClient teacherId={user.id} initialSubmissions={enriched} />
+        <TeacherGradingClient teacherId={user.id} initialSubmissions={enriched as any[]} />
       </main>
     </div>
   )
