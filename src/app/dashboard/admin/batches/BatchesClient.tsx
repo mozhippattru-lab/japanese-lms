@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { getBatchRoster, createCollegeQuick, createBatch, updateBatch, deleteBatch } from './actions'
 import {
   Calendar, CheckCircle2, Users, BarChart3, Plus,
   Clock, CalendarDays, GraduationCap, CalendarClock,
@@ -180,17 +180,7 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
     setViewBatch(batch)
     setRoster([])
     setRosterLoading(true)
-    const supabase = createClient()
-    const { data: enr } = await supabase.from('student_batches').select('student_id').eq('batch_id', batch.id)
-    const ids = (enr || []).map(e => e.student_id)
-    if (ids.length > 0) {
-      const { data: profs } = await supabase
-        .from('profiles')
-        .select('id, full_name, email, jlpt_level, phone')
-        .in('id', ids)
-        .order('full_name')
-      setRoster(profs || [])
-    }
+    setRoster(await getBatchRoster(batch.id))
     setRosterLoading(false)
   }
 
@@ -259,20 +249,15 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
     const teacher = teachers.find(t => t.id === form.teacher_id)
     if (!scheduleOK(form.teacher_id || null, teacher?.full_name || undefined, form.days, timeToMin(form.start_time), timeToMin(form.end_time), null)) return
     setLoading(true)
-    const supabase = createClient()
 
     // If "Add new college…" was chosen, create the college first and use its id.
     let collegeId: string | null = form.mode === 'College' ? (form.college_id || null) : null
     if (form.mode === 'College' && form.college_id === '__new__') {
       const name = form.new_college_name.trim()
       if (!name) { setLoading(false); return }
-      const { data: col, error: colErr } = await supabase
-        .from('colleges')
-        .insert({ name, join_code: genCode(), status: 'Active' })
-        .select('id')
-        .single()
-      if (colErr || !col) { setLoading(false); alert(colErr?.message || 'Could not create college'); return }
-      collegeId = col.id
+      const { id, error: colErr } = await createCollegeQuick(name, genCode())
+      if (colErr || !id) { setLoading(false); alert(colErr || 'Could not create college'); return }
+      collegeId = id
     }
 
     const newBatch = {
@@ -290,7 +275,7 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
       college_id: collegeId,
       meeting_link: form.mode === 'Online' ? (form.meeting_link.trim() || null) : null,
     }
-    const { data } = await supabase.from('batches').insert(newBatch).select().single()
+    const { batch: data } = await createBatch(newBatch)
     if (data) setBatches(prev => [data, ...prev])
     setShowAdd(false)
     setForm(emptyForm)
@@ -304,7 +289,6 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
     const r = slotToRange(editBatch.time_slot)
     if (!scheduleOK(editBatch.teacher_id || null, teacher?.full_name || undefined, editBatch.days || '', r?.[0] ?? null, r?.[1] ?? null, editBatch.id)) return
     setLoading(true)
-    const supabase = createClient()
     const updates = {
       name: editBatch.name,
       jlpt_level: editBatch.jlpt_level,
@@ -319,7 +303,7 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
       college_id: editBatch.mode === 'College' ? (editBatch.college_id || null) : null,
       meeting_link: editBatch.mode === 'Online' ? (editBatch.meeting_link?.trim() || null) : null,
     }
-    await supabase.from('batches').update(updates).eq('id', editBatch.id)
+    await updateBatch(editBatch.id, updates)
     setBatches(prev => prev.map(b => b.id === editBatch.id ? { ...b, ...updates } : b))
     setEditBatch(null)
     setLoading(false)
@@ -327,8 +311,7 @@ export default function BatchesClient({ initialBatches, teachers, colleges }: { 
 
   async function handleDelete(id: string) {
     if (!confirm('Delete this batch?')) return
-    const supabase = createClient()
-    await supabase.from('batches').delete().eq('id', id)
+    await deleteBatch(id)
     setBatches(prev => prev.filter(b => b.id !== id))
   }
 
