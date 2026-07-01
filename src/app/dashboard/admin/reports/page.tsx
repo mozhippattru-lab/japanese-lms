@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import DataToolbar from '@/components/DataToolbar'
 import { Users, DollarSign, CalendarCheck, TrendingUp } from 'lucide-react'
@@ -16,28 +17,18 @@ function fmt(n: number) {
 }
 
 export default async function ReportsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'admin') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('admin')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
   const now = new Date()
 
-  const [
-    { data: students },
-    { data: payments },
-    { data: invoices },
-    { data: sessions },
-    { data: batches },
-    { data: collegePayments },
-  ] = await Promise.all([
-    supabase.from('profiles').select('id, jlpt_level, status, created_at, college_id').eq('role', 'student'),
-    supabase.from('payments').select('id, amount, payment_date'),
-    supabase.from('invoices').select('id, amount, status'),
-    supabase.from('attendance_sessions').select('id, batch_id, total_present, total_absent, total_late, session_date').order('session_date', { ascending: false }),
-    supabase.from('batches').select('id, name, jlpt_level, enrolled, capacity, status, mode'),
-    supabase.from('college_payments').select('id, amount, payment_date'),
+  const [students, payments, invoices, sessions, batches, collegePayments] = await Promise.all([
+    sql`select id, jlpt_level, status, created_at, college_id from profiles where role = 'student'`,
+    sql`select id, amount, payment_date from payments`,
+    sql`select id, amount, status from invoices`,
+    sql`select id, batch_id, total_present, total_absent, total_late, session_date from attendance_sessions order by session_date desc`,
+    sql`select id, name, jlpt_level, enrolled, capacity, status, mode from batches`,
+    sql`select id, amount, payment_date from college_payments`,
   ])
 
   const totalStudents = students?.length || 0
@@ -86,7 +77,7 @@ export default async function ReportsPage() {
   const maxCount = Math.max(...months.map(m => m.count), 1)
   const maxAmount = Math.max(...months.map(m => m.amount), 1)
 
-  const batchStats = (batches || []).map(b => {
+  const batchStats: any[] = (batches as Record<string, any>[]).map(b => {
     const bs = sessions?.filter(s => s.batch_id === b.id) || []
     const present = bs.reduce((s, sess) => s + (sess.total_present || 0), 0)
     const total = bs.reduce((s, sess) => s + (sess.total_present || 0) + (sess.total_absent || 0) + (sess.total_late || 0), 0)

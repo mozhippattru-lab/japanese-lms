@@ -1,29 +1,22 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import TeachersClient from './TeachersClient'
 import { DashStyles } from '@/components/DashboardKit'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default async function TeachersPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const user = await requireRole('admin')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'admin') redirect(`/dashboard/${profile?.role || 'student'}`)
-
-  const { data: teachers } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('role', 'teacher')
-    .order('created_at', { ascending: false })
+  const teachers = await sql`select * from profiles where role = 'teacher' order by created_at desc`
 
   return (
     <div className="dash-shell">
       <Sidebar role="admin" userName={profile?.full_name || user.email || 'Admin'} />
       <main className="dash-main">
         <DashStyles />
-        <TeachersClient initialTeachers={teachers || []} />
+        <TeachersClient initialTeachers={teachers as any[]} />
       </main>
     </div>
   )
