@@ -4,9 +4,10 @@ import { useState } from 'react'
 import Link from 'next/link'
 import {
   Menu, X, ArrowRight, ArrowUpRight, Check, Phone, Mail, MapPin, BookOpen,
-  CheckCircle2, AlertCircle,
+  CheckCircle2, AlertCircle, Plus, Minus,
 } from 'lucide-react'
 import KanaClock from './KanaClock'
+import { FAQ } from '@/lib/seo'
 
 // ─── Brand ──────────────────────────────────────────────────────────────────
 const TAMIL = 'மொழிப்பற்று'
@@ -78,6 +79,7 @@ export default function Landing() {
             <a href="#courses" onClick={() => setMenuOpen(false)}>Courses</a>
             <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
             <a href="#why" onClick={() => setMenuOpen(false)}>Why Us</a>
+            <a href="#faq" onClick={() => setMenuOpen(false)}>FAQ</a>
             <a href="#donate" onClick={() => setMenuOpen(false)}>Donate</a>
             <Link href="/login" className="lp-nav-login" onClick={() => setMenuOpen(false)}>Login</Link>
             <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>Free Demo</a>
@@ -540,6 +542,20 @@ export default function Landing() {
             <DemoForm />
           </div>
         </section>
+
+        {/* ─── FAQ ─────────────────────────────── */}
+        <section id="faq" className="lp-section lp-section-paper">
+          <div className="lp-container">
+            <div className="lp-section-head">
+              <SectionTag ta="அடிக்கடி கேட்கப்படும் கேள்விகள்" jp="よくある質問">FAQ</SectionTag>
+              <h2 className="lp-h2">Questions, answered.</h2>
+              <p className="lp-lead">Everything you need to know before you begin.</p>
+            </div>
+            <div className="lp-faq">
+              {FAQ.map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* ─── Footer ──────────────────────────── */}
@@ -600,6 +616,21 @@ function SectionTag({ children, ta, jp, light }: { children: React.ReactNode; ta
       {ta && <span className="lp-tag-ta">{ta}</span>}
       <span className="lp-tag-main">{children}</span>
       {jp && <span className="lp-tag-jp">{jp}</span>}
+    </div>
+  )
+}
+
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className={`lp-faq-item ${open ? 'open' : ''}`}>
+      <button className="lp-faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
+        <span>{q}</span>
+        {open ? <Minus size={18} /> : <Plus size={18} />}
+      </button>
+      <div className="lp-faq-a" style={{ maxHeight: open ? '320px' : '0' }}>
+        <p>{a}</p>
+      </div>
     </div>
   )
 }
@@ -988,6 +1019,18 @@ function LandingStyles() {
       .lp-p strong { color: var(--ink); }
       .lp-p-light { color: rgba(255,255,255,0.72); }
       .lp-lead { font-size: 17px; line-height: 1.7; color: var(--ink-soft); }
+
+      /* FAQ */
+      .lp-faq { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+      .lp-faq-item { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+        transition: border-color 180ms ease, box-shadow 180ms ease; }
+      .lp-faq-item.open { border-color: var(--gold-soft); box-shadow: 0 6px 22px rgba(40,32,20,0.06); }
+      .lp-faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        background: none; border: none; cursor: pointer; padding: 18px 22px; text-align: left;
+        font-family: inherit; font-size: 15.5px; font-weight: 600; color: var(--ink); line-height: 1.5; }
+      .lp-faq-q svg { flex-shrink: 0; color: var(--red); }
+      .lp-faq-a { overflow: hidden; transition: max-height 260ms ease; }
+      .lp-faq-a p { margin: 0; padding: 0 22px 20px; font-size: 14.5px; line-height: 1.7; color: var(--ink-soft); }
 
       /* About */
       .lp-about { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
