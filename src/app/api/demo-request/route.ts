@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { sql } from '@/lib/db'
 
 // Public endpoint — anyone on the marketing site can request a free demo class.
-// Uses the service-role client so the insert bypasses the admin-only RLS on `leads`.
 // Each request lands in the CRM (Admin → CRM/Leads) as a "New" lead, source "Website".
 
 const VALID_LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1', 'Package']
@@ -43,18 +42,12 @@ export async function POST(req: Request) {
     message ? `Message: ${message}` : null,
   ].filter(Boolean).join('\n')
 
-  const supabase = createAdminClient()
-  const { error } = await supabase.from('leads').insert({
-    full_name,
-    phone,
-    email: email || null,
-    source: 'Website',
-    interested_level,
-    status: 'New',
-    notes,
-  })
-
-  if (error) {
+  try {
+    await sql`
+      insert into leads (full_name, phone, email, source, interested_level, status, notes)
+      values (${full_name}, ${phone}, ${email || null}, 'Website', ${interested_level}, 'New', ${notes})
+    `
+  } catch {
     return NextResponse.json({ error: 'Could not submit your request. Please try again.' }, { status: 500 })
   }
 

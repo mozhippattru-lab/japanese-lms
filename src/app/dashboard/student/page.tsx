@@ -1,38 +1,25 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
 import { Reveal, Stagger, StaggerItem } from '@/components/motion/Motion'
 import { BookOpen, CalendarCheck, ClipboardList, Target, Clock } from 'lucide-react'
 
 export default async function StudentDashboard() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const user = await requireRole('student')
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'student') redirect(`/dashboard/${profile?.role || 'student'}`)
-
-  // Access control check
-  const db = createAdminClient()
-  const { data: settings } = await db.from('app_settings').select('student_login_blocked, maintenance_mode').eq('id', 'default').single()
-  if (settings?.student_login_blocked || settings?.maintenance_mode) redirect('/blocked')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
   const name = profile?.full_name || user.email || 'Student'
   const firstName = name.split(' ')[0]
   const level = profile?.jlpt_level || 'N5'
   const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
 
-  // Fetch real student data (RLS scoped to own rows)
-  const [
-    { data: attendanceRows },
-    { data: pendingSubmissions },
-    { data: assignments },
-  ] = await Promise.all([
-    supabase.from('attendance_records').select('status').eq('student_id', user.id),
-    supabase.from('assignment_submissions').select('id').eq('student_id', user.id).is('graded_at', null),
-    supabase.from('assignments').select('id, title, due_date').order('due_date', { ascending: true }).limit(5),
+  // Fetch real student data
+  const [attendanceRows, pendingSubmissions, assignments] = await Promise.all([
+    sql`select status from attendance_records where student_id = ${user.id}`,
+    sql`select id from assignment_submissions where student_id = ${user.id} and graded_at is null`,
+    sql`select id, title, due_date from assignments order by due_date asc limit 5`,
   ])
 
   // Mock test scores are not tracked in the database yet — show as empty.

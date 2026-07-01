@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { DashStyles, CardHead, Kpi } from '@/components/DashboardKit'
 import { Reveal, Stagger, StaggerItem } from '@/components/motion/Motion'
@@ -11,43 +10,32 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default async function TeacherDashboard() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const user = await requireRole('teacher')
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
-
-  // Access control check
-  const { data: settings } = await createAdminClient().from('app_settings').select('teacher_login_blocked, maintenance_mode').eq('id', 'default').single()
-  if (settings?.teacher_login_blocked || settings?.maintenance_mode) redirect('/blocked')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
   const name = profile?.full_name || user.email || 'Teacher'
   const firstName = name.split(' ')[0]
   const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
 
   // Teacher's batches and related data
-  const db = createAdminClient()
-  const [
-    { data: myBatches },
-    { data: pendingSubmissions },
-  ] = await Promise.all([
-    db.from('batches').select('id, name, jlpt_level, status, time_slot, days').eq('teacher_id', user.id),
-    db.from('assignment_submissions').select('id, student_id, assignment_id, status, submitted_at').is('graded_at', null).order('submitted_at', { ascending: false }).limit(5),
+  const [myBatches, pendingSubmissions] = await Promise.all([
+    sql`select id, name, jlpt_level, status, time_slot, days from batches where teacher_id = ${user.id}`,
+    sql`select id, student_id, assignment_id, status, submitted_at from assignment_submissions where graded_at is null order by submitted_at desc limit 5`,
   ])
 
-  const activeBatches = (myBatches || []).filter(b => b.status === 'Active')
+  const activeBatches = myBatches.filter(b => b.status === 'Active')
 
   // Student count across the teacher's active batches (via enrollments)
   let studentCount = 0
   if (activeBatches.length > 0) {
     const batchIds = activeBatches.map(b => b.id)
-    const { data: enr } = await db.from('student_batches').select('student_id').in('batch_id', batchIds).eq('status', 'Active')
-    studentCount = new Set((enr || []).map(e => e.student_id)).size
+    const enr = await sql`select student_id from student_batches where batch_id = any(${batchIds}) and status = 'Active'`
+    studentCount = new Set(enr.map(e => e.student_id)).size
   }
 
-  // Pending grade count — submissions linked to assignments in teacher's batches
-  const pendingGradeCount = pendingSubmissions?.length ?? 0
+  // Pending grade count
+  const pendingGradeCount = pendingSubmissions.length
 
   return (
     <div className="dash-shell">

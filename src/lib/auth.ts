@@ -80,6 +80,27 @@ export async function requireUser(role?: string | string[]): Promise<SessionUser
   return user
 }
 
+// Guard a role dashboard: require the session, enforce the role, and apply the
+// access-control flags from app_settings (redirecting to /blocked when set).
+// Admins are never blocked.
+export async function requireRole(role: 'student' | 'teacher' | 'admin'): Promise<SessionUser> {
+  const user = await getSessionUser()
+  if (!user) redirect('/login')
+  if (user.role !== role) redirect(`/dashboard/${user.role || 'student'}`)
+
+  if (role !== 'admin') {
+    const rows = await sql<{ student_login_blocked: boolean; teacher_login_blocked: boolean; maintenance_mode: boolean }[]>`
+      select student_login_blocked, teacher_login_blocked, maintenance_mode
+      from app_settings where id = 'default' limit 1
+    `
+    const s = rows[0]
+    if (s?.maintenance_mode) redirect('/blocked')
+    if (role === 'student' && s?.student_login_blocked) redirect('/blocked')
+    if (role === 'teacher' && s?.teacher_login_blocked) redirect('/blocked')
+  }
+  return user
+}
+
 // Purge expired sessions (call opportunistically, e.g. on login).
 export async function pruneExpiredSessions(): Promise<void> {
   await sql`delete from sessions where expires_at < now()`
