@@ -1,6 +1,6 @@
 'use client'
 import { useState, type ReactNode } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import * as courseApi from './actions'
 import {
   BookOpen, CheckCircle2, FileText, Users, Plus, Pencil, X,
   Video, FileText as FileReading, ClipboardList, Target, Headphones,
@@ -115,22 +115,11 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
   async function openCourse(course: Course) {
     setActiveCourse(course)
     setContentLoading(true)
-    const supabase = createClient()
-    const { data: mods } = await supabase
-      .from('course_modules')
-      .select('*')
-      .eq('course_id', course.id)
-      .order('order_index')
-    const modList = mods || []
+    const { modules: modList, lessons: lsns } = await courseApi.loadCourseContent(course.id)
     setModules(modList)
     if (modList.length > 0) {
-      const { data: lsns } = await supabase
-        .from('lessons')
-        .select('*')
-        .eq('course_id', course.id)
-        .order('order_index')
       const grouped: Record<string, Lesson[]> = {}
-      for (const l of (lsns || [])) {
+      for (const l of lsns) {
         if (!grouped[l.module_id]) grouped[l.module_id] = []
         grouped[l.module_id].push(l)
       }
@@ -144,15 +133,13 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
   async function addCourse(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const supabase = createClient()
-    const { data } = await supabase.from('courses').insert({
+    const { row: data } = await courseApi.createCourse({
       title: courseForm.title,
       jlpt_level: courseForm.jlpt_level,
       description: courseForm.description || null,
       duration_weeks: courseForm.duration_weeks,
       status: courseForm.status,
-      enrolled_count: 0,
-    }).select().single()
+    })
     if (data) setCourses(prev => [data, ...prev])
     setShowAdd(false)
     setCourseForm(emptyCourseForm)
@@ -163,7 +150,6 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
     e.preventDefault()
     if (!editCourse) return
     setLoading(true)
-    const supabase = createClient()
     const updates = {
       title: editCourse.title,
       jlpt_level: editCourse.jlpt_level,
@@ -171,7 +157,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
       duration_weeks: editCourse.duration_weeks,
       status: editCourse.status,
     }
-    await supabase.from('courses').update(updates).eq('id', editCourse.id)
+    await courseApi.updateCourse(editCourse.id, updates)
     setCourses(prev => prev.map(c => c.id === editCourse.id ? { ...c, ...updates } : c))
     setEditCourse(null)
     setLoading(false)
@@ -179,8 +165,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
 
   async function deleteCourse(id: string) {
     if (!confirm('Delete this course and all its content?')) return
-    const supabase = createClient()
-    await supabase.from('courses').delete().eq('id', id)
+    await courseApi.deleteCourse(id)
     setCourses(prev => prev.filter(c => c.id !== id))
   }
 
@@ -189,12 +174,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
     e.preventDefault()
     if (!activeCourse || !moduleTitle.trim()) return
     setLoading(true)
-    const supabase = createClient()
-    const { data } = await supabase.from('course_modules').insert({
-      course_id: activeCourse.id,
-      title: moduleTitle.trim(),
-      order_index: modules.length,
-    }).select().single()
+    const { row: data } = await courseApi.createModule(activeCourse.id, moduleTitle.trim(), modules.length)
     if (data) {
       setModules(prev => [...prev, data])
       setExpandedMods(prev => new Set([...prev, data.id]))
@@ -209,8 +189,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
     e.preventDefault()
     if (!editModule) return
     setLoading(true)
-    const supabase = createClient()
-    await supabase.from('course_modules').update({ title: editModule.title }).eq('id', editModule.id)
+    await courseApi.updateModule(editModule.id, editModule.title)
     setModules(prev => prev.map(m => m.id === editModule.id ? { ...m, title: editModule.title } : m))
     setEditModule(null)
     setLoading(false)
@@ -218,8 +197,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
 
   async function deleteModule(id: string) {
     if (!confirm('Delete this module and all its lessons?')) return
-    const supabase = createClient()
-    await supabase.from('course_modules').delete().eq('id', id)
+    await courseApi.deleteModule(id)
     setModules(prev => prev.filter(m => m.id !== id))
     setLessons(prev => { const n = { ...prev }; delete n[id]; return n })
   }
@@ -229,8 +207,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
     e.preventDefault()
     if (!activeCourse || !addLessonModId) return
     setLoading(true)
-    const supabase = createClient()
-    const { data } = await supabase.from('lessons').insert({
+    const { row: data } = await courseApi.createLesson({
       module_id: addLessonModId,
       course_id: activeCourse.id,
       title: lessonForm.title,
@@ -238,7 +215,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
       duration_minutes: Number(lessonForm.duration_minutes),
       order_index: (lessons[addLessonModId] || []).length,
       content_url: lessonForm.content_url || null,
-    }).select().single()
+    })
     if (data) {
       setLessons(prev => ({ ...prev, [addLessonModId]: [...(prev[addLessonModId] || []), data] }))
     }
@@ -251,14 +228,13 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
     e.preventDefault()
     if (!editLesson) return
     setLoading(true)
-    const supabase = createClient()
     const updates = {
       title: editLesson.title,
       lesson_type: editLesson.lesson_type,
       duration_minutes: editLesson.duration_minutes,
       content_url: editLesson.content_url,
     }
-    await supabase.from('lessons').update(updates).eq('id', editLesson.id)
+    await courseApi.updateLesson(editLesson.id, updates)
     setLessons(prev => ({
       ...prev,
       [editLesson.module_id]: (prev[editLesson.module_id] || []).map(l =>
@@ -271,8 +247,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
 
   async function deleteLesson(lesson: Lesson) {
     if (!confirm('Delete this lesson?')) return
-    const supabase = createClient()
-    await supabase.from('lessons').delete().eq('id', lesson.id)
+    await courseApi.deleteLesson(lesson.id)
     setLessons(prev => ({
       ...prev,
       [lesson.module_id]: (prev[lesson.module_id] || []).filter(l => l.id !== lesson.id),
