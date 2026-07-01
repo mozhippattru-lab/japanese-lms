@@ -48,12 +48,12 @@ export default function OpengraphImage() {
         </div>
 
         {/* Headline */}
-        <div style={{ fontSize: '68px', color: '#fff', fontWeight: 800, lineHeight: 1.1, maxWidth: '900px' }}>
+        <div style={{ display: 'flex', fontSize: '68px', color: '#fff', fontWeight: 800, lineHeight: 1.1, maxWidth: '900px' }}>
           Learn Japanese for JLPT N5 · N4 · N3
         </div>
 
-        <div style={{ fontSize: '32px', color: 'rgba(255,255,255,0.72)', marginTop: '28px' }}>
-          N1-certified teachers · Online &amp; across India · Free demo class
+        <div style={{ display: 'flex', fontSize: '32px', color: 'rgba(255,255,255,0.72)', marginTop: '28px' }}>
+          N1-certified teachers · Online and across India · Free demo class
         </div>
 
         {/* Bottom accent */}
@@ -76,7 +76,7 @@ export default function OpengraphImage() {
                 fontWeight: 700,
               }}
             >
-              JLPT {l}
+              {`JLPT ${l}`}
             </div>
           ))}
         </div>
