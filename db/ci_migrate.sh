@@ -100,6 +100,8 @@ SELECT id,email,encrypted_password,created_at FROM _u
 ON CONFLICT (id) DO NOTHING;
 SQL
   "$PG_DUMP" "$SUPABASE_DB_URL" --schema=public --no-owner --no-privileges --no-comments -f /tmp/public_dump.sql
+  # Strip PG17-only session GUCs the local PG16 server doesn't recognize.
+  sed -i -E '/^SET (transaction_timeout|idle_session_timeout)/d' /tmp/public_dump.sql
   psql "$LOCAL_DB_URL" -v ON_ERROR_STOP=1 -f /tmp/public_dump.sql
   echo "== 6/6  App columns + roll-number helper (002) =="
   psql "$LOCAL_DB_URL" -v ON_ERROR_STOP=1 -f db/002_app_columns.sql
