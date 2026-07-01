@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createLead, updateLead, setLeadStatus, deleteLead as deleteLeadAction } from './actions'
 import {
   Search, Plus, Eye, Pencil, X, AlertCircle, Eye as EyeIcon, EyeOff,
   Phone, Mail, Calendar, ChevronRight, UserCheck, UserX, Clock,
@@ -256,15 +256,14 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true); setError('')
-    const supabase = createClient()
     const payload = {
       full_name: form.full_name, email: form.email || null, phone: form.phone || null,
       source: form.source, interested_level: form.interested_level,
       status: form.status, notes: form.notes || null,
       follow_up_date: form.follow_up_date || null,
     }
-    const { data, error: err } = await supabase.from('leads').insert(payload).select().single()
-    if (err) { setError(err.message); setLoading(false); return }
+    const { lead: data, error: err } = await createLead(payload)
+    if (err || !data) { setError(err || 'Create failed'); setLoading(false); return }
     setLeads(prev => [data, ...prev])
     setShowAdd(false); setForm({ ...EMPTY_FORM })
     toast('Lead added', 'success')
@@ -275,14 +274,13 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
     e.preventDefault()
     if (!editLead) return
     setLoading(true)
-    const supabase = createClient()
     const payload = {
       full_name: editLead.full_name, email: editLead.email, phone: editLead.phone,
       source: editLead.source, interested_level: editLead.interested_level,
       status: editLead.status, notes: editLead.notes,
       follow_up_date: editLead.follow_up_date,
     }
-    const { error: err } = await supabase.from('leads').update(payload).eq('id', editLead.id)
+    const { error: err } = await updateLead(editLead.id, payload)
     if (!err) {
       setLeads(prev => prev.map(l => l.id === editLead.id ? { ...l, ...payload } : l))
       toast('Lead updated', 'success')
@@ -293,10 +291,9 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
   async function advanceStatus(lead: Lead) {
     const next = NEXT_STATUS[lead.status]
     if (!next) return
-    const supabase = createClient()
     const update: Partial<Lead> = { status: next }
     if (next === 'Enrolled') update.converted_at = new Date().toISOString()
-    await supabase.from('leads').update(update).eq('id', lead.id)
+    await setLeadStatus(lead.id, next, update.converted_at)
     setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, ...update } : l))
     if (viewLead?.id === lead.id) setViewLead(l => l ? { ...l, ...update } : l)
     toast(`Moved to ${next}`, 'success')
@@ -304,8 +301,7 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
 
   async function markLost(lead: Lead) {
     if (!confirm(`Mark "${lead.full_name}" as Lost?`)) return
-    const supabase = createClient()
-    await supabase.from('leads').update({ status: 'Lost' }).eq('id', lead.id)
+    await setLeadStatus(lead.id, 'Lost')
     setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status: 'Lost' } : l))
     if (viewLead?.id === lead.id) setViewLead(l => l ? { ...l, status: 'Lost' } : l)
     toast('Lead marked as Lost', 'info')
@@ -331,11 +327,8 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
     const json = await res.json()
     if (!res.ok) { setError(json.error || 'Failed to convert lead'); setLoading(false); return }
     const studentId = json.student?.id
-    const supabase = createClient()
     const convertedAt = new Date().toISOString()
-    await supabase.from('leads').update({
-      status: 'Enrolled', converted_at: convertedAt, converted_student_id: studentId,
-    }).eq('id', convertLead.id)
+    await setLeadStatus(convertLead.id, 'Enrolled', convertedAt, studentId)
     setLeads(prev => prev.map(l => l.id === convertLead!.id ? { ...l, status: 'Enrolled', converted_at: convertedAt, converted_student_id: studentId } : l))
     toast(`${convertLead.full_name} is now a student!`, 'success')
     setConvertLead(null); setConvertPw(''); setLoading(false)
@@ -343,8 +336,7 @@ export default function CRMClient({ initialLeads }: { initialLeads: Lead[] }) {
 
   async function deleteLead(id: string, name: string) {
     if (!confirm(`Delete lead "${name}"? This cannot be undone.`)) return
-    const supabase = createClient()
-    await supabase.from('leads').delete().eq('id', id)
+    await deleteLeadAction(id)
     setLeads(prev => prev.filter(l => l.id !== id))
     toast('Lead deleted', 'info')
   }
