@@ -43,6 +43,16 @@ sudo -u postgres psql -tc "SELECT 1 FROM pg_database WHERE datname='${DB_NAME}'"
 
 LOCAL_DB_URL="postgres://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}"
 
+echo "== 2b   Ensuring Supabase stub roles (superuser) =="
+# Roles are cluster-global; the dumped RLS policies reference them `TO ...`.
+sudo -u postgres psql -v ON_ERROR_STOP=1 <<'SQL'
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='anon')          THEN CREATE ROLE anon NOLOGIN;          END IF;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='authenticated') THEN CREATE ROLE authenticated NOLOGIN; END IF;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='service_role')  THEN CREATE ROLE service_role NOLOGIN;  END IF;
+END $$;
+SQL
+
 echo "== 3/6  Writing .env (DATABASE_URL, SESSION_SECRET) =="
 touch "$ENV_FILE"
 grep -q '^DATABASE_URL='   "$ENV_FILE" || echo "DATABASE_URL=${LOCAL_DB_URL}"        >> "$ENV_FILE"
