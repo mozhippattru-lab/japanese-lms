@@ -27,7 +27,13 @@ export async function proxy(request: NextRequest) {
 
   // Pages/endpoints reachable without logging in (landing + the whole auth flow).
   const PUBLIC_PREFIXES = ['/login', '/register', '/forgot-password', '/reset-password', '/privacy', '/terms', '/api/auth']
-  const isPublic = pathname === '/' || PUBLIC_PREFIXES.some(p => pathname.startsWith(p))
+  // SEO / crawler files must never redirect to login.
+  const PUBLIC_EXACT = ['/sitemap.xml', '/robots.txt', '/manifest.webmanifest', '/opengraph-image', '/twitter-image', '/favicon.ico']
+  const isPublic =
+    pathname === '/' ||
+    PUBLIC_EXACT.includes(pathname) ||
+    pathname.startsWith('/opengraph-image') ||
+    PUBLIC_PREFIXES.some(p => pathname.startsWith(p))
 
   // Redirect unauthenticated users to login
   if (!user && !isPublic) {
