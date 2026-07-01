@@ -1,6 +1,6 @@
 'use client'
 import { useState, type ReactNode } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import * as fin from './actions'
 import {
   CheckCircle2, Clock, AlertTriangle, Receipt, Plus, Check,
   LayoutDashboard, DollarSign, Banknote, Smartphone, Landmark,
@@ -244,16 +244,14 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
   async function createInvoice(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const supabase = createClient()
-    const { data } = await supabase.from('invoices').insert({
+    const { row: data } = await fin.createInvoice({
       student_id: cf.studentId,
       batch_id: cf.batchId || null,
       fee_structure_id: cf.feeId || null,
       amount: Number(cf.amount),
       due_date: cf.dueDate,
-      status: 'Pending',
       description: cf.description || null,
-    }).select().single()
+    })
     if (data) setInvoices(prev => [data, ...prev])
     setShowCreate(false)
     setCf(emptyCF)
@@ -264,8 +262,7 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
     e.preventDefault()
     if (!payingInv) return
     setLoading(true)
-    const supabase = createClient()
-    await supabase.from('payments').insert({
+    await fin.recordPayment({
       invoice_id: payingInv.id,
       student_id: payingInv.student_id,
       amount: Number(pf.amount),
@@ -274,7 +271,6 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
       reference_number: pf.reference || null,
       notes: pf.notes || null,
     })
-    await supabase.from('invoices').update({ status: 'Paid' }).eq('id', payingInv.id)
     setInvoices(prev => prev.map(i => i.id === payingInv.id ? { ...i, status: 'Paid' } : i))
 
     // Send congratulation email (fire-and-forget — doesn't block the UI)
@@ -300,14 +296,12 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
 
   async function cancelInvoice(id: string) {
     if (!confirm('Cancel this invoice?')) return
-    const supabase = createClient()
-    await supabase.from('invoices').update({ status: 'Cancelled' }).eq('id', id)
+    await fin.setInvoiceStatus(id, 'Cancelled')
     setInvoices(prev => prev.map(i => i.id === id ? { ...i, status: 'Cancelled' } : i))
   }
 
   async function markOverdue(id: string) {
-    const supabase = createClient()
-    await supabase.from('invoices').update({ status: 'Overdue' }).eq('id', id)
+    await fin.setInvoiceStatus(id, 'Overdue')
     setInvoices(prev => prev.map(i => i.id === id ? { ...i, status: 'Overdue' } : i))
   }
 
@@ -315,15 +309,13 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
   async function addFee(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const supabase = createClient()
-    const { data } = await supabase.from('fee_structures').insert({
+    const { row: data } = await fin.createFee({
       name: ff.name,
       jlpt_level: ff.jlpt_level || null,
       amount: Number(ff.amount),
       frequency: ff.frequency,
       description: ff.description || null,
-      is_active: true,
-    }).select().single()
+    })
     if (data) setFees(prev => [data, ...prev])
     setShowAddFee(false)
     setFf(emptyFF)
@@ -334,9 +326,8 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
     e.preventDefault()
     if (!editFee) return
     setLoading(true)
-    const supabase = createClient()
     const updates = { name: editFee.name, jlpt_level: editFee.jlpt_level, amount: editFee.amount, frequency: editFee.frequency, description: editFee.description }
-    await supabase.from('fee_structures').update(updates).eq('id', editFee.id)
+    await fin.updateFee(editFee.id, updates)
     setFees(prev => prev.map(f => f.id === editFee.id ? { ...f, ...updates } : f))
     setEditFee(null)
     setLoading(false)
@@ -344,14 +335,12 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
 
   async function deleteFee(id: string) {
     if (!confirm('Delete this fee structure?')) return
-    const supabase = createClient()
-    await supabase.from('fee_structures').delete().eq('id', id)
+    await fin.deleteFee(id)
     setFees(prev => prev.filter(f => f.id !== id))
   }
 
   async function toggleFeeActive(fee: FeeStructure) {
-    const supabase = createClient()
-    await supabase.from('fee_structures').update({ is_active: !fee.is_active }).eq('id', fee.id)
+    await fin.toggleFee(fee.id, !fee.is_active)
     setFees(prev => prev.map(f => f.id === fee.id ? { ...f, is_active: !f.is_active } : f))
   }
 
@@ -359,17 +348,16 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
   async function addExpense(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const supabase = createClient()
-    const { data, error } = await supabase.from('expenses').insert({
+    const { row: data, error } = await fin.createExpense({
       title: ef.title,
       category: ef.category,
       amount: Number(ef.amount),
       expense_date: ef.date,
       payment_method: ef.method,
       notes: ef.notes || null,
-    }).select().single()
+    })
     setLoading(false)
-    if (error) { alert('Could not save expense: ' + error.message); return }
+    if (error) { alert('Could not save expense: ' + error); return }
     if (data) setExpenses(prev => [data, ...prev])
     setShowAddExpense(false)
     setEf(emptyEF)
@@ -377,8 +365,7 @@ export default function FinanceClient({ initialInvoices, initialFees, students, 
 
   async function deleteExpense(id: string) {
     if (!confirm('Delete this expense?')) return
-    const supabase = createClient()
-    await supabase.from('expenses').delete().eq('id', id)
+    await fin.deleteExpense(id)
     setExpenses(prev => prev.filter(x => x.id !== id))
   }
 
