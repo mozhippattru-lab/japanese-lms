@@ -28,7 +28,10 @@ jobs:
             cd /var/www/japanese-lms
 
             echo "── Pulling latest code..."
-            git checkout -- package-lock.json 2>/dev/null || true
+            # Next.js rewrites tsconfig.json (and npm rewrites package-lock.json)
+            # during builds, leaving the server's working tree dirty. Discard
+            # those local edits so `git pull` never aborts on a merge conflict.
+            git checkout -- package-lock.json tsconfig.json 2>/dev/null || true
             git pull origin main
 
             echo "── Installing dependencies..."
