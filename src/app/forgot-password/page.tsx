@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { AlertCircle, MailCheck, ArrowLeft } from 'lucide-react'
 
 export default function ForgotPasswordPage() {
@@ -12,12 +11,15 @@ export default function ForgotPasswordPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     setStatus('loading'); setError('')
-    const supabase = createClient()
-    // Email is sent via Supabase's configured Resend SMTP. The recovery
-    // template builds a token_hash link to /reset-password, which the page
-    // verifies with verifyOtp (no PKCE / redirect-allowlist issues).
-    const { error } = await supabase.auth.resetPasswordForEmail(email.trim())
-    if (error) { setError(error.message); setStatus('error'); return }
+    const res = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.trim() }),
+    })
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}))
+      setError(d.error || 'Something went wrong. Please try again.'); setStatus('error'); return
+    }
     setStatus('sent')
   }
 

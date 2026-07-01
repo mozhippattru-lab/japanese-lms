@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { Eye, EyeOff, AlertCircle } from 'lucide-react'
 
 const PETALS = [
@@ -37,14 +36,15 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    const supabase = createClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
-    if (authError) { setError(authError.message); setLoading(false); return }
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-      router.push(`/dashboard/${profile?.role || 'student'}`)
-    }
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) { setError(data.error || 'Login failed'); setLoading(false); return }
+    router.push(`/dashboard/${data.role || 'student'}`)
+    router.refresh()
   }
 
   return (

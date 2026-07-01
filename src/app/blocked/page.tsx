@@ -50,7 +50,7 @@ export default async function BlockedPage() {
           </div>
         </div>
 
-        <form action="/api/auth/signout" method="POST">
+        <form action="/api/auth/logout" method="POST">
           <button type="submit" style={{
             padding: '12px 28px', background: 'var(--red, #e84040)', color: '#fff',
             border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 600,

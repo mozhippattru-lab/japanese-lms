@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen, Calendar,
   ClipboardList, DollarSign, Target, BarChart2, Settings,
@@ -105,9 +104,9 @@ export default function Sidebar({ role, userName }: { role: string; userName: st
   useEffect(() => { setOpen(false) }, [pathname])
 
   async function handleLogout() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/login')
+    router.refresh()
   }
 
   return (

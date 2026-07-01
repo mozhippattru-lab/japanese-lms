@@ -39,6 +39,31 @@ export async function sendPaymentConfirmation({
   })
 }
 
+export async function sendPasswordReset({ to, url }: { to: string; url: string }) {
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: 'Reset your password — Mozhippattru Japanese School',
+    html: `
+      <div style="font-family:Georgia,serif;max-width:540px;margin:0 auto;padding:32px;color:#1a2340;">
+        <h2 style="color:#1a2340;margin-bottom:4px;">Reset your password</h2>
+        <hr style="border:none;border-top:1px solid #e8e0d0;margin:20px 0;">
+        <p>We received a request to reset your Mozhippattru account password. Click the button below to choose a new one. This link expires in <strong>1 hour</strong>.</p>
+        <p style="text-align:center;margin:28px 0;">
+          <a href="${url}" style="display:inline-block;background:#e84040;color:#fff;text-decoration:none;padding:12px 28px;border-radius:10px;font-weight:700;">Reset password</a>
+        </p>
+        <p style="font-size:13px;color:#7a6a4a;">If the button doesn't work, copy this link into your browser:<br><a href="${url}" style="color:#2d7dd2;word-break:break-all;">${url}</a></p>
+        <p style="font-size:13px;color:#7a6a4a;">If you didn't request this, you can safely ignore this email — your password won't change.</p>
+        <hr style="border:none;border-top:1px solid #e8e0d0;margin:24px 0;">
+        <p style="font-size:12px;color:#9a8a6a;">
+          Mozhippattru Japanese Language School<br>
+          +91 90928 82957 · japanese.school@mozhippattru.org
+        </p>
+      </div>
+    `,
+  })
+}
+
 export async function sendWelcome({
   to,
   studentName,

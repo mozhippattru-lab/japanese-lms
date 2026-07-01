@@ -2,54 +2,38 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react'
 import { wrap, card, eyebrow, title, sub, label, errBox, iconCircle, btn, authFieldCss } from '../forgot-password/page'
 
 export default function ResetPasswordPage() {
   const router = useRouter()
   const [ready, setReady] = useState<'checking' | 'ok' | 'invalid'>('checking')
+  const [token, setToken] = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [error, setError] = useState('')
 
-  // Establish the recovery session from the email link. We email a
-  // token_hash + type=recovery link (see /api/auth/send-reset) and verify it
-  // here — no PKCE code_verifier or hash-fragment parsing needed.
+  // Read the one-time token from the emailed link. Its validity is checked
+  // server-side on submit.
   useEffect(() => {
-    const supabase = createClient()
-    const params = new URLSearchParams(window.location.search)
-    const tokenHash = params.get('token_hash')
-    const type = params.get('type')
-
-    if (tokenHash && type === 'recovery') {
-      supabase.auth.verifyOtp({ type: 'recovery', token_hash: tokenHash })
-        .then(({ error }) => setReady(error ? 'invalid' : 'ok'))
-      return
-    }
-
-    // Fallbacks: PKCE ?code= or a session already present in the URL hash.
-    const code = params.get('code')
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code)
-        .then(({ error }) => setReady(error ? 'invalid' : 'ok'))
-      return
-    }
-    supabase.auth.getSession().then(({ data }) => setReady(data.session ? 'ok' : 'invalid'))
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') setReady('ok')
-    })
-    return () => sub.subscription.unsubscribe()
+    const t = new URLSearchParams(window.location.search).get('token')
+    if (t) { setToken(t); setReady('ok') } else { setReady('invalid') }
   }, [])
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     if (password.length < 6) { setError('Password must be at least 6 characters.'); setStatus('error'); return }
     setStatus('loading'); setError('')
-    const supabase = createClient()
-    const { error } = await supabase.auth.updateUser({ password })
-    if (error) { setError(error.message); setStatus('error'); return }
+    const res = await fetch('/api/auth/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, password }),
+    })
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}))
+      setError(d.error || 'Could not reset password.'); setStatus('error'); return
+    }
     setStatus('done')
     setTimeout(() => router.push('/login'), 1800)
   }

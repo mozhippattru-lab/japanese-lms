@@ -61,26 +61,16 @@ export default function RegisterPage() {
     if (!agreed) { setError('Please agree to the Privacy Policy and Terms to continue.'); return }
     setLoading(true)
     setError('')
-    const supabase = createClient()
-    // Public registration is always a student. Role is owned by the database
-    // (handle_new_user trigger); never trust a client-supplied role.
-    const { data, error: authError } = await supabase.auth.signUp({
-      email: form.email, password: form.password,
-      options: { data: { full_name: form.name } },
+    // Public registration is always a student — role is set server-side.
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: form.name, email: form.email, password: form.password, college_id: collegeId || null }),
     })
-    if (authError) { setError(authError.message); setLoading(false); return }
-    if (data.user) {
-      await supabase.from('profiles').upsert({ id: data.user.id, full_name: form.name, email: form.email })
-      if (collegeId) {
-        try {
-          await fetch('/api/college/join', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ college_id: collegeId }),
-          })
-        } catch { /* non-fatal */ }
-      }
-      router.push('/dashboard/student')
-    }
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) { setError(data.error || 'Registration failed'); setLoading(false); return }
+    router.push('/dashboard/student')
+    router.refresh()
   }
 
   const labelStyle: React.CSSProperties = { display: 'block', fontSize: '12px', fontWeight: '600', color: '#6b7280', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.05em' }
