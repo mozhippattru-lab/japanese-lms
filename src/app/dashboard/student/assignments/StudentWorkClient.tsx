@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { submitWork } from './actions'
 import {
   FileText, Clock, CheckCircle2, Calendar, GraduationCap, Award, Upload, AlertCircle,
 } from 'lucide-react'
@@ -23,8 +23,8 @@ function isOverdue(d: string | null) {
 }
 
 export default function StudentWorkClient({
-  kind, studentId, initialItems,
-}: { kind: 'Assignment' | 'Test'; studentId: string; initialItems: StudentWorkItem[] }) {
+  kind, initialItems,
+}: { kind: 'Assignment' | 'Test'; studentId?: string; initialItems: StudentWorkItem[] }) {
   const { toasts, toast, remove } = useToast()
   const [items, setItems] = useState<StudentWorkItem[]>(initialItems)
   const [active, setActive] = useState<StudentWorkItem | null>(null)
@@ -53,21 +53,8 @@ export default function StudentWorkClient({
     if (!active) return
     if (!answer.trim()) { toast('Write your answer before submitting', 'error'); return }
     setSaving(true)
-    const supabase = createClient()
-    const payload = {
-      assignment_id: active.id,
-      student_id: studentId,
-      content: answer.trim(),
-      status: 'Submitted',
-      submitted_at: new Date().toISOString(),
-    }
-    const { data, error } = await supabase
-      .from('assignment_submissions')
-      .upsert(payload, { onConflict: 'assignment_id,student_id' })
-      .select()
-      .single()
-    if (error) { toast(error.message, 'error'); setSaving(false); return }
-    const sub = data as { id: string; submitted_at: string }
+    const { data: sub, error } = await submitWork(active.id, answer.trim()).then(r => ({ data: r.submission, error: r.error }))
+    if (error || !sub) { toast(error || 'Submit failed', 'error'); setSaving(false); return }
     setItems(prev => prev.map(i => i.id === active.id ? {
       ...i, submission_id: sub.id, sub_status: 'Submitted', content: answer.trim(), submitted_at: sub.submitted_at,
     } : i))

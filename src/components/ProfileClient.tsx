@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { updateOwnProfile } from '@/components/profile-actions'
 import { resizeImageToDataUrl } from '@/lib/image'
 import Avatar from '@/components/Avatar'
 import ToastContainer, { useToast } from '@/components/Toast'
@@ -32,12 +32,8 @@ export default function ProfileClient({ profile }: { profile: ProfileData }) {
   async function handleSave() {
     if (!fullName.trim()) { toast('Name cannot be empty', 'error'); return }
     setSaving(true)
-    const supabase = createClient()
-    const { error } = await supabase
-      .from('profiles')
-      .update({ full_name: fullName.trim(), phone: phone.trim() || null, avatar_url: avatar })
-      .eq('id', profile.id)
-    if (error) { toast(error.message, 'error'); setSaving(false); return }
+    const { error } = await updateOwnProfile({ full_name: fullName.trim(), phone: phone.trim() || null, avatar_url: avatar })
+    if (error) { toast(error, 'error'); setSaving(false); return }
     toast('Profile saved', 'success')
     setSaving(false)
   }
