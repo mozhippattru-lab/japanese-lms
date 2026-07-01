@@ -100,10 +100,17 @@ SELECT id,email,encrypted_password,created_at FROM _u
 ON CONFLICT (id) DO NOTHING;
 SQL
   "$PG_DUMP" "$SUPABASE_DB_URL" --schema=public --no-owner --no-privileges --no-comments -f /tmp/public_dump.sql
-  # Strip PG17-only session GUCs the local PG16 server doesn't recognize.
-  sed -i -E '/^SET (transaction_timeout|idle_session_timeout)/d' /tmp/public_dump.sql
+  # Normalize the dump for a plain PG16 target:
+  #  - drop PG17-only session GUCs the local server doesn't recognize
+  #  - drop "CREATE SCHEMA public" (we recreate it ourselves below)
+  sed -i -E '/^SET (transaction_timeout|idle_session_timeout)/d; /^CREATE SCHEMA public;/d' /tmp/public_dump.sql
+  # Start from a clean public schema so re-runs never trip on leftovers.
+  # (auth schema + migrated users live in the `auth` schema and are untouched.)
+  psql "$LOCAL_DB_URL" -v ON_ERROR_STOP=1 -c "DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;"
   psql "$LOCAL_DB_URL" -v ON_ERROR_STOP=1 -f /tmp/public_dump.sql
-  echo "== 6/6  App columns + roll-number helper (002) =="
+  echo "== 6/6  Session tables + app columns + roll-number helper =="
+  # Recreate our public.sessions / password_reset_tokens (dropped with public above).
+  psql "$LOCAL_DB_URL" -v ON_ERROR_STOP=1 -f db/001_auth.sql
   psql "$LOCAL_DB_URL" -v ON_ERROR_STOP=1 -f db/002_app_columns.sql
   rm -f /tmp/auth_users.csv /tmp/public_dump.sql
 fi
