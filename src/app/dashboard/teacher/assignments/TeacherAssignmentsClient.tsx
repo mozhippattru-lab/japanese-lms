@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createAssignment, updateAssignment, deleteAssignment } from './actions'
 import {
   FileText, Plus, Calendar, Users, CheckCircle2, Clock, ClipboardList,
   Trash2, Pencil, GraduationCap,
@@ -35,8 +35,8 @@ const emptyForm = {
 }
 
 export default function TeacherAssignmentsClient({
-  teacherId, batches, initialAssignments,
-}: { teacherId: string; batches: Batch[]; initialAssignments: Assignment[] }) {
+  batches, initialAssignments,
+}: { teacherId?: string; batches: Batch[]; initialAssignments: Assignment[] }) {
   const { toasts, toast, remove } = useToast()
   const [assignments, setAssignments] = useState<Assignment[]>(initialAssignments)
   const [showForm, setShowForm] = useState(false)
@@ -74,7 +74,6 @@ export default function TeacherAssignmentsClient({
     if (!form.title.trim()) { toast('Title is required', 'error'); return }
     if (!form.batch_id) { toast('Select a batch', 'error'); return }
     setSaving(true)
-    const supabase = createClient()
     const batch = batches.find(b => b.id === form.batch_id)
     const payload = {
       title: form.title.trim(),
@@ -86,19 +85,18 @@ export default function TeacherAssignmentsClient({
       max_points: Number(form.max_points) || 100,
       due_date: form.due_date || null,
       status: form.status,
-      teacher_id: teacherId,
     }
 
     if (editing) {
-      const { error } = await supabase.from('assignments').update(payload).eq('id', editing.id)
-      if (error) { toast(error.message, 'error'); setSaving(false); return }
+      const { error } = await updateAssignment(editing.id, payload)
+      if (error) { toast(error, 'error'); setSaving(false); return }
       setAssignments(prev => prev.map(a => a.id === editing.id ? {
         ...a, ...payload, batch_name: batch?.name || a.batch_name, batch_enrolled: batch?.enrolled || a.batch_enrolled,
       } : a))
       toast('Assignment updated', 'success')
     } else {
-      const { data, error } = await supabase.from('assignments').insert(payload).select().single()
-      if (error) { toast(error.message, 'error'); setSaving(false); return }
+      const { assignment: data, error } = await createAssignment(payload)
+      if (error || !data) { toast(error || 'Create failed', 'error'); setSaving(false); return }
       setAssignments(prev => [{
         ...(data as Assignment),
         batch_name: batch?.name || '—', batch_enrolled: batch?.enrolled || 0,
@@ -112,9 +110,8 @@ export default function TeacherAssignmentsClient({
 
   async function handleDelete(a: Assignment) {
     if (!confirm(`Delete "${a.title}"? This removes all its submissions too.`)) return
-    const supabase = createClient()
-    const { error } = await supabase.from('assignments').delete().eq('id', a.id)
-    if (error) { toast(error.message, 'error'); return }
+    const { error } = await deleteAssignment(a.id)
+    if (error) { toast(error, 'error'); return }
     setAssignments(prev => prev.filter(x => x.id !== a.id))
     toast('Assignment deleted', 'success')
   }
