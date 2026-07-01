@@ -21,6 +21,24 @@ if ! command -v psql >/dev/null 2>&1; then
 fi
 (systemctl enable --now postgresql 2>/dev/null || service postgresql start || true)
 
+# Supabase runs Postgres 17; Ubuntu's default pg_dump is 16 and refuses to dump
+# a newer server. Ensure a v17+ client from the official PostgreSQL (PGDG) repo.
+PG_DUMP="$(command -v pg_dump || true)"
+if [ -z "$PG_DUMP" ] || ! "$PG_DUMP" --version | grep -qE ' (1[7-9]|[2-9][0-9])'; then
+  echo "   Installing PostgreSQL 17 client from PGDG…"
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get install -y -qq curl ca-certificates gnupg lsb-release >/dev/null
+  install -d /usr/share/postgresql-common/pgdg
+  curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+    -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+  echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+    > /etc/apt/sources.list.d/pgdg.list
+  apt-get update -qq
+  apt-get install -y -qq postgresql-client-17 >/dev/null
+  PG_DUMP="/usr/lib/postgresql/17/bin/pg_dump"
+fi
+echo "   Using pg_dump: $($PG_DUMP --version)"
+
 echo "== 2/6  Ensuring role + database =="
 # Reuse an existing password from .env if present, else generate a new one.
 if grep -q '^DATABASE_URL=' "$ENV_FILE" 2>/dev/null; then
@@ -81,7 +99,7 @@ INSERT INTO auth.users(id,email,encrypted_password,created_at)
 SELECT id,email,encrypted_password,created_at FROM _u
 ON CONFLICT (id) DO NOTHING;
 SQL
-  pg_dump "$SUPABASE_DB_URL" --schema=public --no-owner --no-privileges --no-comments -f /tmp/public_dump.sql
+  "$PG_DUMP" "$SUPABASE_DB_URL" --schema=public --no-owner --no-privileges --no-comments -f /tmp/public_dump.sql
   psql "$LOCAL_DB_URL" -v ON_ERROR_STOP=1 -f /tmp/public_dump.sql
   echo "== 6/6  App columns + roll-number helper (002) =="
   psql "$LOCAL_DB_URL" -v ON_ERROR_STOP=1 -f db/002_app_columns.sql
