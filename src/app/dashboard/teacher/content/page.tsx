@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { BookOpen, Video, FileText, Headphones, ClipboardCheck, Target } from 'lucide-react'
 import { DashStyles } from '@/components/DashboardKit'
@@ -13,33 +13,36 @@ const LESSON_ICONS: Record<string, React.ReactNode> = {
 }
 
 export default async function TeacherContentPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('teacher')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
   // Get levels from teacher's batches
-  const { data: batches } = await supabase.from('batches').select('jlpt_level').eq('teacher_id', user.id)
-  const levels = [...new Set(batches?.map(b => b.jlpt_level).filter(Boolean) || [])]
+  const batches = await sql`select jlpt_level from batches where teacher_id = ${user.id}`
+  const levels = [...new Set(batches.map(b => b.jlpt_level).filter(Boolean))] as string[]
 
-  // Get courses for those levels
-  const { data: courses } = levels.length
-    ? await supabase
-        .from('courses')
-        .select(`id, title, jlpt_level, description, duration_weeks, status, enrolled_count,
-          course_modules(id, title, order_index, lessons(id, title, lesson_type, duration_minutes, order_index))`)
-        .in('jlpt_level', levels)
-        .order('jlpt_level')
-    : await supabase
-        .from('courses')
-        .select(`id, title, jlpt_level, description, duration_weeks, status, enrolled_count,
-          course_modules(id, title, order_index, lessons(id, title, lesson_type, duration_minutes, order_index))`)
-        .order('jlpt_level')
+  // Get courses (optionally filtered to the teacher's levels), with nested
+  // modules + lessons assembled as JSON.
+  const courses = await sql`
+    select c.id, c.title, c.jlpt_level, c.description, c.duration_weeks, c.status, c.enrolled_count,
+      coalesce((
+        select json_agg(json_build_object(
+          'id', m.id, 'title', m.title, 'order_index', m.order_index,
+          'lessons', coalesce((
+            select json_agg(json_build_object('id', l.id, 'title', l.title, 'lesson_type', l.lesson_type,
+              'duration_minutes', l.duration_minutes, 'order_index', l.order_index) order by l.order_index)
+            from lessons l where l.module_id = m.id
+          ), '[]'::json)
+        ) order by m.order_index)
+        from course_modules m where m.course_id = c.id
+      ), '[]'::json) as course_modules
+    from courses c
+    ${levels.length ? sql`where c.jlpt_level = any(${levels})` : sql``}
+    order by c.jlpt_level
+  `
 
-  const totalLessons = courses?.reduce((s, c) => {
+  const totalLessons = courses.reduce((s, c) => {
     return s + (c.course_modules || []).reduce((ms: number, m: { lessons: unknown[] }) => ms + (m.lessons?.length || 0), 0)
-  }, 0) || 0
+  }, 0)
 
   const card: React.CSSProperties = { background: '#fff', borderRadius: '12px', border: '1px solid #ececef' }
 

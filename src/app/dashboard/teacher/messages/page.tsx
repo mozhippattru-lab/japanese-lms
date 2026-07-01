@@ -1,16 +1,13 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import MessagesClient from '@/components/MessagesClient'
 import { loadMessagingData } from '@/lib/messages'
 import { DashStyles } from '@/components/DashboardKit'
 
 export default async function TeacherMessagesPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('teacher')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
   const { contacts, messages, parties } = await loadMessagingData(user.id, 'teacher')
 

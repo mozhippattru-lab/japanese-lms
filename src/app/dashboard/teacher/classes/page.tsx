@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { Users, Clock, Calendar } from 'lucide-react'
 import { DashStyles } from '@/components/DashboardKit'
@@ -13,20 +13,13 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default async function TeacherClassesPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('teacher')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
-  const { data: batches } = await supabase
-    .from('batches')
-    .select('*')
-    .eq('teacher_id', user.id)
-    .order('start_date', { ascending: false })
+  const batches = await sql`select * from batches where teacher_id = ${user.id} order by start_date desc`
 
-  const activeBatches = batches?.filter(b => b.status === 'Active') || []
-  const totalStudents = batches?.reduce((s, b) => s + (b.enrolled || 0), 0) || 0
+  const activeBatches = batches.filter(b => b.status === 'Active')
+  const totalStudents = batches.reduce((s, b) => s + (b.enrolled || 0), 0)
 
   const card: React.CSSProperties = { background: '#fff', borderRadius: '12px', border: '1px solid #ececef' }
 

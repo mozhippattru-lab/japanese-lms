@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/admin'
+import { sql } from '@/lib/db'
 
 export type Contact = {
   id: string
@@ -24,51 +24,49 @@ export type MessagingData = {
   parties: Record<string, Contact> // id -> profile, for everyone in a conversation
 }
 
-const SEL = 'id, full_name, email, avatar_url, jlpt_level, role'
-
 // Resolve who a user may message, all their messages, and the profiles of
-// everyone they've talked to. Uses the service role (server only).
+// everyone they've talked to. Server only.
 export async function loadMessagingData(userId: string, role: string): Promise<MessagingData> {
-  const sb = createAdminClient()
-
   // ── contacts ──────────────────────────────────────────────
   let contactIds: string[] = []
   if (role === 'teacher') {
-    const { data: batches } = await sb.from('batches').select('id').eq('teacher_id', userId)
-    const batchIds = (batches || []).map(b => b.id)
+    const batches = await sql`select id from batches where teacher_id = ${userId}`
+    const batchIds = batches.map(b => b.id as string)
     if (batchIds.length) {
-      const { data: enr } = await sb.from('student_batches').select('student_id').in('batch_id', batchIds)
-      contactIds = [...new Set((enr || []).map(e => e.student_id as string))]
+      const enr = await sql`select student_id from student_batches where batch_id = any(${batchIds})`
+      contactIds = [...new Set(enr.map(e => e.student_id as string))]
     }
   } else if (role === 'student') {
-    const { data: myb } = await sb.from('student_batches').select('batch_id').eq('student_id', userId)
-    const batchIds = [...new Set((myb || []).map(b => b.batch_id as string))]
+    const myb = await sql`select batch_id from student_batches where student_id = ${userId}`
+    const batchIds = [...new Set(myb.map(b => b.batch_id as string))]
     if (batchIds.length) {
-      const { data: batches } = await sb.from('batches').select('teacher_id').in('id', batchIds)
-      contactIds = [...new Set((batches || []).map(b => b.teacher_id).filter(Boolean) as string[])]
+      const batches = await sql`select teacher_id from batches where id = any(${batchIds})`
+      contactIds = [...new Set(batches.map(b => b.teacher_id as string).filter(Boolean))]
     }
   }
 
   // everyone can message the office (admins)
-  const { data: admins } = await sb.from('profiles').select(SEL).eq('role', 'admin')
-  const adminList = (admins || []) as Contact[]
+  const adminList = await sql<Contact[]>`
+    select id, full_name, email, avatar_url, jlpt_level, role from profiles where role = 'admin'
+  `
 
   let roleContacts: Contact[] = []
   if (contactIds.length) {
-    const { data } = await sb.from('profiles').select(SEL).in('id', contactIds).order('full_name')
-    roleContacts = (data || []) as Contact[]
+    roleContacts = await sql<Contact[]>`
+      select id, full_name, email, avatar_url, jlpt_level, role from profiles
+      where id = any(${contactIds}) order by full_name
+    `
   }
 
   const contacts = [...roleContacts, ...adminList].filter((c, i, arr) =>
     c.id !== userId && arr.findIndex(x => x.id === c.id) === i)
 
   // ── messages ──────────────────────────────────────────────
-  const { data: msgs } = await sb
-    .from('messages')
-    .select('id, sender_id, recipient_id, body, read_at, created_at')
-    .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`)
-    .order('created_at', { ascending: true })
-  const messages = (msgs || []) as Message[]
+  const messages = await sql<Message[]>`
+    select id, sender_id, recipient_id, body, read_at, created_at from messages
+    where sender_id = ${userId} or recipient_id = ${userId}
+    order by created_at asc
+  `
 
   // ── party profiles (contacts + anyone in a conversation) ──
   const parties: Record<string, Contact> = {}
@@ -76,9 +74,11 @@ export async function loadMessagingData(userId: string, role: string): Promise<M
   const missing = [...new Set(messages.flatMap(m => [m.sender_id, m.recipient_id]))]
     .filter(id => id !== userId && !parties[id])
   if (missing.length) {
-    const { data } = await sb.from('profiles').select(SEL).in('id', missing)
-    for (const p of (data || []) as Contact[]) parties[p.id] = p
+    const more = await sql<Contact[]>`
+      select id, full_name, email, avatar_url, jlpt_level, role from profiles where id = any(${missing})
+    `
+    for (const p of more) parties[p.id] = p
   }
 
-  return { contacts, messages, parties }
+  return { contacts, messages: messages as unknown as Message[], parties }
 }

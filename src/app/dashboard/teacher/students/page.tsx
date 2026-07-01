@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { sql } from '@/lib/db'
+import { requireRole } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import { DashStyles } from '@/components/DashboardKit'
 
@@ -8,49 +9,35 @@ const LEVEL_COLORS: Record<string, string> = {
 }
 
 export default async function TeacherStudentsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (profile?.role !== 'teacher') redirect(`/dashboard/${profile?.role || 'student'}`)
+  const user = await requireRole('teacher')
+  const [profile] = await sql`select * from profiles where id = ${user.id} limit 1`
 
   // Get teacher's batches
-  const { data: batches } = await supabase
-    .from('batches')
-    .select('id, name, jlpt_level')
-    .eq('teacher_id', user.id)
-
-  const batchIds = batches?.map(b => b.id) || []
+  const batches = await sql`select id, name, jlpt_level from batches where teacher_id = ${user.id}`
+  const batchIds = batches.map(b => b.id)
 
   // Get enrolled students across those batches
-  const { data: enrollments } = batchIds.length
-    ? await supabase
-        .from('student_batches')
-        .select('id, batch_id, enrolled_at, student_id')
-        .in('batch_id', batchIds)
-        .eq('status', 'Active')
-    : { data: [] }
+  const enrollments: any[] = batchIds.length
+    ? await sql`select id, batch_id, enrolled_at, student_id from student_batches where batch_id = any(${batchIds}) and status = 'Active'`
+    : []
 
-  const studentIds = [...new Set(enrollments?.map(e => e.student_id) || [])]
-  const { data: studentProfiles } = studentIds.length
-    ? await supabase
-        .from('profiles')
-        .select('id, full_name, email, phone, jlpt_level, status')
-        .in('id', studentIds)
-    : { data: [] }
+  const studentIds = [...new Set(enrollments.map(e => e.student_id))]
+  const studentProfiles: any[] = studentIds.length
+    ? await sql`select id, full_name, email, phone, jlpt_level, status from profiles where id = any(${studentIds})`
+    : []
 
   // Build a map of batch id → batch info
-  const batchMap = Object.fromEntries((batches || []).map(b => [b.id, b]))
+  const batchMap = Object.fromEntries(batches.map(b => [b.id, b]))
 
   // Augment enrollments with student profiles and batch info
-  const rows = (enrollments || []).map(e => ({
+  const rows: any[] = enrollments.map(e => ({
     ...e,
-    student: studentProfiles?.find(s => s.id === e.student_id),
+    student: studentProfiles.find(s => s.id === e.student_id),
     batch: batchMap[e.batch_id],
   })).filter(r => r.student)
 
   // Group by batch for the batch filter display
-  const batchGroups: Record<string, typeof rows> = {}
+  const batchGroups: Record<string, any[]> = {}
   rows.forEach(r => {
     if (!batchGroups[r.batch_id]) batchGroups[r.batch_id] = []
     batchGroups[r.batch_id].push(r)
