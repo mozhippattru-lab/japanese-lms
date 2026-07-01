@@ -47,6 +47,7 @@ const adminNav: NavItem[] = [
   { label: 'Finance',    href: '/dashboard/admin/finance',   icon: <DollarSign      size={16} /> },
   { label: 'CRM / Leads',href: '/dashboard/admin/crm',       icon: <Target          size={16} /> },
   { label: 'Reports',    href: '/dashboard/admin/reports',   icon: <BarChart2       size={16} /> },
+  { label: 'Blog',       href: '/dashboard/admin/blog',      icon: <FileText        size={16} /> },
   { label: 'Settings',   href: '/dashboard/admin/settings',  icon: <Settings        size={16} /> },
 ]
 

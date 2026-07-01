@@ -1,0 +1,42 @@
+name: Apply DB schema file
+
+# Runs a single idempotent SQL file from db/ against the live Postgres.
+# Actions tab → "Apply DB schema file" → Run workflow (pick the file).
+on:
+  workflow_dispatch:
+    inputs:
+      file:
+        description: 'SQL file under db/ to apply'
+        type: string
+        required: true
+        default: '003_posts.sql'
+
+concurrency:
+  group: apply-schema
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    name: Apply schema on Contabo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run psql via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 10m
+          envs: SQL_FILE
+          script: |
+            set -e
+            cd /var/www/japanese-lms
+            git checkout -- package-lock.json tsconfig.json 2>/dev/null || true
+            git pull origin main
+            DB_URL="$(grep '^DATABASE_URL=' .env | head -1 | cut -d= -f2-)"
+            if [ -z "$DB_URL" ]; then echo "DATABASE_URL not found in .env"; exit 1; fi
+            echo "Applying db/${SQL_FILE} …"
+            psql "$DB_URL" -v ON_ERROR_STOP=1 -f "db/${SQL_FILE}"
+            echo "✓ Applied db/${SQL_FILE}"
+        env:
+          SQL_FILE: ${{ inputs.file }}
