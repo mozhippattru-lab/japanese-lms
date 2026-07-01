@@ -1,6 +1,9 @@
 'use client'
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import {
+  loadBatchDetail, loadEnrollableStudents, enrollStudent as enrollStudentAction,
+  removeStudent as removeStudentAction, loadSessionForDate, saveAttendanceSession,
+} from './actions'
 import {
   Calendar, CheckCircle2, Users, Plus, ClipboardList, Check,
   ArrowLeft, Clock, CalendarDays, History, ClipboardCheck,
@@ -64,33 +67,9 @@ export default function AttendanceClient({ initialBatches }: { initialBatches: B
     setActiveBatch(batch)
     setView('detail')
     setDetailLoading(true)
-    const supabase = createClient()
-
-    const { data: enrollData } = await supabase
-      .from('student_batches')
-      .select('student_id')
-      .eq('batch_id', batch.id)
-      .eq('status', 'Active')
-
-    if (enrollData && enrollData.length > 0) {
-      const ids = enrollData.map((e: { student_id: string }) => e.student_id)
-      const { data: students } = await supabase
-        .from('profiles')
-        .select('id, full_name, email, jlpt_level, phone, batch')
-        .in('id', ids)
-        .order('full_name')
-      setEnrolled(students || [])
-    } else {
-      setEnrolled([])
-    }
-
-    const { data: sess } = await supabase
-      .from('attendance_sessions')
-      .select('*')
-      .eq('batch_id', batch.id)
-      .order('session_date', { ascending: false })
-      .limit(30)
-    setSessions(sess || [])
+    const { students, sessions } = await loadBatchDetail(batch.id)
+    setEnrolled(students)
+    setSessions(sessions)
     setDetailLoading(false)
   }
 
@@ -98,26 +77,16 @@ export default function AttendanceClient({ initialBatches }: { initialBatches: B
   async function openEnrollModal() {
     setShowEnroll(true)
     setEnrollSearch('')
-    const supabase = createClient()
-    const { data } = await supabase
-      .from('profiles')
-      .select('id, full_name, email, jlpt_level, phone, batch')
-      .eq('role', 'student')
-      .order('full_name')
+    const data = await loadEnrollableStudents()
     const enrolledIds = new Set(enrolled.map(s => s.id))
-    setAllStudents((data || []).filter((s: Student) => !enrolledIds.has(s.id)))
+    setAllStudents((data as Student[]).filter((s: Student) => !enrolledIds.has(s.id)))
   }
 
   async function enrollStudent(student: Student) {
     if (!activeBatch) return
     setEnrolling(true)
-    const supabase = createClient()
-    await supabase.from('student_batches').upsert(
-      { student_id: student.id, batch_id: activeBatch.id, status: 'Active' },
-      { onConflict: 'student_id,batch_id' }
-    )
     const newCount = (activeBatch.enrolled || 0) + 1
-    await supabase.from('batches').update({ enrolled: newCount }).eq('id', activeBatch.id)
+    await enrollStudentAction(activeBatch.id, student.id, newCount)
     setEnrolled(prev => [...prev, student])
     setAllStudents(prev => prev.filter(s => s.id !== student.id))
     setBatches(prev => prev.map(b => b.id === activeBatch.id ? { ...b, enrolled: newCount } : b))
@@ -127,13 +96,8 @@ export default function AttendanceClient({ initialBatches }: { initialBatches: B
 
   async function removeStudent(studentId: string) {
     if (!activeBatch || !confirm('Remove this student from the batch?')) return
-    const supabase = createClient()
-    await supabase.from('student_batches')
-      .update({ status: 'Dropped' })
-      .eq('student_id', studentId)
-      .eq('batch_id', activeBatch.id)
     const newCount = Math.max(0, (activeBatch.enrolled || 0) - 1)
-    await supabase.from('batches').update({ enrolled: newCount }).eq('id', activeBatch.id)
+    await removeStudentAction(activeBatch.id, studentId, newCount)
     setEnrolled(prev => prev.filter(s => s.id !== studentId))
     setBatches(prev => prev.map(b => b.id === activeBatch.id ? { ...b, enrolled: newCount } : b))
     setActiveBatch(prev => prev ? { ...prev, enrolled: newCount } : prev)
@@ -145,25 +109,15 @@ export default function AttendanceClient({ initialBatches }: { initialBatches: B
     const date = todayStr()
     setMarkDate(date)
     setMarkTopic('')
-    const supabase = createClient()
 
-    const { data: existing } = await supabase
-      .from('attendance_sessions')
-      .select('*')
-      .eq('batch_id', activeBatch.id)
-      .eq('session_date', date)
-      .maybeSingle()
+    const { session: existing, records } = await loadSessionForDate(activeBatch.id, date)
 
     const defaultMap: Record<string, AttStatus> = {}
     for (const s of enrolled) defaultMap[s.id] = 'Present'
 
     if (existing) {
       setMarkTopic(existing.topic || '')
-      const { data: records } = await supabase
-        .from('attendance_records')
-        .select('student_id, status')
-        .eq('session_id', existing.id)
-      for (const r of (records || [])) defaultMap[r.student_id] = r.status as AttStatus
+      for (const r of records) defaultMap[r.student_id] = r.status as AttStatus
     }
     setAttMap(defaultMap)
     setView('mark')
@@ -173,36 +127,13 @@ export default function AttendanceClient({ initialBatches }: { initialBatches: B
   async function saveAttendance() {
     if (!activeBatch) return
     setSaving(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
 
-    const present = Object.values(attMap).filter(s => s === 'Present').length
-    const absent = Object.values(attMap).filter(s => s === 'Absent').length
-    const late = Object.values(attMap).filter(s => s === 'Late').length
-
-    const { data: session } = await supabase
-      .from('attendance_sessions')
-      .upsert({
-        batch_id: activeBatch.id,
-        session_date: markDate,
-        topic: markTopic || null,
-        total_present: present,
-        total_absent: absent,
-        total_late: late,
-        created_by: user?.id,
-      }, { onConflict: 'batch_id,session_date' })
-      .select()
-      .single()
+    const records = enrolled.map(s => ({ student_id: s.id, status: attMap[s.id] || 'Present' }))
+    const { session } = await saveAttendanceSession({
+      batchId: activeBatch.id, date: markDate, topic: markTopic || null, records,
+    })
 
     if (session) {
-      await supabase.from('attendance_records').delete().eq('session_id', session.id)
-      const records = enrolled.map(s => ({
-        session_id: session.id,
-        student_id: s.id,
-        batch_id: activeBatch.id,
-        status: attMap[s.id] || 'Present',
-      }))
-      if (records.length > 0) await supabase.from('attendance_records').insert(records)
       setSessions(prev => {
         const exists = prev.find(x => x.id === session.id)
         return exists ? prev.map(x => x.id === session.id ? session : x) : [session, ...prev]
