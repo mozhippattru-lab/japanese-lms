@@ -14,6 +14,10 @@ export const ORG = {
   addressArea: 'Namakkal',
   postalCountry: 'IN',
   areaServed: 'India',
+  // Locality-level coordinates for Pallipalayam (Namakkal district).
+  // Refine to the exact building pin once the Google Business Profile is live.
+  latitude: 11.362,
+  longitude: 77.729,
 }
 
 // The courses shown on the marketing site (prices inclusive of GST, excl. books).
@@ -80,6 +84,14 @@ export function buildJsonLd() {
       addressRegion: ORG.addressRegion,
       addressCountry: ORG.postalCountry,
     },
+    // Locality-level coordinates for Pallipalayam, Namakkal (refine to the
+    // exact building/Google Business pin when available).
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: ORG.latitude,
+      longitude: ORG.longitude,
+    },
+    hasMap: `https://www.google.com/maps/search/?api=1&query=${ORG.latitude},${ORG.longitude}`,
     areaServed: { '@type': 'Country', name: ORG.areaServed },
     contactPoint: {
       '@type': 'ContactPoint',
