@@ -11,11 +11,21 @@ CREATE SCHEMA IF NOT EXISTS auth;
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";   -- gen_random_uuid()
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";  -- some Supabase defaults use this
 
+-- Supabase's dump carries RLS policies written `TO authenticated / anon /
+-- service_role`. Those roles don't exist on a plain Postgres, so create them
+-- as harmless NOLOGIN stubs, else CREATE POLICY fails on restore.
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='anon')          THEN CREATE ROLE anon NOLOGIN;          END IF;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='authenticated') THEN CREATE ROLE authenticated NOLOGIN; END IF;
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='service_role')  THEN CREATE ROLE service_role NOLOGIN;  END IF;
+END $$;
+
 -- Stub the Supabase helpers so any RLS policies carried in the dump restore
 -- cleanly (they simply never match; the app connects as table owner and
 -- bypasses RLS anyway).
-CREATE OR REPLACE FUNCTION auth.uid()  RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT NULL::uuid $$;
-CREATE OR REPLACE FUNCTION auth.role() RETURNS text LANGUAGE sql STABLE AS $$ SELECT NULL::text $$;
+CREATE OR REPLACE FUNCTION auth.uid()  RETURNS uuid  LANGUAGE sql STABLE AS $$ SELECT NULL::uuid  $$;
+CREATE OR REPLACE FUNCTION auth.role() RETURNS text  LANGUAGE sql STABLE AS $$ SELECT NULL::text  $$;
+CREATE OR REPLACE FUNCTION auth.jwt()  RETURNS jsonb LANGUAGE sql STABLE AS $$ SELECT '{}'::jsonb $$;
 
 -- Identity table. Migrated 1:1 from Supabase auth.users; encrypted_password
 -- holds the original bcrypt ($2a$…) hash so existing passwords keep working.

@@ -1,0 +1,41 @@
+name: Migrate DB to server
+
+# Manual, one-click migration: installs Postgres on the Contabo server,
+# provisions the DB, writes .env, and copies all data from Supabase.
+# Trigger from the Actions tab → "Migrate DB to server" → Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Wipe & re-import the target DB (only before cutover)'
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: db-migrate
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    name: Provision + migrate on Contabo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run migration on server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 30m
+          envs: SUPABASE_DB_URL,FORCE
+          script: |
+            set -e
+            cd /var/www/japanese-lms
+            # Keep git pull from aborting on Next/npm-rewritten files.
+            git checkout -- package-lock.json tsconfig.json 2>/dev/null || true
+            git pull origin main
+            bash db/ci_migrate.sh
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          FORCE: ${{ inputs.force && '1' || '0' }}
