@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { pollMessages, markMessagesRead, sendMessage } from '@/components/message-actions'
 import Avatar from '@/components/Avatar'
 import { Search, Send, ArrowLeft, PenSquare, MessageSquare, X } from 'lucide-react'
 import type { Contact, Message } from '@/lib/messages'
@@ -43,13 +43,9 @@ export default function MessagesClient({
 
   // Poll for new messages every 6s
   useEffect(() => {
-    const sb = createClient()
     const id = setInterval(async () => {
-      const { data } = await sb.from('messages')
-        .select('id, sender_id, recipient_id, body, read_at, created_at')
-        .or(`sender_id.eq.${me.id},recipient_id.eq.${me.id}`)
-        .order('created_at', { ascending: true })
-      if (data) setMessages(data as Message[])
+      const data = await pollMessages()
+      if (data && data.length) setMessages(data)
     }, 6000)
     return () => clearInterval(id)
   }, [me.id])
@@ -80,9 +76,8 @@ export default function MessagesClient({
     if (!activeId) return
     const unread = messages.filter(m => m.sender_id === activeId && m.recipient_id === me.id && !m.read_at)
     if (!unread.length) return
-    const sb = createClient()
     const now = new Date().toISOString()
-    sb.from('messages').update({ read_at: now }).in('id', unread.map(m => m.id)).then(() => {
+    markMessagesRead(unread.map(m => m.id)).then(() => {
       setMessages(prev => prev.map(m => unread.find(u => u.id === m.id) ? { ...m, read_at: now } : m))
     })
   }, [activeId, messages, me.id])
@@ -91,13 +86,10 @@ export default function MessagesClient({
     const body = text.trim()
     if (!body || !activeId) return
     setText('')
-    const sb = createClient()
     const optimistic: Message = { id: `tmp-${Date.now()}`, sender_id: me.id, recipient_id: activeId, body, read_at: null, created_at: new Date().toISOString() }
     setMessages(prev => [...prev, optimistic])
-    const { data, error } = await sb.from('messages')
-      .insert({ sender_id: me.id, recipient_id: activeId, body })
-      .select('id, sender_id, recipient_id, body, read_at, created_at').single()
-    if (!error && data) setMessages(prev => prev.map(m => m.id === optimistic.id ? (data as Message) : m))
+    const data = await sendMessage(activeId, body)
+    if (data) setMessages(prev => prev.map(m => m.id === optimistic.id ? data : m))
   }
 
   const partyOf = (id: string): Contact => parties[id] || contacts.find(c => c.id === id) || { id, full_name: 'User', email: null, avatar_url: null, jlpt_level: null, role: '' }

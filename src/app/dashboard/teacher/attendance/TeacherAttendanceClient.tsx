@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { loadBatchStudents, saveAttendance } from './actions'
 import { ArrowLeft, Users, CheckCircle2, XCircle, Clock } from 'lucide-react'
 import ToastContainer, { useToast } from '@/components/Toast'
 
@@ -38,23 +38,11 @@ export default function TeacherAttendanceClient({ batches }: { batches: Batch[] 
     setSessionDate(today())
     setLoadingStudents(true)
 
-    const supabase = createClient()
-    const { data: enrollments } = await supabase
-      .from('student_batches')
-      .select('student_id')
-      .eq('batch_id', batch.id)
-      .eq('status', 'Active')
-
-    const studentIds = enrollments?.map(e => e.student_id) || []
-    if (studentIds.length > 0) {
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, full_name, email')
-        .in('id', studentIds)
-        .order('full_name')
-      setStudents(profiles || [])
+    const profiles = await loadBatchStudents(batch.id)
+    if (profiles.length > 0) {
+      setStudents(profiles)
       const defaultAtt: Record<string, AttendanceStatus> = {}
-      profiles?.forEach(s => { defaultAtt[s.id] = 'Present' })
+      profiles.forEach(s => { defaultAtt[s.id] = 'Present' })
       setAttendance(defaultAtt)
     } else {
       setStudents([])
@@ -65,41 +53,12 @@ export default function TeacherAttendanceClient({ batches }: { batches: Batch[] 
   async function handleSubmit() {
     if (!selectedBatch || students.length === 0) return
     setSubmitting(true)
-    const supabase = createClient()
 
-    const present = Object.values(attendance).filter(s => s === 'Present').length
-    const absent = Object.values(attendance).filter(s => s === 'Absent').length
-    const late = Object.values(attendance).filter(s => s === 'Late').length
-
-    const { data: session, error: sessErr } = await supabase
-      .from('attendance_sessions')
-      .upsert({
-        batch_id: selectedBatch.id,
-        session_date: sessionDate,
-        topic: topic || null,
-        total_present: present,
-        total_absent: absent,
-        total_late: late,
-        created_by: (await supabase.auth.getUser()).data.user?.id,
-      }, { onConflict: 'batch_id,session_date' })
-      .select()
-      .single()
-
-    if (sessErr || !session) {
-      toast('Failed to save session', 'error')
-      setSubmitting(false)
-      return
-    }
-
-    // Delete existing records for this session and re-insert
-    await supabase.from('attendance_records').delete().eq('session_id', session.id)
-    const records = students.map(s => ({
-      session_id: session.id,
-      student_id: s.id,
-      batch_id: selectedBatch.id,
-      status: attendance[s.id] || 'Absent',
-    }))
-    await supabase.from('attendance_records').insert(records)
+    const records = students.map(s => ({ student_id: s.id, status: attendance[s.id] || 'Absent' }))
+    const { error } = await saveAttendance({
+      batchId: selectedBatch.id, sessionDate, topic: topic || null, records,
+    })
+    if (error) { toast('Failed to save session', 'error'); setSubmitting(false); return }
 
     toast('Attendance saved!', 'success')
     setSubmitting(false)
