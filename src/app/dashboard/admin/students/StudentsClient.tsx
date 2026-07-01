@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { getStudentInvoices, updateStudent, deactivateStudent } from './actions'
 import { useRouter } from 'next/navigation'
 import { Search, Plus, Pencil, Trash2, X, CheckCircle, AlertCircle, ChevronDown, ChevronUp, Eye as EyeIcon, EyeOff, GraduationCap } from 'lucide-react'
 import Modal from '@/components/Modal'
@@ -187,9 +187,7 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
     setViewStudent(s)
     setStudentInvoices([])
     setInvoicesLoading(true)
-    const supabase = createClient()
-    const { data } = await supabase.from('invoices').select('id, amount, due_date, status, description, created_at').eq('student_id', s.id).order('created_at', { ascending: false }).limit(10)
-    setStudentInvoices(data || [])
+    setStudentInvoices(await getStudentInvoices(s.id))
     setInvoicesLoading(false)
   }
 
@@ -215,9 +213,8 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
     e.preventDefault()
     if (!editStudent) return
     setLoading(true)
-    const supabase = createClient()
     const updates = { full_name: editStudent.full_name, phone: editStudent.phone, jlpt_level: editStudent.jlpt_level, batch: editStudent.batch, status: editStudent.status }
-    await supabase.from('profiles').update(updates).eq('id', editStudent.id)
+    await updateStudent(editStudent.id, updates)
     setStudents(prev => prev.map(s => s.id === editStudent.id ? { ...s, ...updates } : s))
     setEditStudent(null)
     setLoading(false)
@@ -226,8 +223,7 @@ export default function StudentsClient({ initialStudents }: { initialStudents: S
 
   async function handleDelete(id: string) {
     if (!confirm('Mark this student as Inactive?')) return
-    const supabase = createClient()
-    await supabase.from('profiles').update({ status: 'Inactive' }).eq('id', id)
+    await deactivateStudent(id)
     setStudents(prev => prev.map(s => s.id === id ? { ...s, status: 'Inactive' } : s))
     toast('Student deactivated', 'info')
   }

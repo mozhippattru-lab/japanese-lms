@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { getTeacherBatches, updateTeacher, deactivateTeacher } from './actions'
 import { Search, Plus, Pencil, Trash2, X, AlertCircle, Eye as EyeIcon, EyeOff, Users, UserCheck, Clock, GraduationCap } from 'lucide-react'
 import Modal from '@/components/Modal'
 import ToastContainer, { useToast } from '@/components/Toast'
@@ -176,9 +176,7 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
 
   async function openView(t: Teacher) {
     setViewTeacher(t); setTeacherBatches([]); setBatchesLoading(true)
-    const supabase = createClient()
-    const { data } = await supabase.from('batches').select('id, name, jlpt_level, time_slot, status, enrolled, capacity, days').eq('teacher_id', t.id).order('created_at', { ascending: false })
-    setTeacherBatches(data || []); setBatchesLoading(false)
+    setTeacherBatches(await getTeacherBatches(t.id)); setBatchesLoading(false)
   }
 
   function openEdit(t: Teacher) { setEditTeacher({ ...t }); setViewTeacher(null) }
@@ -209,9 +207,8 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
 
   async function handleUpdate(e: React.FormEvent) {
     e.preventDefault(); if (!editTeacher) return; setLoading(true)
-    const supabase = createClient()
     const updates = { full_name: editTeacher.full_name, phone: editTeacher.phone, jlpt_level: editTeacher.jlpt_level, status: editTeacher.status }
-    await supabase.from('profiles').update(updates).eq('id', editTeacher.id)
+    await updateTeacher(editTeacher.id, updates)
     setTeachers(prev => prev.map(t => t.id === editTeacher.id ? { ...t, ...updates } : t))
     setEditTeacher(null); setLoading(false)
     toast('Teacher updated', 'success')
@@ -219,8 +216,7 @@ export default function TeachersClient({ initialTeachers }: { initialTeachers: T
 
   async function handleDeactivate(id: string) {
     if (!confirm('Deactivate this teacher?')) return
-    const supabase = createClient()
-    await supabase.from('profiles').update({ status: 'Inactive' }).eq('id', id)
+    await deactivateTeacher(id)
     setTeachers(prev => prev.map(t => t.id === id ? { ...t, status: 'Inactive' } : t))
     toast('Teacher deactivated', 'info')
   }
