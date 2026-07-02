@@ -799,7 +799,7 @@ function LandingStyles() {
 
       /* About */
       .lp-about { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
-      .lp-future { background: var(--navy); border-radius: 8px; padding: 34px; color: #fff; position: relative; overflow: hidden; }
+      .lp-future { background: var(--navy); border-radius: 8px; padding: 34px; color: #fff; position: relative; overflow: hidden; margin-top: 57px; }
       .lp-future::before { content: '⛩'; position: absolute; right: -10px; bottom: -18px; font-size: 120px; color: rgba(255,255,255,0.04); }
       .lp-future-title { font-family: var(--jp); font-size: 17px; font-weight: 600; margin: 0 0 22px; color: #fff; }
       .lp-future-list { list-style: none; margin: 0; padding: 0; counter-reset: f; display: flex; flex-direction: column; gap: 17px; }
@@ -1070,6 +1070,7 @@ function LandingStyles() {
         .lp-hero-sub { margin-left: auto; margin-right: auto; }
         .lp-hero-cta, .lp-cred, .lp-kicker { justify-content: center; }
         .lp-about, .lp-why { grid-template-columns: 1fr; gap: 36px; }
+        .lp-future { margin-top: 0; }
         .lp-kural-split { grid-template-columns: 1fr; gap: 28px; }
         .lp-course-grid { grid-template-columns: repeat(2, 1fr); }
         .lp-price-grid { grid-template-columns: repeat(2, 1fr); }
