@@ -564,6 +564,7 @@ export default function Landing() {
             <h4>Portal</h4>
             <Link href="/login">Student login</Link><Link href="/login">Teacher login</Link>
             <Link href="/login">Admin login</Link><Link href="/register">Register</Link>
+            <a href="#donate">Wheelchair donation</a>
           </div>
           <div>
             <h4>Contact</h4>
