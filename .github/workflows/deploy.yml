@@ -34,6 +34,18 @@ jobs:
             git checkout -- package-lock.json tsconfig.json 2>/dev/null || true
             git pull origin main
 
+            echo "── Applying idempotent DB schema + seed files..."
+            DB_URL="$(grep '^DATABASE_URL=' .env 2>/dev/null | head -1 | cut -d= -f2-)"
+            if [ -n "$DB_URL" ] && command -v psql >/dev/null 2>&1; then
+              psql "$DB_URL" -f db/003_posts.sql || echo "  (003_posts.sql warning — continuing)"
+              for f in $(ls db/seed_posts_*.sql 2>/dev/null | sort); do
+                echo "  seeding $f"
+                psql "$DB_URL" -f "$f" || echo "  ($f warning — continuing)"
+              done
+            else
+              echo "  (skipped — no DATABASE_URL or psql)"
+            fi
+
             echo "── Installing dependencies..."
             npm install --legacy-peer-deps > /dev/null 2>&1
 
