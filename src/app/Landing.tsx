@@ -48,15 +48,11 @@ const KIDS_COURSE = {
   points: ['Basic speaking & listening', 'Hiragana reading & writing', 'Fun vocabulary & greetings', 'Interactive activities & games'],
 }
 
-// Donation stats (update these as actual donations come in)
-const DONATION_STATS = { raised: 0, wheelchairs: 0, target: 300000 }
-
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Landing() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [donateOpen, setDonateOpen] = useState(false)
 
   return (
     <div className="lp">
@@ -78,10 +74,9 @@ export default function Landing() {
             <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
             <a href="#courses" onClick={() => setMenuOpen(false)}>Courses</a>
             <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
-            <a href="#why" onClick={() => setMenuOpen(false)}>Why Us</a>
             <a href="#faq" onClick={() => setMenuOpen(false)}>FAQ</a>
             <a href="/blog" onClick={() => setMenuOpen(false)}>Blog</a>
-            <a href="#donate" onClick={() => setMenuOpen(false)}>Donate</a>
+            <a href="/donate" onClick={() => setMenuOpen(false)}>Donate</a>
             <Link href="/login" className="lp-nav-login" onClick={() => setMenuOpen(false)}>Login</Link>
             <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>Free Demo</a>
           </nav>
@@ -320,43 +315,6 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ─── Why us — Thirukkural + mission cards ─────── */}
-        <section id="why" className="lp-section lp-section-paper">
-          <div className="lp-container">
-            <div className="lp-section-head">
-              <SectionTag ta="ஏன் நாங்கள்" jp="選ばれる理由">Why Mozhippattru</SectionTag>
-            </div>
-
-            {/* Special mission cards */}
-            <div className="lp-why-specials">
-              {/* Wheelchair Donation */}
-              <div className="lp-mission-card lp-mission-blue">
-                <div className="lp-mission-icon">♿</div>
-                <div className="lp-mission-body">
-                  <div className="lp-mission-badge">Learn &amp; Donate</div>
-                  <h3 className="lp-mission-title">25% of Every Fee Goes to Our Wheelchair Donation Fund</h3>
-                  <p className="lp-mission-desc">
-                    Education with a purpose. Whenever a student pays a course fee, <strong>25% of the tuition fee</strong> is
-                    automatically allocated to our Electric Wheelchair Donation Fund — helping people with
-                    physical disabilities regain independence and mobility.
-                  </p>
-                  <div className="lp-mission-tree">
-                    <span className="lp-mission-tree-icon">💡</span>
-                    <div>
-                      <strong>Did you know?</strong>
-                      <p>An electric wheelchair (≈ ₹90,000) can restore independent movement for years —
-                        turning everyday things like getting to class or work from impossible into ordinary.</p>
-                    </div>
-                  </div>
-                  <div className="lp-mission-tagline">
-                    {`“So far, students’ learning has gifted ${DONATION_STATS.wheelchairs} electric ${DONATION_STATS.wheelchairs === 1 ? 'wheelchair' : 'wheelchairs'} — that’s ${DONATION_STATS.wheelchairs} ${DONATION_STATS.wheelchairs === 1 ? 'person' : 'people'} back on the move.”`}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* ─── Annanin Parisu — free education for those who need it most ── */}
         <section id="annanin" className="lp-section lp-annanin">
           <div className="lp-container">
@@ -412,94 +370,6 @@ export default function Landing() {
               <span className="lp-ap-dot" />
               <span className="lp-ap-chip">Taught with dignity</span>
               <a href="#demo" className="lp-ap-apply">Apply through our free demo <ArrowRight size={15} /></a>
-            </div>
-          </div>
-        </section>
-
-        {/* ─── Donation section ────────────────── */}
-        <section id="donate" className="lp-section lp-donate-section">
-          <div className="lp-container">
-            <div className="lp-donate-inner">
-
-              {/* Left — copy + stats */}
-              <div className="lp-donate-copy">
-                <SectionTag light ta="கொடை" jp="寄付・車椅子">Support</SectionTag>
-                <h2 className="lp-h2 lp-on-dark">Support Our Electric Wheelchair Mission</h2>
-                <p className="lp-p lp-p-light">
-                  Students, parents, alumni, and supporters can voluntarily contribute to our Electric
-                  Wheelchair Donation Fund. Every contribution helps someone with a disability regain
-                  independence. <em style={{ color: 'rgba(255,255,255,0.55)', fontStyle: 'normal' }}>Donations are completely optional.</em>
-                </p>
-
-                {/* 3-stat row */}
-                <div className="lp-donate-stats-row">
-                  <div className="lp-dstat">
-                    <div className="lp-dstat-val">{inr(DONATION_STATS.raised)}</div>
-                    <div className="lp-dstat-label">Total Raised</div>
-                  </div>
-                  <div className="lp-dstat-div" />
-                  <div className="lp-dstat">
-                    <div className="lp-dstat-val">{DONATION_STATS.wheelchairs}</div>
-                    <div className="lp-dstat-label">Wheelchairs Gifted</div>
-                  </div>
-                  <div className="lp-dstat-div" />
-                  <div className="lp-dstat">
-                    <div className="lp-dstat-val">{Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100)}%</div>
-                    <div className="lp-dstat-label">To Next Batch</div>
-                  </div>
-                </div>
-
-                {/* Progress bar */}
-                <div className="lp-donate-bar-wrap">
-                  <div className="lp-donate-bar-track">
-                    <div className="lp-donate-bar-fill" style={{ width: `${Math.min(100, Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100))}%` }} />
-                  </div>
-                  <div className="lp-donate-bar-labels">
-                    <span>{inr(DONATION_STATS.raised)} raised</span>
-                    <span>Goal: {inr(DONATION_STATS.target)}</span>
-                  </div>
-                </div>
-
-                <div className="lp-donate-actions">
-                  <button onClick={() => setDonateOpen(true)} className="lp-btn lp-btn-donate">🤍 Donate Now</button>
-                  <span className="lp-donate-note">Voluntary · No minimum amount</span>
-                </div>
-              </div>
-
-              {/* Right — impact card */}
-              <div className="lp-donate-impact-card">
-                <div className="lp-dic-header">
-                  <div className="lp-dic-icon">♿</div>
-                  <div>
-                    <div className="lp-dic-title">Impact So Far</div>
-                    <div className="lp-dic-sub">Every student who learns, gives back</div>
-                  </div>
-                </div>
-
-                <div className="lp-dic-milestones">
-                  {[
-                    { label: 'Electric wheelchairs gifted', val: `${DONATION_STATS.wheelchairs} ${DONATION_STATS.wheelchairs === 1 ? 'person' : 'people'}`, done: true },
-                    { label: 'Families regained mobility', val: `${DONATION_STATS.wheelchairs} ${DONATION_STATS.wheelchairs === 1 ? 'family' : 'families'}`, done: true },
-                    { label: 'Current batch fundraising', val: `${Math.round(DONATION_STATS.raised / DONATION_STATS.target * 100)}% funded`, done: false },
-                  ].map((m, i) => (
-                    <div key={i} className={`lp-dic-row ${m.done ? 'lp-dic-done' : 'lp-dic-pending'}`}>
-                      <span className="lp-dic-dot">{m.done ? '✓' : '○'}</span>
-                      <span className="lp-dic-item-label">{m.label}</span>
-                      <span className="lp-dic-item-val">{m.val}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="lp-dic-cost">
-                  <div className="lp-dic-cost-label">Cost of one electric wheelchair</div>
-                  <div className="lp-dic-cost-val">≈ ₹90,000</div>
-                </div>
-
-                <div className="lp-dic-quote">
-                  &ldquo;When you learn Japanese here, someone somewhere gains the freedom to move.&rdquo;
-                </div>
-              </div>
-
             </div>
           </div>
         </section>
@@ -564,7 +434,7 @@ export default function Landing() {
             <h4>Portal</h4>
             <Link href="/login">Student login</Link><Link href="/login">Teacher login</Link>
             <Link href="/login">Admin login</Link><Link href="/register">Register</Link>
-            <a href="#donate">Wheelchair donation</a>
+            <Link href="/donate" className="lp-footer-donate">♿ Wheelchair donation</Link>
           </div>
           <div>
             <h4>Contact</h4>
@@ -585,8 +455,6 @@ export default function Landing() {
           <a href="https://nexaex.in" target="_blank" rel="noopener noreferrer">nexaex.in</a>
         </div>
       </footer>
-
-      {donateOpen && <DonateModal onClose={() => setDonateOpen(false)} />}
     </div>
   )
 }
@@ -649,90 +517,6 @@ function KidsCourse() {
 }
 
 // ─── Donate Modal ──────────────────────────────────────────────────────────────
-function DonateModal({ onClose }: { onClose: () => void }) {
-  const [form, setForm] = useState({ name: '', mobile: '', email: '', place: '', amount: '' })
-  const [done, setDone] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }))
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      const res = await fetch('/api/donate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
-      })
-      if (!res.ok) {
-        const d = await res.json().catch(() => ({}))
-        alert(d.error || 'Could not submit. Please try again.')
-        setLoading(false); return
-      }
-      setDone(true)
-    } catch {
-      alert('Network error. Please try again.')
-    }
-    setLoading(false)
-  }
-
-  return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }}
-      onClick={e => { if (e.target === e.currentTarget) onClose() }}>
-      <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '480px', boxShadow: '0 32px 80px rgba(0,0,0,0.3)', overflow: 'hidden' }}>
-        {/* Header */}
-        <div style={{ background: 'var(--navy)', padding: '20px 24px', position: 'relative', display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ width: '44px', height: '44px', background: 'var(--red)', borderRadius: '10px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--display)', fontWeight: 700, fontSize: '22px', color: '#fff', boxShadow: '0 4px 14px rgba(232,64,64,0.4)' }}>本</div>
-          <div>
-            <div style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: '17px', color: '#fff', letterSpacing: '-0.01em', lineHeight: 1.2 }}>மொழிப்பற்று</div>
-            <div style={{ fontSize: '9.5px', color: 'var(--gold-soft)', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '3px' }}>Mozhippattru · Japanese Language School</div>
-          </div>
-          <button onClick={onClose} style={{ position: 'absolute', top: '14px', right: '16px', background: 'rgba(255,255,255,0.12)', border: 'none', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
-        </div>
-        <div style={{ background: 'var(--navy)', padding: '0 24px 18px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-          <p style={{ color: 'var(--gold-soft)', fontSize: '12.5px', margin: 0 }}>🤍 Your gift funds an electric wheelchair for someone in need</p>
-        </div>
-
-        <div style={{ padding: '28px' }}>
-          {!done ? (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {[
-                { label: 'Full Name', key: 'name', type: 'text', placeholder: 'Your full name' },
-                { label: 'Mobile Number', key: 'mobile', type: 'tel', placeholder: '+91 XXXXX XXXXX' },
-                { label: 'Email Address', key: 'email', type: 'email', placeholder: 'you@example.com' },
-                { label: 'City / Place', key: 'place', type: 'text', placeholder: 'Chennai, Tamil Nadu' },
-                { label: 'Amount You Wish to Donate (₹)', key: 'amount', type: 'number', placeholder: 'e.g. 500' },
-              ].map(f => (
-                <div key={f.key}>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>{f.label}</label>
-                  <input required type={f.type} placeholder={f.placeholder} value={(form as Record<string,string>)[f.key]}
-                    onChange={e => set(f.key, e.target.value)}
-                    style={{ width: '100%', padding: '10px 14px', border: '1.5px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }} />
-                </div>
-              ))}
-              <button type="submit" disabled={loading}
-                style={{ marginTop: '6px', width: '100%', padding: '13px', background: loading ? '#9ca3af' : 'var(--red)', color: '#fff', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
-                {loading ? 'Submitting…' : 'Submit'}
-              </button>
-            </form>
-          ) : (
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '40px', marginBottom: '12px' }}>🙏</div>
-              <h4 style={{ fontFamily: 'var(--serif)', fontSize: '20px', color: 'var(--navy)', margin: '0 0 6px' }}>Thank you, {form.name.split(' ')[0]}!</h4>
-              <p style={{ fontSize: '13.5px', color: '#6b7280', margin: '0 0 20px' }}>
-                We have received your interest to donate <strong>₹{form.amount}</strong>. Our team will contact you shortly with the payment details.
-              </p>
-              <p style={{ fontSize: '12.5px', color: '#2f9e63', fontWeight: 600, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '12px 14px' }}>
-                ✅ We will reach out on your <strong>mobile</strong>, <strong>email</strong> and <strong>WhatsApp</strong> with the account details, and send a receipt once your donation is confirmed.
-              </p>
-              <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '12px' }}>Questions? WhatsApp us at <strong>+91 90928 82957</strong></p>
-              <button onClick={onClose} style={{ marginTop: '16px', padding: '10px 28px', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Close</button>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // ─── Demo form ─────────────────────────────────────────────────────────────────
 function DemoForm() {
   const [form, setForm] = useState({
@@ -1125,6 +909,10 @@ function LandingStyles() {
       .lp-footer-jp { font-family: var(--jp); color: var(--gold-soft); }
       .lp-fc-email { font-size: 12.5px; align-items: flex-start; line-height: 1.45; overflow-wrap: anywhere; }
       .lp-fc-email svg { flex-shrink: 0; margin-top: 3px; }
+      .lp-footer-donate, .lp-footer .lp-footer-donate { display: inline-block; margin-top: 10px; background: var(--red);
+        color: #fff; padding: 9px 14px; border-radius: 8px; font-size: 13px; font-weight: 700;
+        box-shadow: 0 6px 16px rgba(226,65,56,0.3); transition: background 160ms, transform 160ms; align-self: flex-start; }
+      .lp-footer-donate:hover { background: var(--red-deep); color: #fff; transform: translateY(-2px); }
       .lp-footer-credit { border-top: 1px solid rgba(255,255,255,0.07); padding: 16px 28px; text-align: center;
         font-size: 12px; color: rgba(255,255,255,0.4); max-width: 1180px; margin: 0 auto; }
       .lp-footer-credit a { display: inline; margin: 0; font-size: 12px; color: rgba(255,255,255,0.62);
