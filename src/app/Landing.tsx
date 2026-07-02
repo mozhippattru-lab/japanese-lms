@@ -316,7 +316,7 @@ export default function Landing() {
             <div style={{ marginTop: '14px', padding: '14px 20px', background: 'var(--navy)', border: '1px solid var(--navy-2)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
               <span style={{ fontSize: '18px' }}>🗓️</span>
               <p style={{ margin: 0, fontSize: '13.5px', color: 'rgba(255,255,255,0.78)' }}>
-                <strong style={{ color: '#fff' }}>JLPT Exam December, 2026:</strong> Exam Date — <strong style={{ color: '#ff8d85' }}>06/12/2026</strong>
+                <strong style={{ color: '#fff' }}>TARGET: JLPT N5, N4, N3 — DECEMBER, 2026.</strong> Exam Date — <strong style={{ color: '#ff8d85' }}>06/12/2026</strong>
               </p>
             </div>
           </div>
