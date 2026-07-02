@@ -342,6 +342,7 @@ export default function Landing() {
                   Students who have lost one or both parents can learn Japanese with us at no cost. Each
                   application is gently verified before we welcome them in.
                 </p>
+                <div className="lp-ap-free">Tuition fee is FREE</div>
               </div>
 
               <div className="lp-ap-card" style={{ ['--c' as string]: 'var(--red)' }}>
@@ -351,6 +352,7 @@ export default function Landing() {
                   UDID cardholders who wish to study Japanese are supported fully and taught free — online
                   or in class, whichever serves them best.
                 </p>
+                <div className="lp-ap-free">Tuition fee is FREE</div>
               </div>
 
               <div className="lp-ap-card" style={{ ['--c' as string]: 'var(--navy)' }}>
@@ -360,6 +362,7 @@ export default function Landing() {
                   Transgender learners who wish to study Japanese are warmly welcome to join and learn
                   with us, with dignity and free of charge.
                 </p>
+                <div className="lp-ap-free">Tuition fee is FREE</div>
               </div>
 
               <div className="lp-ap-card" style={{ ['--c' as string]: '#2e7d46' }}>
@@ -369,6 +372,7 @@ export default function Landing() {
                   Students of nearby government schools learn Japanese with us completely free — and each
                   plants at least one tree near their home or school, giving back to nature.
                 </p>
+                <div className="lp-ap-free">Tuition fee is FREE</div>
               </div>
             </div>
 
@@ -1060,6 +1064,10 @@ function LandingStyles() {
         background: color-mix(in srgb, var(--c) 12%, #fff); }
       .lp-ap-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 10px; line-height: 1.3; }
       .lp-ap-desc { font-size: 14px; line-height: 1.7; color: var(--ink-soft); margin: 0; }
+      .lp-ap-free { margin-top: 16px; align-self: flex-start; font-size: 12px; font-weight: 700;
+        letter-spacing: .06em; text-transform: uppercase; color: var(--c);
+        border: 1.5px solid color-mix(in srgb, var(--c) 45%, transparent);
+        background: color-mix(in srgb, var(--c) 8%, #fff); padding: 7px 12px; border-radius: 8px; }
       .lp-annanin-foot { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px;
         margin-top: 40px; }
       .lp-ap-chip { font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); }
