@@ -245,7 +245,7 @@ export default function Landing() {
                 <span>❌ Japanglish</span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '9px', padding: '9px 13px', fontSize: '12.5px', color: '#5f4b00' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', background: '#fff', border: '1px solid var(--line)', borderLeft: '3px solid var(--red)', borderRadius: '9px', padding: '9px 13px', fontSize: '12.5px', color: 'var(--ink-soft)', boxShadow: '0 3px 12px rgba(40,32,20,0.06)' }}>
                 <span>📌</span>
                 <span>Language adulteration won&apos;t be entertained in our school.</span>
               </div>
@@ -263,9 +263,9 @@ export default function Landing() {
               <SectionTag ta="கட்டணம்" jp="料金">Pricing</SectionTag>
               <h2 className="lp-h2">Honest, one-time fees.</h2>
               <p className="lp-lead">No hidden charges. Take all three levels together and save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}.</p>
-              <div className="lp-gst-note" style={{ marginTop: '12px', padding: '12px 18px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '10px', display: 'inline-flex', alignItems: 'center', gap: '10px', width: 'fit-content', maxWidth: 'none' }}>
+              <div className="lp-gst-note" style={{ marginTop: '12px', padding: '12px 18px', background: '#fff', border: '1px solid var(--line)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'inline-flex', alignItems: 'center', gap: '10px', width: 'fit-content', maxWidth: 'none', boxShadow: '0 3px 12px rgba(40,32,20,0.06)' }}>
                 <span style={{ fontSize: '16px' }}>📌</span>
-                <p style={{ margin: 0, fontSize: '13px', color: '#5f4b00', whiteSpace: 'nowrap' }}><strong>Note:</strong> All classes are conducted <strong>online</strong>. <strong style={{ color: 'var(--red)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>All prices are inclusive of GST, excluding book fees.</strong></p>
+                <p style={{ margin: 0, fontSize: '13px', color: 'var(--ink-soft)', whiteSpace: 'nowrap' }}><strong style={{ color: 'var(--ink)' }}>Note:</strong> All classes are conducted <strong>online</strong>. <strong style={{ color: 'var(--red)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>All prices are inclusive of GST, excluding book fees.</strong></p>
               </div>
             </div>
 
@@ -305,10 +305,10 @@ export default function Landing() {
               </div>
             </div>
 
-            <div style={{ marginTop: '24px', padding: '14px 20px', background: '#fff8e1', border: '1px solid #ffe082', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ marginTop: '24px', padding: '14px 20px', background: '#fff', border: '1px solid var(--line)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 3px 12px rgba(40,32,20,0.06)' }}>
               <span style={{ fontSize: '18px' }}>📌</span>
-              <p style={{ margin: 0, fontSize: '13.5px', color: '#5f4b00' }}>
-                <strong>Note:</strong> In-class course prices are completely different from the above mentioned online prices.{' '}
+              <p style={{ margin: 0, fontSize: '13.5px', color: 'var(--ink-soft)' }}>
+                <strong style={{ color: 'var(--ink)' }}>Note:</strong> In-class course prices are completely different from the above mentioned online prices.{' '}
                 <a href="#demo" style={{ color: 'var(--red)', fontWeight: 600, textDecoration: 'none' }}>Enquire for more details →</a>
               </p>
             </div>
