@@ -60,6 +60,12 @@ export default async function BlogIndex() {
           </p>
           <a href="/#demo" style={{ display: 'inline-block', background: '#e84040', color: '#fff', textDecoration: 'none', padding: '13px 30px', borderRadius: '10px', fontSize: '15px', fontWeight: 700, boxShadow: '0 8px 22px rgba(232,64,64,0.3)' }}>Book a Free Demo →</a>
         </div>
+
+        {/* Developer credit */}
+        <p style={{ marginTop: '40px', textAlign: 'center', fontSize: '13px', color: '#8a90a8' }}>
+          Developed &amp; maintained by{' '}
+          <a href="https://nexaex.in" target="_blank" rel="noopener" style={{ color: '#2d3461', fontWeight: 600, textDecoration: 'none' }}>Nexaex Digital Services Pvt. Ltd.</a>
+        </p>
       </div>
     </main>
   )
