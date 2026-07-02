@@ -334,30 +334,6 @@ export default function Landing() {
 
             {/* Special mission cards */}
             <div className="lp-why-specials">
-              {/* Free Education */}
-              <div className="lp-mission-card lp-mission-green">
-                <div className="lp-mission-icon">🌳</div>
-                <div className="lp-mission-body">
-                  <div className="lp-mission-badge">Free Education Initiative</div>
-                  <h3 className="lp-mission-title">Free Japanese Education for Government School Students</h3>
-                  <p className="lp-mission-desc">
-                    We provide free Japanese language education to students studying in nearby government schools.
-                    Our mission is to create equal learning opportunities for every child regardless of their
-                    financial background.
-                  </p>
-                  <div className="lp-mission-tree">
-                    <span className="lp-mission-tree-icon">🌱</span>
-                    <div>
-                      <strong>Tree Planting Initiative</strong>
-                      <p>Every student receiving free education must plant at least one tree near their home or school.</p>
-                    </div>
-                  </div>
-                  <div className="lp-mission-tagline">
-                    &ldquo;We provide education. Our students give back to nature by planting trees and creating a greener future.&rdquo;
-                  </div>
-                </div>
-              </div>
-
               {/* Wheelchair Donation */}
               <div className="lp-mission-card lp-mission-blue">
                 <div className="lp-mission-icon">♿</div>
@@ -423,6 +399,15 @@ export default function Landing() {
                 <p className="lp-ap-desc">
                   Transgender learners who wish to study Japanese are warmly welcome to join and learn
                   with us, with dignity and free of charge.
+                </p>
+              </div>
+
+              <div className="lp-ap-card" style={{ ['--c' as string]: '#2e7d46' }}>
+                <div className="lp-ap-icon">🌳</div>
+                <h3 className="lp-ap-title">Government school students</h3>
+                <p className="lp-ap-desc">
+                  Students of nearby government schools learn Japanese with us completely free — and each
+                  plants at least one tree near their home or school, giving back to nature.
                 </p>
               </div>
             </div>
@@ -1173,7 +1158,7 @@ function LandingStyles() {
       .lp-kids-note { font-size: 11px; color: var(--ink-soft); text-align: center; }
 
       /* Why Us special mission cards — editorial brand style */
-      .lp-why-specials { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 52px; }
+      .lp-why-specials { display: grid; grid-template-columns: 1fr; gap: 26px; margin-top: 52px; }
       .lp-mission-card { position: relative; background: #fff; border: 1px solid var(--line);
         border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;
         transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
@@ -1207,7 +1192,8 @@ function LandingStyles() {
       .lp-annanin-head .lp-tag { justify-content: center; }
       .lp-annanin-lead { margin: 0 auto; }
       .lp-annanin-lead em { font-family: var(--serif); font-style: italic; color: var(--red); font-weight: 600; }
-      .lp-annanin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+      .lp-annanin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+      @media (max-width: 1200px) { .lp-annanin-grid { grid-template-columns: repeat(2, 1fr); } }
       .lp-ap-card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px;
         padding: 30px 28px; overflow: hidden; display: flex; flex-direction: column;
         transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
