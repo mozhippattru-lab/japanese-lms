@@ -312,6 +312,13 @@ export default function Landing() {
                 <a href="#demo" style={{ color: 'var(--red)', fontWeight: 600, textDecoration: 'none' }}>Enquire for more details →</a>
               </p>
             </div>
+
+            <div style={{ marginTop: '14px', padding: '14px 20px', background: '#fff', border: '1px solid var(--line)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 3px 12px rgba(40,32,20,0.06)' }}>
+              <span style={{ fontSize: '18px' }}>🗓️</span>
+              <p style={{ margin: 0, fontSize: '13.5px', color: 'var(--ink-soft)' }}>
+                <strong style={{ color: 'var(--ink)' }}>JLPT Exam December, 2026:</strong> Exam Date — <strong style={{ color: 'var(--red)' }}>06/12/2026</strong>
+              </p>
+            </div>
           </div>
         </section>
 
