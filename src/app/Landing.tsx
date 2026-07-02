@@ -325,11 +325,6 @@ export default function Landing() {
           <div className="lp-container">
             <div className="lp-section-head">
               <SectionTag ta="ஏன் நாங்கள்" jp="選ばれる理由">Why Mozhippattru</SectionTag>
-              <h2 className="lp-h2">Small school. Serious results.</h2>
-              <p className="lp-lead">
-                We kept the things that actually move a learner forward, and left out the rest.
-                Here&apos;s what you can count on with us.
-              </p>
             </div>
 
             {/* Special mission cards */}
