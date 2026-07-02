@@ -316,7 +316,7 @@ function DonateStyles() {
       .lp-p-light { color: rgba(255,255,255,0.72); }
 
       /* Mission card */
-      .lp-why-specials { display: grid; grid-template-columns: 1fr; gap: 26px; margin-top: 24px; }
+      .lp-why-specials { display: grid; grid-template-columns: 1fr; gap: 26px; margin: 24px auto 0; max-width: 720px; }
       .lp-mission-card { position: relative; background: #fff; border: 1px solid var(--line);
         border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;
         transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
