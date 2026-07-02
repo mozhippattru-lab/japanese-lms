@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getPublishedPost, getPublishedPosts } from '@/lib/blog'
+import { getPublishedPost, getPublishedPosts, getRelatedPosts } from '@/lib/blog'
 
 export const revalidate = 60
 
@@ -47,6 +47,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = await getPublishedPost(slug).catch(() => null)
   if (!post) notFound()
 
+  const related = await getRelatedPosts(post.slug, post.tags || []).catch(() => [])
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -87,6 +89,30 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           className="blog-body"
           dangerouslySetInnerHTML={{ __html: post.body_html || '' }}
         />
+
+        {/* Conversion CTA */}
+        <div style={{ marginTop: '44px', background: 'linear-gradient(135deg,#1a1f3c 0%,#2d3461 100%)', borderRadius: '16px', padding: '30px 32px', textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Shippori Mincho', serif", fontSize: '22px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>Ready to learn Japanese?</div>
+          <p style={{ fontSize: '14.5px', color: 'rgba(255,255,255,0.75)', margin: '0 auto 20px', maxWidth: '460px', lineHeight: 1.6 }}>
+            Join Mozhippattru Japanese Language School — JLPT N5–N3 with N1-certified teachers. Book a <strong>free demo class</strong>, no commitment.
+          </p>
+          <a href="/#demo" style={{ display: 'inline-block', background: '#e84040', color: '#fff', textDecoration: 'none', padding: '13px 30px', borderRadius: '10px', fontSize: '15px', fontWeight: 700, boxShadow: '0 8px 22px rgba(232,64,64,0.3)' }}>Book a Free Demo →</a>
+        </div>
+
+        {/* Related posts */}
+        {related.length > 0 && (
+          <div style={{ marginTop: '48px' }}>
+            <h2 style={{ fontFamily: "'Shippori Mincho', serif", fontSize: '20px', fontWeight: 700, color: '#1a1f3c', margin: '0 0 16px' }}>Continue reading</h2>
+            <div style={{ display: 'grid', gap: '12px' }}>
+              {related.map(r => (
+                <Link key={r.id} href={`/blog/${r.slug}`} style={{ textDecoration: 'none', display: 'block', border: '1px solid rgba(40,32,20,0.1)', borderRadius: '12px', padding: '16px 18px' }}>
+                  <div style={{ fontSize: '15.5px', fontWeight: 700, color: '#1a1f3c', marginBottom: '4px' }}>{r.title}</div>
+                  {r.excerpt && <div style={{ fontSize: '13.5px', color: '#6b665e', lineHeight: 1.5 }}>{r.excerpt}</div>}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </article>
 
       <style>{`

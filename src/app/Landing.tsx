@@ -80,6 +80,7 @@ export default function Landing() {
             <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
             <a href="#why" onClick={() => setMenuOpen(false)}>Why Us</a>
             <a href="#faq" onClick={() => setMenuOpen(false)}>FAQ</a>
+            <a href="/blog" onClick={() => setMenuOpen(false)}>Blog</a>
             <a href="#donate" onClick={() => setMenuOpen(false)}>Donate</a>
             <Link href="/login" className="lp-nav-login" onClick={() => setMenuOpen(false)}>Login</Link>
             <a href="#demo" className="lp-btn lp-btn-primary" onClick={() => setMenuOpen(false)}>Free Demo</a>
@@ -577,7 +578,7 @@ export default function Landing() {
           <div>
             <h4>Explore</h4>
             <a href="#about">About us</a><a href="#courses">Courses</a>
-            <a href="#pricing">Pricing</a><a href="#demo">Free demo</a>
+            <a href="#pricing">Pricing</a><a href="/blog">Blog</a><a href="#demo">Free demo</a>
           </div>
           <div>
             <h4>Portal</h4>

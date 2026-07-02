@@ -51,6 +51,15 @@ export default async function BlogIndex() {
             ))}
           </div>
         )}
+
+        {/* Conversion CTA */}
+        <div style={{ marginTop: '48px', background: 'linear-gradient(135deg,#1a1f3c 0%,#2d3461 100%)', borderRadius: '16px', padding: '32px', textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Shippori Mincho', serif", fontSize: '24px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>Learn Japanese with us</div>
+          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.75)', margin: '0 auto 20px', maxWidth: '480px', lineHeight: 1.6 }}>
+            JLPT N5–N3 coaching by N1-certified teachers, online &amp; across India. Book your <strong>free demo class</strong> today.
+          </p>
+          <a href="/#demo" style={{ display: 'inline-block', background: '#e84040', color: '#fff', textDecoration: 'none', padding: '13px 30px', borderRadius: '10px', fontSize: '15px', fontWeight: 700, boxShadow: '0 8px 22px rgba(232,64,64,0.3)' }}>Book a Free Demo →</a>
+        </div>
       </div>
     </main>
   )
