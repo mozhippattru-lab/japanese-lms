@@ -245,7 +245,7 @@ export default function Landing() {
                 <span>❌ Japanglish</span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', background: '#fff', border: '1px solid var(--line)', borderLeft: '3px solid var(--red)', borderRadius: '9px', padding: '9px 13px', fontSize: '12.5px', color: 'var(--ink-soft)', boxShadow: '0 3px 12px rgba(40,32,20,0.06)' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '12px', width: 'fit-content', background: '#fff', border: '1px solid var(--line)', borderLeft: '3px solid var(--red)', borderRadius: '9px', padding: '9px 13px', fontSize: '12.5px', color: 'var(--ink-soft)', boxShadow: '0 3px 12px rgba(40,32,20,0.06)' }}>
                 <span>📌</span>
                 <span>Language adulteration won&apos;t be entertained in our school.</span>
               </div>
