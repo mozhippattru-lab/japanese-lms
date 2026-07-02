@@ -1063,8 +1063,8 @@ function LandingStyles() {
         justify-content: center; font-size: 28px; margin-bottom: 18px;
         background: color-mix(in srgb, var(--c) 12%, #fff); }
       .lp-ap-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 10px; line-height: 1.3; }
-      .lp-ap-desc { font-size: 14px; line-height: 1.7; color: var(--ink-soft); margin: 0; }
-      .lp-ap-free { margin-top: 16px; align-self: flex-start; font-size: 12px; font-weight: 700;
+      .lp-ap-desc { font-size: 14px; line-height: 1.7; color: var(--ink-soft); margin: 0 0 16px; }
+      .lp-ap-free { margin-top: auto; align-self: flex-start; font-size: 12px; font-weight: 700;
         letter-spacing: .06em; text-transform: uppercase; color: var(--c);
         border: 1.5px solid color-mix(in srgb, var(--c) 45%, transparent);
         background: color-mix(in srgb, var(--c) 8%, #fff); padding: 7px 12px; border-radius: 8px; }
