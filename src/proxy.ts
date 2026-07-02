@@ -9,7 +9,7 @@ export async function proxy(request: NextRequest) {
   const hasSession = Boolean(request.cookies.get(SESSION_COOKIE)?.value)
 
   // Public marketing + auth flow + crawler files — reachable without a session.
-  const PUBLIC_PREFIXES = ['/login', '/register', '/forgot-password', '/reset-password', '/privacy', '/terms', '/blog', '/api/auth', '/api/colleges', '/api/demo-request']
+  const PUBLIC_PREFIXES = ['/login', '/register', '/forgot-password', '/reset-password', '/privacy', '/terms', '/blog', '/api/auth', '/api/colleges', '/api/demo-request', '/api/donate']
   const PUBLIC_EXACT = ['/sitemap.xml', '/robots.txt', '/manifest.webmanifest', '/opengraph-image', '/twitter-image', '/favicon.ico']
   const isPublic =
     pathname === '/' ||

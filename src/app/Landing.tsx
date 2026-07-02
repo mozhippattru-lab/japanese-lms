@@ -674,10 +674,23 @@ function DonateModal({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false)
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }))
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => { setLoading(false); setDone(true) }, 600)
+    try {
+      const res = await fetch('/api/donate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
+      })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        alert(d.error || 'Could not submit. Please try again.')
+        setLoading(false); return
+      }
+      setDone(true)
+    } catch {
+      alert('Network error. Please try again.')
+    }
+    setLoading(false)
   }
 
   return (
@@ -716,34 +729,20 @@ function DonateModal({ onClose }: { onClose: () => void }) {
               ))}
               <button type="submit" disabled={loading}
                 style={{ marginTop: '6px', width: '100%', padding: '13px', background: loading ? '#9ca3af' : 'var(--red)', color: '#fff', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
-                {loading ? 'Submitting…' : 'Submit & See Account Details'}
+                {loading ? 'Submitting…' : 'Submit'}
               </button>
             </form>
           ) : (
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '40px', marginBottom: '12px' }}>🙏</div>
               <h4 style={{ fontFamily: 'var(--serif)', fontSize: '20px', color: 'var(--navy)', margin: '0 0 6px' }}>Thank you, {form.name.split(' ')[0]}!</h4>
-              <p style={{ fontSize: '13.5px', color: '#6b7280', margin: '0 0 24px' }}>Please transfer ₹{form.amount} to the account below. Our team will confirm within 24 hours.</p>
-              <div style={{ background: '#f8f9fa', border: '1.5px solid #e5e7eb', borderRadius: '12px', padding: '20px', textAlign: 'left' }}>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '14px' }}>Bank Account Details</div>
-                {[
-                  ['Account Name', 'Mozhippattru Japanese Language School'],
-                  ['Bank', 'State Bank of India'],
-                  ['Account Number', '00000XXXXXXXXXX'],
-                  ['IFSC Code', 'SBIN0XXXXXXX'],
-                  ['Branch', 'Kumbakonam, Tamil Nadu'],
-                  ['UPI ID', 'mozhippattru@sbi'],
-                ].map(([label, val]) => (
-                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13.5px' }}>
-                    <span style={{ color: '#6b7280' }}>{label}</span>
-                    <span style={{ fontWeight: 600, color: 'var(--navy)' }}>{val}</span>
-                  </div>
-                ))}
-              </div>
-              <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '14px' }}>After transfer, WhatsApp your screenshot to <strong>+91 90928 82957</strong></p>
-              <p style={{ fontSize: '12.5px', color: '#2f9e63', fontWeight: 600, marginTop: '8px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '10px 14px' }}>
-                ✅ Once we confirm your donation, we will send a receipt to your <strong>email</strong> and <strong>WhatsApp</strong>.
+              <p style={{ fontSize: '13.5px', color: '#6b7280', margin: '0 0 20px' }}>
+                We have received your interest to donate <strong>₹{form.amount}</strong>. Our team will contact you shortly with the payment details.
               </p>
+              <p style={{ fontSize: '12.5px', color: '#2f9e63', fontWeight: 600, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '12px 14px' }}>
+                ✅ We will reach out on your <strong>mobile</strong>, <strong>email</strong> and <strong>WhatsApp</strong> with the account details, and send a receipt once your donation is confirmed.
+              </p>
+              <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '12px' }}>Questions? WhatsApp us at <strong>+91 90928 82957</strong></p>
               <button onClick={onClose} style={{ marginTop: '16px', padding: '10px 28px', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Close</button>
             </div>
           )}
