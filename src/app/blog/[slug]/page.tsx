@@ -118,6 +118,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <p style={{ marginTop: '48px', paddingTop: '20px', borderTop: '1px solid rgba(40,32,20,0.1)', textAlign: 'center', fontSize: '13px', color: '#8a90a8' }}>
           Developed &amp; maintained by{' '}
           <a href="https://nexaex.in" target="_blank" rel="noopener" style={{ color: '#2d3461', fontWeight: 600, textDecoration: 'none' }}>Nexaex Digital Services Pvt. Ltd.</a>
+          {' '}·{' '}
+          <a href="https://nexaex.in" target="_blank" rel="noopener" style={{ color: '#2d3461', fontWeight: 600, textDecoration: 'none' }}>nexaex.in</a>
         </p>
       </article>
 

@@ -65,6 +65,8 @@ export default async function BlogIndex() {
         <p style={{ marginTop: '40px', textAlign: 'center', fontSize: '13px', color: '#8a90a8' }}>
           Developed &amp; maintained by{' '}
           <a href="https://nexaex.in" target="_blank" rel="noopener" style={{ color: '#2d3461', fontWeight: 600, textDecoration: 'none' }}>Nexaex Digital Services Pvt. Ltd.</a>
+          {' '}·{' '}
+          <a href="https://nexaex.in" target="_blank" rel="noopener" style={{ color: '#2d3461', fontWeight: 600, textDecoration: 'none' }}>nexaex.in</a>
         </p>
       </div>
     </main>
