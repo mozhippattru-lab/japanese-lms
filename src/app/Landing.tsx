@@ -381,6 +381,71 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* ─── Batch timings ───────────────────── */}
+        <section id="batches" className="lp-section lp-section-paper">
+          <div className="lp-container">
+            <div className="lp-section-head">
+              <SectionTag ta="வகுப்பு நேரங்கள்" jp="クラス時間">Batch Timings</SectionTag>
+              <h2 className="lp-h2">Online classes, around your day.</h2>
+              <p className="lp-lead">Pick the batch that fits your routine — early mornings before work, evenings after class, or weekends only.</p>
+            </div>
+
+            <div className="lp-batch-grid">
+              <div className="lp-batch-card" style={{ ['--c' as string]: '#2f9e63' }}>
+                <div className="lp-batch-head">
+                  <span className="lp-batch-dot" />
+                  <div>
+                    <h3 className="lp-batch-title">Weekday Batches</h3>
+                    <div className="lp-batch-days">Monday – Friday</div>
+                  </div>
+                </div>
+                <ul className="lp-batch-list">
+                  <li><span>Early Morning</span><b>6:00 AM – 7:30 AM</b></li>
+                  <li><span>Morning</span><b>10:00 AM – 12:00 PM</b></li>
+                  <li><span>Afternoon</span><b>2:00 PM – 4:00 PM</b></li>
+                  <li><span>Evening</span><b>5:00 PM – 6:30 PM</b></li>
+                  <li><span>Night</span><b>8:00 PM – 9:30 PM</b></li>
+                </ul>
+              </div>
+
+              <div className="lp-batch-card" style={{ ['--c' as string]: '#c98a2b' }}>
+                <div className="lp-batch-head">
+                  <span className="lp-batch-dot" />
+                  <div>
+                    <h3 className="lp-batch-title">Weekend Batches</h3>
+                    <div className="lp-batch-days">Saturday &amp; Sunday</div>
+                  </div>
+                </div>
+                <ul className="lp-batch-list">
+                  <li><span>Early Morning</span><b>6:00 AM – 7:30 AM</b></li>
+                  <li><span>Morning</span><b>9:00 AM – 12:00 PM</b></li>
+                  <li><span>Afternoon</span><b>1:00 PM – 4:00 PM</b></li>
+                </ul>
+              </div>
+
+              <div className="lp-batch-card" style={{ ['--c' as string]: 'var(--navy)' }}>
+                <div className="lp-batch-head">
+                  <span className="lp-batch-dot" />
+                  <div>
+                    <h3 className="lp-batch-title">Sunday Only Batch</h3>
+                    <div className="lp-batch-days">Sunday</div>
+                  </div>
+                </div>
+                <ul className="lp-batch-list">
+                  <li><span>Evening</span><b>6:00 PM – 9:00 PM</b></li>
+                </ul>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '24px', padding: '14px 20px', background: '#fff', border: '1px solid var(--line)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 3px 12px rgba(40,32,20,0.06)' }}>
+              <span style={{ fontSize: '18px' }}>📌</span>
+              <p style={{ margin: 0, fontSize: '13.5px', color: 'var(--ink-soft)' }}>
+                <strong style={{ color: 'var(--ink)' }}>Note:</strong> Batches will be started only if the required number of students for a batch is reached.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* ─── Demo ────────────────────────────── */}
         <section id="demo" className="lp-section lp-demo">
           <div className="lp-container lp-demo-grid">
@@ -1003,6 +1068,25 @@ function LandingStyles() {
         color: var(--red); text-decoration: none; margin-left: 8px; transition: gap 150ms; }
       .lp-ap-apply:hover { gap: 10px; }
 
+      /* Batch timings */
+      .lp-batch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+      .lp-batch-card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px;
+        padding: 28px; overflow: hidden; display: flex; flex-direction: column;
+        transition: transform 200ms, box-shadow 200ms, border-color 200ms; }
+      .lp-batch-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--c); }
+      .lp-batch-card:hover { transform: translateY(-6px); box-shadow: 0 28px 50px -22px rgba(40,32,20,0.4); border-color: transparent; }
+      .lp-batch-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
+      .lp-batch-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--c); flex-shrink: 0; margin-top: 6px;
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 18%, transparent); }
+      .lp-batch-title { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 4px; line-height: 1.3; }
+      .lp-batch-days { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--c); }
+      .lp-batch-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+      .lp-batch-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: 13.5px; }
+      .lp-batch-list li:last-child { border-bottom: none; }
+      .lp-batch-list li span { color: var(--ink-soft); }
+      .lp-batch-list li b { color: var(--ink); font-weight: 600; white-space: nowrap; }
+
       /* Donation section */
       .lp-donate-section { background: var(--navy);
         background-image: radial-gradient(110% 80% at 85% 15%, rgba(226,65,56,0.14), transparent 55%),
@@ -1088,6 +1172,7 @@ function LandingStyles() {
         .lp-kids-cta { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; }
         .lp-why-specials { grid-template-columns: 1fr; }
         .lp-annanin-grid { grid-template-columns: 1fr; }
+        .lp-batch-grid { grid-template-columns: 1fr; }
         .lp-donate-inner { grid-template-columns: 1fr; gap: 36px; }
         .lp-donate-stats-row { flex-wrap: wrap; }
       }
