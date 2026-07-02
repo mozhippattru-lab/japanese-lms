@@ -245,7 +245,7 @@ export default function Landing() {
                 <span>❌ Japanglish</span>
               </div>
 
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '12px', width: 'fit-content', background: 'var(--navy)', border: '1px solid var(--navy-2)', borderLeft: '3px solid var(--red)', borderRadius: '9px', padding: '9px 13px', fontSize: '12.5px', color: 'rgba(255,255,255,0.82)', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '12px', width: 'fit-content', background: '#2b3260', border: '1px solid #3a4173', borderLeft: '3px solid var(--red)', borderRadius: '9px', padding: '9px 13px', fontSize: '12.5px', color: 'rgba(255,255,255,0.82)', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
                 <span>📌</span>
                 <span>Language adulteration won&apos;t be entertained in our school.</span>
               </div>
@@ -263,7 +263,7 @@ export default function Landing() {
               <SectionTag ta="கட்டணம்" jp="料金">Pricing</SectionTag>
               <h2 className="lp-h2">Honest, one-time fees.</h2>
               <p className="lp-lead">No hidden charges. Take all three levels together and save {inr(PACKAGE_ORIGINAL - PACKAGE_PRICE)}.</p>
-              <div className="lp-gst-note" style={{ marginTop: '12px', padding: '12px 18px', background: 'var(--navy)', border: '1px solid var(--navy-2)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'inline-flex', alignItems: 'center', gap: '10px', width: 'fit-content', maxWidth: 'none', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
+              <div className="lp-gst-note" style={{ marginTop: '12px', padding: '12px 18px', background: '#2b3260', border: '1px solid #3a4173', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'inline-flex', alignItems: 'center', gap: '10px', width: 'fit-content', maxWidth: 'none', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
                 <span style={{ fontSize: '16px' }}>📌</span>
                 <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.78)', whiteSpace: 'nowrap' }}><strong style={{ color: '#fff' }}>Note:</strong> All classes are conducted <strong style={{ color: '#fff' }}>online</strong>. <strong style={{ color: '#ff8d85', textTransform: 'uppercase', letterSpacing: '0.03em' }}>All prices are inclusive of GST, excluding book fees.</strong></p>
               </div>
@@ -305,7 +305,7 @@ export default function Landing() {
               </div>
             </div>
 
-            <div style={{ marginTop: '24px', padding: '14px 20px', background: 'var(--navy)', border: '1px solid var(--navy-2)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
+            <div style={{ marginTop: '24px', padding: '14px 20px', background: '#2b3260', border: '1px solid #3a4173', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
               <span style={{ fontSize: '18px' }}>📌</span>
               <p style={{ margin: 0, fontSize: '13.5px', color: 'rgba(255,255,255,0.78)' }}>
                 <strong style={{ color: '#fff' }}>Note:</strong> In-class course prices are completely different from the above mentioned online prices.{' '}
@@ -313,7 +313,7 @@ export default function Landing() {
               </p>
             </div>
 
-            <div style={{ marginTop: '14px', padding: '14px 20px', background: 'var(--navy)', border: '1px solid var(--navy-2)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
+            <div style={{ marginTop: '14px', padding: '14px 20px', background: '#2b3260', border: '1px solid #3a4173', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
               <span style={{ fontSize: '18px' }}>🗓️</span>
               <p style={{ margin: 0, fontSize: '13.5px', color: 'rgba(255,255,255,0.78)' }}>
                 <strong style={{ color: '#fff' }}>TARGET: JLPT N5, N4, N3 — DECEMBER, 2026.</strong> Exam Date — <strong style={{ color: '#ff8d85' }}>06/12/2026</strong>
@@ -437,7 +437,7 @@ export default function Landing() {
               </div>
             </div>
 
-            <div style={{ marginTop: '24px', padding: '14px 20px', background: 'var(--navy)', border: '1px solid var(--navy-2)', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
+            <div style={{ marginTop: '24px', padding: '14px 20px', background: '#2b3260', border: '1px solid #3a4173', borderLeft: '3px solid var(--red)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 8px 22px rgba(22,26,51,0.22)' }}>
               <span style={{ fontSize: '18px' }}>📌</span>
               <p style={{ margin: 0, fontSize: '13.5px', color: 'rgba(255,255,255,0.78)' }}>
                 <strong style={{ color: '#fff' }}>Note:</strong> Batches will be started only if the required number of students for a batch is reached.
