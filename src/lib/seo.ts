@@ -71,7 +71,7 @@ export function buildJsonLd() {
     name: ORG.name,
     alternateName: ORG.alternateName,
     url: SITE_URL,
-    logo: `${SITE_URL}/12.png`,
+    logo: `${SITE_URL}/app-icon-512.png`,
     image: `${SITE_URL}/opengraph-image`,
     description:
       'Mozhippattru Japanese Language School offers JLPT N5, N4 and N3 coaching by N1-certified teachers, online and across India.',

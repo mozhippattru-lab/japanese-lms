@@ -64,8 +64,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [{ url: "/12.png", type: "image/png" }],
-    apple: [{ url: "/12.png" }],
+    icon: [{ url: "/app-icon-192.png", type: "image/png" }],
+    apple: [{ url: "/app-icon-192.png" }],
   },
   manifest: "/manifest.webmanifest",
   formatDetection: { telephone: true, email: true, address: true },

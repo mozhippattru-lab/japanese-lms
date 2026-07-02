@@ -62,7 +62,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     publisher: {
       '@type': 'Organization',
       name: 'Mozhippattru Japanese Language School',
-      logo: { '@type': 'ImageObject', url: `${SITE}/12.png` },
+      logo: { '@type': 'ImageObject', url: `${SITE}/app-icon-512.png` },
     },
   }
 
